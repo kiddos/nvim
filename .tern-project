@@ -1,0 +1,11 @@
+{
+	"libs": [
+		"browser",
+		"jquery",
+		"angularjs"
+	],
+	"plugins": {
+		"node": {},
+		"angular": "./"
+	}
+}
