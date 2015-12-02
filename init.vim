@@ -25,6 +25,8 @@ NeoBundle 'burnettk/vim-angular'
 NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'ashisha/image.vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'krisajenkins/vim-java-sql'
+NeoBundle 'has207/vim-java-conceal'
 
 " color scheme
 NeoBundle 'kiddos/malokai'
@@ -63,13 +65,10 @@ NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'tomtom/tlib_vim'
 
 call neobundle#end()
-
-" Required:
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
 NeoBundleCheck
+
+let g:python_host_prog = '/usr/bin/python2.7'
 
 "" omni completeion --------------------------------------------------{{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
