@@ -456,6 +456,9 @@ let g:airline_symbols.readonly = 'ℜ '
 "let g:airline_symbols.whitespace = '⇆'
 let g:airline_symbols.whitespace = '⌨  '
 "" }}}
+"" GitGutter options {{{
+autocmd VimEnter * silent! :GitGutterDisable
+"" }}}
 "" syntasitc settings {{{
 autocmd VimEnter * silent! :SyntasticToggleMode
 autocmd	BufWritePost * silent! :SyntasticCheck
