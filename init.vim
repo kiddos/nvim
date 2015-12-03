@@ -11,6 +11,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'groenewege/vim-less'
 NeoBundle 'moll/vim-node'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'tpope/vim-markdown'
@@ -18,7 +19,6 @@ NeoBundle 'tpope/vim-rails'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'sgeb/vim-matlab'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'burnettk/vim-angular'
@@ -26,23 +26,30 @@ NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'ashisha/image.vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'krisajenkins/vim-java-sql'
-NeoBundle 'has207/vim-java-conceal'
+NeoBundle 'vim-scripts/octave.vim--'
 
 " color scheme
 NeoBundle 'kiddos/malokai'
-NeoBundle 'ternjs/tern_for_vim'
 
 " code completion
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'artur-shaik/vim-javacomplete2'
+NeoBundle 'ternjs/tern_for_vim'
+NeoBundle 'vim-scripts/Vim-R-plugin'
+NeoBundle 'Raimondi/delimitMate'
+NeoBundle 'Shougo/neocomplcache.vim'
 
 " git
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'sjl/gundo.vim'
+
+" tmux
+NeoBundle 'erikw/tmux-powerline'
+NeoBundle 'edkolev/tmuxline.vim'
 
 " utils
 NeoBundle 'scrooloose/syntastic'
@@ -55,10 +62,15 @@ NeoBundle 'godlygeek/tabular'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-surround'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'vim-scripts/octave.vim'
+NeoBundle 'vim-scripts/R.vim'
+NeoBundle 'vim-scripts/YankRing.vim'
+NeoBundle 'vim-scripts/JavaDecompiler.vim'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -68,9 +80,7 @@ call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
 
-let g:python_host_prog = '/usr/bin/python2.7'
-
-"" omni completeion --------------------------------------------------{{{
+"" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal ofu=ccomplete#Complete
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -81,9 +91,8 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby,eruby setlocal ofu=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
-"" -------------------------------------------------------------------}}}
-
-"" coding settings ---------------------------------------------------{{{
+" }}}
+"" coding settingsa {{{
 set autoindent
 set nosmartindent
 set complete=.,w,b,u,U,t,k
@@ -94,9 +103,9 @@ autocmd FileType c,cpp,objc,xml,html,css,javascript,ruby,php,java,python set fol
 setlocal foldmethod=marker
 autocmd Syntax c,cpp,vim,xml,html,xhtml setlocal foldmethod=syntax
 autocmd Syntax c,cpp,vim,xml,html,xhtml,perl normal zR
-"" -------------------------------------------------------------------}}}
-
-"" buffer settings ---------------------------------------------------{{{
+let b:javascript_fold = 1
+" }}}
+"" buffer settings {{{
 set autoread
 set backupdir=.,~/.vimtmp,/tmp
 set confirm
@@ -110,9 +119,8 @@ autocmd VimEnter,BufRead,BufNewFile *.m set filetype=objc
 autocmd VimEnter,BufRead,BufNewFile *.h set filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs set filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
-"" -------------------------------------------------------------------}}}
-
-"" editing settings --------------------------------------------------{{{
+" }}}
+"" editing settings {{{
 set altkeymap
 set ambiwidth=double
 set backspace=indent,eol,start
@@ -165,9 +173,8 @@ autocmd FileType css setlocal modeline
 set timeoutlen=1000 ttimeoutlen=0
 set whichwrap+=<,>,b,s,[,],~
 set wrap
-"" --------------------------------------------------------------------}}}
-
-"" window settings ---------------------------------------------------{{{
+" }}}
+"" window settings {{{
 set cmdheight=2
 set cmdwinheight=6
 " set columns=100
@@ -190,23 +197,20 @@ set splitright
 set tabpagemax=20
 set title
 set warn
-"" --------------------------------------------------------------------}}}
-
-"" screen size --------------------------------------------------------{{{
+" }}}
+"" screen size {{{
 if has("gui_running")
 	set lines=999
 	set columns=999
 endif
-
 "" GUI settings
 if has("unix")
 	set guifont=Ubuntu\ Mono\ 13
 else
 	set guifont=Consolas:h12
 endif
-"" --------------------------------------------------------------------}}}
-
-"" Custom key mappings ------------------------------------------------{{{
+" }}}
+"" Custom key mappings {{{
 let mapleader=","
 
 " copy, cut, paste, save
@@ -279,8 +283,7 @@ inoremap <expr> <PageDown>	pumvisible() ? "\<PageDown>\<C-P>\<C-N>" : "\<PageDow
 inoremap <expr> <PageUp>	pumvisible() ? "\<PageUp>\<C-P>\<C-N>" : "\<PageUp>"
 "inoremap <C-D>	<C-X><C-O><C-P>
 inoremap <C-D>	<C-X><C-U>
-"" --------------------------------------------------------------------}}}
-
+" }}}
 "" color settings {{{
 set background=dark
 syntax enable
@@ -288,11 +291,7 @@ syntax on
 set t_Co=256
 colorscheme malokai
 " }}}
-
-"" javascript settings
-let b:javascript_fold = 1
-
-"" keybindings ---------------------------------------------------------{{{
+"" keybindings {{{
 function Toggle_ft_m()
 	if &ft == "objc"
 		execute ":setlocal ft=matlab"
@@ -377,13 +376,7 @@ nmap	H	<C-E>
 nmap	L	<C-Y>
 
 imap	<C-F> <C-R><Tab><C-P>
-"" ---------------------------------------------------------------------}}}
-
-"" AutoClose options {{{
-let g:AutoClosePairs_add = "[] '' "
-let g:AutoClosePreserveDotReg = 0
-"" }}}
-
+" }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
@@ -463,7 +456,6 @@ let g:airline_symbols.readonly = 'ℜ '
 "let g:airline_symbols.whitespace = '⇆'
 let g:airline_symbols.whitespace = '⌨  '
 "" }}}
-
 "" syntasitc settings {{{
 autocmd VimEnter * silent! :SyntasticToggleMode
 autocmd	BufWritePost * silent! :SyntasticCheck
@@ -599,7 +591,6 @@ let g:syntastic_javascript_closurecompiler_path = '~/Web/tools/google-closure-co
 " jade options
 let g:syntastic_jade_checkers = ['jade-lint']
 "" --------------------------------------------------------------------}}}
-
 "" YouCompleteMe Options ----------------------------------------------{{{
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_auto_trigger = 1
