@@ -63,14 +63,13 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-bundler'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'vim-scripts/octave.vim'
-NeoBundle 'vim-scripts/R.vim'
-NeoBundle 'vim-scripts/YankRing.vim'
-NeoBundle 'vim-scripts/JavaDecompiler.vim'
+NeoBundle 'chrisbra/csv.vim'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -82,15 +81,16 @@ NeoBundleCheck
 
 "" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
-autocmd FileType cpp setlocal ofu=ccomplete#Complete
+autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 autocmd FileType python setlocal omnifunc=python3complete#Complete
-autocmd FileType php setlocal ofu=phpcomplete#CompletePHP
-autocmd FileType html,xhtml setlocal ofu=htmlcomplete#CompleteTags
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby,eruby setlocal ofu=rubycomplete#Complete
+autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
+autocmd FileType r setlocal omnifunc=rcomplete#CompleteR
 " }}}
 "" coding settingsa {{{
 set autoindent
@@ -469,7 +469,7 @@ set statusline+=%*
 highlight	SyntasticErrorSign	cterm=BOLD	ctermfg=253	ctermbg=124	guifg=white	guibg=red
 highlight	SyntasticError		cterm=BOLD	ctermfg=253	ctermbg=236	guibg=#2f0000
 highlight	SyntasticErrorLine	cterm=BOLD	ctermfg=253	ctermbg=236	guibg=#2f0000
-"
+
 " general options
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
@@ -593,8 +593,8 @@ let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_javascript_closurecompiler_path = '~/Web/tools/google-closure-compiler.jar'
 " jade options
 let g:syntastic_jade_checkers = ['jade-lint']
-"" --------------------------------------------------------------------}}}
-"" YouCompleteMe Options ----------------------------------------------{{{
+" }}}
+"" YouCompleteMe Options {{{
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_auto_trigger = 1
 let g:ycm_min_num_identifier_candidate_chars = 0
@@ -647,10 +647,8 @@ let g:ycm_semantic_triggers =  {
 \	'html' : ['"', '<', '/', '=', '"', '>'],
 \   'ruby' : ['.', '::'],
 \   'lua' : ['.', ':'],
-\   'erlang' : [':']
+\   'erlang' : [':'],
+\	'r' : ['[', ']', '$']
 \ }
-"autocmd CursorMovedI c,cpp,java,python,ruby,eruby,html,css,php,javascript,xml call feedkeys("\<C-X><C-O><C-P>")
-"autocmd CursorMovedI c,cpp,java,python,ruby,eruby,html,css,php,javascript,xml call feedkeys("\<C-Space>")
-
-"" --------------------------------------------------------------------}}}
+" }}}
 
