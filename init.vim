@@ -27,6 +27,7 @@ NeoBundle 'ashisha/image.vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'krisajenkins/vim-java-sql'
 NeoBundle 'vim-scripts/octave.vim--'
+NeoBundle 'jalvesaq/Nvim-R'
 
 " color scheme
 NeoBundle 'kiddos/malokai'
@@ -37,7 +38,6 @@ NeoBundle 'ternjs/tern_for_vim'
 NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'vim-scripts/Vim-R-plugin'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'Shougo/neocomplcache.vim'
 
@@ -90,13 +90,13 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
-autocmd FileType r setlocal omnifunc=rcomplete#CompleteR
 " }}}
-"" coding settingsa {{{
+"" coding settings {{{
 set autoindent
 set nosmartindent
 set complete=.,w,b,u,U,t,k
 set completeopt=menu
+autocmd FileType r setlocal completeopt=menu,preview
 set number
 autocmd FileType c,cpp,objc,javascript,php setlocal foldmarker={,}
 autocmd FileType c,cpp,objc,xml,html,css,javascript,ruby,php,java,python set foldlevel=20
@@ -104,6 +104,7 @@ setlocal foldmethod=marker
 autocmd Syntax c,cpp,vim,xml,html,xhtml setlocal foldmethod=syntax
 autocmd Syntax c,cpp,vim,xml,html,xhtml,perl normal zR
 let b:javascript_fold = 1
+let R_show_args = 1
 " }}}
 "" buffer settings {{{
 set autoread
@@ -353,29 +354,20 @@ nmap	<silent><F5>	:call Test_webpage()<CR>
 nmap	<silent><F6>	:setlocal spell!<CR>
 nmap	<silent><F7>	:call Toggle_ft_m()<CR><CR>
 nmap	<silent><F8>	:call OutlineToggle()<CR>
-
+" tabularize shortcut
 nmap	<leader><space>		:Tabularize / <CR>
 nmap	<leader>"			:Tabularize /"[^"]*"<CR>
 nmap	<leader>(			:Tabularize /(.*)<CR>
 nmap	<leader>=			:Tabularize /= <CR>
 nmap	<leader>a			:AV<CR>
-nmap	<leader>f			za
-nmap	<leader>F			zA
-
-nmap	<leader>d	:YcmForceCompileAndDiagnostics<CR>
-nmap	<leader>s	:YcmShowDetailedDiagnostic<CR>
-nmap	<leader>t	:YcmCompleter GetType<CR>
-nmap	<leader>p	:YcmCompleter GetParent<CR>
-nmap	<leader>r	:YcmRestartServer<CR>
-nmap	<leader><Up>	:YcmCompleter GoToDeclaration<CR>
-nmap	<leader><Down>	:YcmCompleter GoToDefinition<CR>
-
+" large movement
 nmap	J	<C-D>
 nmap	K	<C-U>
 nmap	H	<C-E>
 nmap	L	<C-Y>
-
+" some completion key bindings
 imap	<C-F> <C-R><Tab><C-P>
+imap	<C-D> <Plug>RCompleteArgs
 " }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
@@ -593,6 +585,8 @@ let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_javascript_closurecompiler_path = '~/Web/tools/google-closure-compiler.jar'
 " jade options
 let g:syntastic_jade_checkers = ['jade-lint']
+" R options
+let g:syntastic_enable_r_svtools_checker = 1
 " }}}
 "" YouCompleteMe Options {{{
 let g:ycm_min_num_of_chars_for_completion = 1
