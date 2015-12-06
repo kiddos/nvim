@@ -8,26 +8,26 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Bundles:
 " syntax
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'krisajenkins/vim-java-sql'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'kiddos/vim-vhdl'
+NeoBundle 'ashisha/image.vim'
+NeoBundle 'vim-scripts/octave.vim--'
+NeoBundle 'jalvesaq/Nvim-R'
+" Web syntax
+NeoBundle 'othree/html5.vim'
+NeoBundle 'tpope/vim-haml'
+NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'moll/vim-node'
 NeoBundle 'elzr/vim-json'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'digitaltoad/vim-jade'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'othree/html5.vim'
-NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'burnettk/vim-angular'
-NeoBundle 'Valloric/MatchTagAlways'
-NeoBundle 'ashisha/image.vim'
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
-NeoBundle 'krisajenkins/vim-java-sql'
-NeoBundle 'vim-scripts/octave.vim--'
-NeoBundle 'jalvesaq/Nvim-R'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'tpope/vim-rails'
 
 " color scheme
 NeoBundle 'kiddos/malokai'
@@ -40,6 +40,7 @@ NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'ternjs/tern_for_vim'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/vimshell.vim'
 
 " git
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
@@ -69,7 +70,11 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'vim-scripts/octave.vim'
+NeoBundle 'vim-scripts/java_getset.vim'
 NeoBundle 'chrisbra/csv.vim'
+NeoBundle 'kiddos/a.vim'
+NeoBundle 'zeekay/vim-html2jade'
+NeoBundle 'coachshea/jade-vim'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -105,6 +110,16 @@ autocmd Syntax c,cpp,vim,xml,html,xhtml setlocal foldmethod=syntax
 autocmd Syntax c,cpp,vim,xml,html,xhtml,perl normal zR
 let b:javascript_fold = 1
 let R_show_args = 1
+let b:javagetset_getterTemplate =
+\ "\n" .
+\ "%modifiers% %type% %funcname%() {\n" .
+\ "\treturn %varname%;\n" .
+\ "}"
+let b:javagetset_setterTemplate =
+\ "\n" .
+\ "%modifiers% void %funcname%(%type% %varname%) {\n" .
+\ "\tthis.%varname% = %varname%;\n" .
+\ "}"
 " }}}
 "" buffer settings {{{
 set autoread
@@ -345,6 +360,26 @@ function! Test_webpage()
 		execute ":redraw!"
 	endif
 endfunction
+
+function ShowSpaces(...)
+	let @/='\v(\s+$)|( +\ze\t)'
+	let oldhlsearch=&hlsearch
+	if !a:0
+		let &hlsearch=!&hlsearch
+	else
+		let &hlsearch=a:1
+	end
+	return oldhlsearch
+endfunction
+
+function TrimSpaces() range
+	let oldhlsearch=ShowSpaces(1)
+	execute a:firstline.",".a:lastline."substitute ///gec"
+	let &hlsearch=oldhlsearch
+endfunction
+
+command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 
 nmap	<silent><F1>	:set columns=999<CR>:set lines=66<CR>:redraw<CR>
 nmap	<silent><F2>	:NERDTreeToggle .<CR>
