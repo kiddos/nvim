@@ -21,6 +21,7 @@ NeoBundle 'tpope/vim-haml'
 NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'briancollins/vim-jst'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'nono/jquery.vim'
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
@@ -71,14 +72,17 @@ NeoBundle 'tpope/vim-bundler'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
-NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-scripts/octave.vim'
 NeoBundle 'vim-scripts/java_getset.vim'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'kiddos/a.vim'
+NeoBundle 'bkad/CamelCaseMotion'
 NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'coachshea/jade-vim'
 NeoBundle 'ryanoasis/vim-devicons'
+NeoBundle 'mhinz/vim-startify'
+NeoBundle 'vim-scripts/grep.vim'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -408,6 +412,11 @@ nmap	L	<C-Y>
 imap	<C-F> <C-R><Tab><C-P>
 imap	<C-D> <Plug>RCompleteArgs
 " }}}
+"" CamelCaseMotion {{{
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+"" }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
@@ -684,4 +693,60 @@ let g:ycm_semantic_triggers =  {
 \	'r' : ['[', ']', '$']
 \ }
 " }}}
+"" vim-startify {{{
+let g:startify_list_order = [
+		\ ['   My most recently used files in the current directory:'],
+		\ 'dir',
+		\ ['   My most recently used files:'],
+		\ 'files',
+		\ ['   These are my bookmarks:'],
+		\ 'bookmarks',
+		\ ['   These are my sessions:'],
+		\ 'sessions',
+		\ ]
+let g:startify_files_number = 6
+let g:startify_bookmarks = [ {'init': '  ~/.config/nvim/init.vim'}, {'bash': '  ~/.bashrc'} ]
+let g:startify_custom_header = [
+	\ '                                                                      ______',
+	\ '      .__   __.  _______   ______   ____    ____  __  .___  ___.      L,.   ''',
+	\ '      |  \ |  | |   ____| /  __  \  \   \  /   / |  | |   \/   |       \      '',_',
+	\ '      |   \|  | |  |__   |  |  |  |  \   \/   /  |  | |  \  /  |        \   @   '',',
+	\ '      |  . `  | |   __|  |  |  |  |   \      /   |  | |  |\/|  |         \ ^~^    '',',
+	\ '      |  |\   | |  |____ |  `--''  |    \    /    |  | |  |  |  |          \    NR   '',',
+	\ '      |__| \__| |_______| \______/      \__/     |__| |__|  |__|           \___''98fw  '',_                          _..----.._',
+	\ '                                                                           [______       "''==.I\_____________..--"<__\\_n@___4\,_',
+	\ '                                                                         ,..-=T         __   ____________          \/  "''" 0<==  "''-+.._',
+	\ '                                                                         I____|_____    }_>=========I>=**""''''==-------------==-   " |   "''-.,___',
+	\ '                                                                       [_____,.--''"                             ""--=<""-----=====+==--''''""',
+	\ '                                                                         ""''-=+..,,__,-----,_____                  -=* |',
+	\ '                                                                                     |__   /-----''#------.,I_---------''"',
+	\ '                                                                                        """"''--..__         _.>',
+	\ '                                                                                                   ""''''''''''""',
+	\ '',
+	\ '',
+	\ ]
+" }}}
+"" instant-markdown {{{
+let g:instant_markdown_autostart = 0
+function! UpdateMarkdown()
+	if (b:last_num_changes == "" || b:last_num_changes != b:changedtick)
+		let b:last_num_changes = b:changedtick
+		let current_buffer = join(getbufline("%", 1, "$"), "\n")
+		exec "!echo " . escape(shellescape(current_buffer), "%!#") . " | curl -X PUT -T - http://localhost:8090/ &>/dev/null &"
+		call feedkeys("\<Enter>")
+	endif
+endfunction
+function! OpenMarkdown()
+	let b:last_num_changes = ""
+	exec "!echo " . escape(shellescape(join(getbufline("%", 1, "$"), "\n")), "%!#") . " | instant-markdown-d &>/dev/null &"
+	call feedkeys("\<Enter>")
+endfunction
+function! CloseMarkdown()
+	exec "!curl -s -X DELETE http://localhost:8090/ &>/dev/null &"
+	call feedkeys("\<Enter>")
+endfunction
 
+autocmd BufWritePost *.{md,mkd,mkdn,mark*} call UpdateMarkdown()
+autocmd BufWinLeave *.{md,mkd,mkdn,mark*} call CloseMarkdown()
+autocmd BufWinEnter *.{md,mkd,mkdn,mark*} call OpenMarkdown()
+"" }}}
