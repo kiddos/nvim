@@ -41,7 +41,7 @@ NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle '1995eaton/vim-better-css-completion'
 NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'Raimondi/delimitMate'
+NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'vhda/verilog_systemverilog.vim'
@@ -523,14 +523,13 @@ let g:syntastic_auto_jump = 0
 
 " c options
 let g:syntastic_c_check_header = 1
-let g:syntastic_c_compiler_options = "-Wall -g -O3 -fopenmp -fmax-errors=10 -pthread -std=c99"
+let g:syntastic_c_compiler_options = "-Wall -g -O3 -fopenmp -std=c99 -pthread -fPIC -fmax-errors=10"
 let g:syntastic_c_include_dirs = ['/usr/include/ImageMagick/']
 " c++ options
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_compiler_options = "-Wall -g -O3 -fopenmp -std=c++11 -pthread -fPIC"
-let g:syntastic_cpp_include_dirs = ['.',
+let g:syntastic_cpp_include_dirs = [
 \		'/usr/include/ImageMagick/',
-\		'/opt/Qt5.5.0/5.5/gcc_64/include',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/Enginio',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DCore',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DInput',
@@ -586,34 +585,12 @@ let g:syntastic_cpp_include_dirs = ['.',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/QtXml',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/QtXmlPatterns',
 \		'/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib',
-\		'/usr/include/GNUstep/',
-\		'/usr/include/GNUstep/AppKit',
-\		'/usr/include/GNUstep/Cocoa',
-\		'/usr/include/GNUstep/Cynthiune',
-\		'/usr/include/GNUstep/DBKit',
-\		'/usr/include/GNUstep/Foundation',
-\		'/usr/include/GNUstep/Frameworks',
-\		'/usr/include/GNUstep/FSNode',
-\		'/usr/include/GNUstep/GNUMail',
-\		'/usr/include/GNUstep/gnustep',
-\		'/usr/include/GNUstep/GNUstepBase',
-\		'/usr/include/GNUstep/GNUstepGUI',
-\		'/usr/include/GNUstep/GormCore',
-\		'/usr/include/GNUstep/GormObjCHeaderParser',
-\		'/usr/include/GNUstep/GormPrefs',
-\		'/usr/include/GNUstep/Inspector',
-\		'/usr/include/GNUstep/InterfaceBuilder',
-\		'/usr/include/GNUstep/Operation',
-\		'/usr/include/GNUstep/PreferencePanes',
-\		'/usr/include/GNUstep/ProjectCenter',
-\		'/usr/include/GNUstep/Renaissance',
-\		'/usr/include/GNUstep/TalkSoupBundles',
 \		'.',
 \		'..',
 \		'./include',
 \		'../include']
 " objc options
-let g:syntastic_objc_compiler_options = "-Wall `gnustep-config --objc-flags` `gnustep-config --objc-libs` "
+let g:syntastic_objc_compiler_options = "-Wall -g -O3 -fPIC `gnustep-config --objc-flags` `gnustep-config --objc-libs` "
 "let g:syntastic_objc_compiler = "clang"
 "let g:syntastic_objc_compiler_options += "-DGNU_GUI_LIBRARY=1 -DGNU_RUNTIME=1 "
 "let g:syntastic_objc_compiler_options += "-DGNUSTEP_BASE_LIBRARY=1 -fno-strict-aliasing "
@@ -621,7 +598,7 @@ let g:syntastic_objc_compiler_options = "-Wall `gnustep-config --objc-flags` `gn
 "let g:syntastic_objc_compiler_options += "-D_NATIVE_OBJC_EXCEPTIONS -pthread -fPIC "
 "let g:syntastic_objc_compiler_options += "-Wall -DGSWARN -DGSDIAGNOSE -Wno-import -g -O2 "
 "let g:syntastic_objc_compiler_options += "-fgnu-runtime -fconstant-string-class=NSConstantString"
-"let g:syntastic_objc_include_dirs = ['/usr/include/GNUstep']
+let g:syntastic_objc_include_dirs = ['/usr/include/GNUstep']
 " python options
 let g:syntastic_python_python_exec = '/usr/bin/python'
 let g:syntastic_python_checkers = ['flake8', 'python']
@@ -649,8 +626,8 @@ let g:ycm_always_populate_location_list = 0
 let g:ycm_allow_changing_updatetime = 0
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_string = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_seed_identifiers_with_syntax = 1
 
 let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
@@ -658,7 +635,7 @@ let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_start_csharp_server = 0
 let g:ycm_auto_stop_csharp_server = 0
-let g:ycm_csharp_server_port = 1
+let g:ycm_csharp_server_port = 0
 
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_completion = 0
@@ -668,29 +645,29 @@ let g:ycm_key_list_select_completion = []
 let g:ycm_key_list_previous_completion = []
 let g:ycm_key_invoke_completion = '<C-Space>'
 let g:ycm_key_detailed_diagnostics = '<leader>d'
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.config/nvim/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_filepath_completion_use_working_dir = 1
+let g:ycm_filepath_completion_use_working_dir = 0
 let g:ycm_cache_omnifunc = 0
-let g:ycm_use_ultisnips_completer = 1
-let g:ycm_disable_for_files_larger_than_kb = 8192
+let g:ycm_use_ultisnips_completer = 0
+let g:ycm_disable_for_files_larger_than_kb = 16000
 let g:ycm_semantic_triggers =  {
-\   'c' : ['->', '.', '<', '#', '>', '_', '*', '&', '(', ')', '\\'],
+\   'c' : ['->', '.', '<', '#'],
 \   'objc' : ['->', '.', '<', '#'],
-\   'cpp' : ['->', '.', '::', '#', '<', '>', '_', '*', '&', '\b', '(', ')'],
-\   'objcpp' : ['->', '.', '::', '#'],
+\   'cpp' : ['->', '.', '::', '#', '<'],
+\   'objcpp' : ['->', '.', '::', '#', '<'],
 \   'java' : ['.'],
 \   'ocaml' : ['.', '#'],
 \   'perl' : ['->'],
 \	'css' : [':'],
-\   'php' : ['.', '->', '::', '_', '$', '[', ']'],
+\   'php' : ['.', '->', '::', '_', '$', '['],
 \   'javascript' : ['.', "'", '(', '"'],
-\   'cs,d,vim,python,perl6,scala,vb,elixir,go' : ['.', '(', ')'],
-\	'html' : ['"', '<', '/', '=', '"', '>'],
+\   'cs,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+\	'html' : ['"', '<', '/', '=', '"'],
 \   'ruby' : ['.', '::'],
 \   'lua' : ['.', ':'],
 \   'erlang' : [':'],
-\	'r' : ['[', ']', '$']
+\	'r' : ['$']
 \ }
 " }}}
 "" vim-startify {{{
