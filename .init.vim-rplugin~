@@ -1,6 +1,6 @@
 " python3 plugins
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/unite.vim/rplugin/python3/unite.py', [
-      \ {'sync': 1, 'name': 'UniteInitializePython', 'opts': {}, 'type': 'command'},
+      \ {'sync': 1, 'name': 'UniteInitializePython', 'type': 'command', 'opts': {}},
      \ ])
 
 
