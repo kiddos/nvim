@@ -42,13 +42,10 @@ NeoBundle 'ternjs/tern_for_vim'
 NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle '1995eaton/vim-better-css-completion'
-NeoBundle 'ternjs/tern_for_vim'
 NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'vhda/verilog_systemverilog.vim'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'vim-ruby/vim-ruby'
 
 " git
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
@@ -73,8 +70,8 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'tpope/vim-projectionist'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
@@ -88,9 +85,9 @@ NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'coachshea/jade-vim'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
-NeoBundle 'vim-scripts/grep.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tyru/open-browser.vim'
+NeoBundle 'mbbill/undotree'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -109,7 +106,7 @@ autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+"autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 " }}}
 "" coding settings {{{
@@ -421,9 +418,9 @@ imap	<C-F> <C-R><Tab><C-P>
 imap	<C-D> <Plug>RCompleteArgs
 " }}}
 "" CamelCaseMotion {{{
-map <silent> w <Plug>CamelCaseMotion_w
-map <silent> b <Plug>CamelCaseMotion_b
-map <silent> e <Plug>CamelCaseMotion_e
+"map <silent> w <Plug>CamelCaseMotion_w
+"map <silent> b <Plug>CamelCaseMotion_b
+"map <silent> e <Plug>CamelCaseMotion_e
 "" }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
@@ -610,7 +607,7 @@ let g:syntastic_objc_include_dirs = ['/usr/include/GNUstep']
 " python options
 let g:syntastic_python_python_exec = '/usr/bin/python'
 let g:syntastic_python_checkers = ['flake8', 'python']
-let g:syntastic_python_flake8_args='--ignore=E501,E225,E302,E303,W391'
+let g:syntastic_python_flake8_args='--ignore=E501,E225,E302,E303,W391,E226,E231,E701'
 " html options
 let g:syntastic_html_checkers = ['jshint']
 " javascript options
