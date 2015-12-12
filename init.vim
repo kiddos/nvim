@@ -10,6 +10,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " syntax
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'krisajenkins/vim-java-sql'
+NeoBundle 'OrangeT/vim-csharp'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'ashisha/image.vim'
@@ -32,12 +33,17 @@ NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'tpope/vim-rails'
+NeoBundle 'lambdatoast/elm.vim'
 
 " color scheme
 NeoBundle 'kiddos/malokai'
 
 " code completion
-NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'Valloric/YouCompleteMe', {
+	\ 'build': {
+		\ 'unix': './install.sh --clang-completer',
+	\ }
+\ }
 NeoBundle 'ternjs/tern_for_vim'
 NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -67,7 +73,6 @@ NeoBundle 'benekastah/neomake'
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'majutsushi/tagbar'
-NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-dispatch'
@@ -76,11 +81,9 @@ NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'vim-scripts/octave.vim'
 NeoBundle 'vim-scripts/java_getset.vim'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'kiddos/a.vim'
-NeoBundle 'bkad/CamelCaseMotion'
 NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'coachshea/jade-vim'
 NeoBundle 'ryanoasis/vim-devicons'
@@ -88,6 +91,9 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'mbbill/undotree'
+NeoBundle 'kannokanno/previm'
+NeoBundle 'arecarn/crunch.vim'
+NeoBundle 'arecarn/selection.vim'
 
 " libs
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -168,6 +174,18 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set noexpandtab
+" c indenting
+autocmd FileType c setlocal tabstop=4
+autocmd FileType c setlocal expandtab
+autocmd FileType c setlocal softtabstop=2
+autocmd FileType c setlocal shiftwidth=2
+autocmd FileType c setlocal modeline
+" c++ indenting
+autocmd FileType cpp setlocal tabstop=4
+autocmd FileType cpp setlocal expandtab
+autocmd FileType cpp setlocal softtabstop=2
+autocmd FileType cpp setlocal shiftwidth=2
+autocmd FileType cpp setlocal modeline
 " python indenting
 autocmd FileType python setlocal tabstop=8
 autocmd FileType python setlocal expandtab
@@ -177,8 +195,8 @@ autocmd FileType python setlocal modeline
 " matlab indenting
 autocmd FileType matlab setlocal tabstop=4
 autocmd FileType matlab setlocal expandtab
-autocmd FileType matlab setlocal softtabstop=3
-autocmd FileType matlab setlocal shiftwidth=3
+autocmd FileType matlab setlocal softtabstop=2
+autocmd FileType matlab setlocal shiftwidth=2
 autocmd FileType matlab setlocal modeline
 " indenting html
 autocmd FileType html setlocal tabstop=4
@@ -402,6 +420,7 @@ nmap	<silent><F5>	:call Test_webpage()<CR>
 nmap	<silent><F6>	:setlocal spell!<CR>
 nmap	<silent><F7>	:call Toggle_ft_m()<CR><CR>
 nmap	<silent><F8>	:call OutlineToggle()<CR>
+nmap	<silent><F12>	:Crunch<CR>
 " tabularize shortcut
 nmap	<leader><space>		:Tabularize / <CR>
 nmap	<leader>"			:Tabularize /"[^"]*"<CR>
@@ -417,11 +436,6 @@ nmap	L	<C-Y>
 imap	<C-F> <C-R><Tab><C-P>
 imap	<C-D> <Plug>RCompleteArgs
 " }}}
-"" CamelCaseMotion {{{
-"map <silent> w <Plug>CamelCaseMotion_w
-"map <silent> b <Plug>CamelCaseMotion_b
-"map <silent> e <Plug>CamelCaseMotion_e
-"" }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
@@ -638,9 +652,9 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 "let g:ycm_server_use_vim_stdout = 1
 "let g:ycm_server_log_level = 'debug'
-let g:ycm_auto_start_csharp_server = 0
-let g:ycm_auto_stop_csharp_server = 0
-let g:ycm_csharp_server_port = 0
+let g:ycm_auto_start_csharp_server = 1
+let g:ycm_auto_stop_csharp_server = 1
+let g:ycm_csharp_server_port = 1
 
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_completion = 0
@@ -681,33 +695,27 @@ let g:startify_list_order = [
 		\ 'dir',
 		\ ['   My most recently used files:'],
 		\ 'files',
-		\ ['   These are my bookmarks:'],
+		\ ['   Bookmarks:'],
 		\ 'bookmarks',
-		\ ['   These are my sessions:'],
+		\ ['   Sessions:'],
 		\ 'sessions',
 		\ ]
-let g:startify_files_number = 6
-let g:startify_bookmarks = [ {'init': '  ~/.config/nvim/init.vim'}, {'bash': '  ~/.bashrc'} ]
-let g:startify_custom_header = [
-	\ '                                                                      ______',
-	\ '      .__   __.  _______   ______   ____    ____  __  .___  ___.      L,.   ''',
-	\ '      |  \ |  | |   ____| /  __  \  \   \  /   / |  | |   \/   |       \      '',_',
-	\ '      |   \|  | |  |__   |  |  |  |  \   \/   /  |  | |  \  /  |        \   @   '',',
-	\ '      |  . `  | |   __|  |  |  |  |   \      /   |  | |  |\/|  |         \ ^~^    '',',
-	\ '      |  |\   | |  |____ |  `--''  |    \    /    |  | |  |  |  |          \    NR   '',',
-	\ '      |__| \__| |_______| \______/      \__/     |__| |__|  |__|           \___''98fw  '',_                          _..----.._',
-	\ '                                                                           [______       "''==.I\_____________..--"<__\\_n@___4\,_',
-	\ '                                                                         ,..-=T         __   ____________          \/  "''" 0<==  "''-+.._',
-	\ '                                                                         I____|_____    }_>=========I>=**""''''==-------------==-   " |   "''-.,___',
-	\ '                                                                       [_____,.--''"                             ""--=<""-----=====+==--''''""',
-	\ '                                                                         ""''-=+..,,__,-----,_____                  -=* |',
-	\ '                                                                                     |__   /-----''#------.,I_---------''"',
-	\ '                                                                                        """"''--..__         _.>',
-	\ '                                                                                                   ""''''''''''""',
+let g:startify_files_number = 3
+let g:startify_bookmarks = [ {'init': '  ~/.config/nvim/init.vim'}]
+let g:startify_custom_header =
+		\ map(split(system('tips.py | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
+let g:startify_change_to_dir = 1
+let g:startify_change_to_vcs_root = 1
+let g:startify_enable_special = 0
+let g:startify_custom_footer = [
 	\ '',
-	\ '',
-	\ ]
-" }}}
+	\ '________   _______   ________  ___      ___ ___  _____ ______       ',
+	\ '|\   ___  \|\  ___ \ |\   __  \|\  \    /  /|\  \|\   _ \  _   \    ',
+	\ '\ \  \\ \  \ \   __/|\ \  \|\  \ \  \  /  / | \  \ \  \\\__\ \  \   ',
+	\ ' \ \  \\ \  \ \  \_|/_\ \  \\\  \ \  \/  / / \ \  \ \  \\|__| \  \  ',
+	\ '  \ \  \\ \  \ \  \_|\ \ \  \\\  \ \    / /   \ \  \ \  \    \ \  \ ',
+	\ '   \ \__\\ \__\ \_______\ \_______\ \__/ /     \ \__\ \__\    \ \__\',
+	\ '    \|__| \|__|\|_______|\|_______|\|__|/       \|__|\|__|     \|__|']
 "" instant-markdown {{{
 let g:instant_markdown_autostart = 0
 function! UpdateMarkdown()
@@ -728,7 +736,7 @@ function! CloseMarkdown()
 	call feedkeys("\<Enter>")
 endfunction
 
-autocmd BufWritePost *.{md,mkd,mkdn,mark*} call UpdateMarkdown()
-autocmd BufWinLeave *.{md,mkd,mkdn,mark*} call CloseMarkdown()
-autocmd BufWinEnter *.{md,mkd,mkdn,mark*} call OpenMarkdown()
+"autocmd BufWritePost *.{md,mkd,mkdn,mark*} call UpdateMarkdown()
+"autocmd BufWinLeave *.{md,mkd,mkdn,mark*} call CloseMarkdown()
+"autocmd BufWinEnter *.{md,mkd,mkdn,mark*} call OpenMarkdown()
 "" }}}
