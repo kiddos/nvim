@@ -106,6 +106,7 @@ NeoBundleCheck
 "" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 autocmd FileType python setlocal omnifunc=python3complete#Complete
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
@@ -150,7 +151,7 @@ set hidden
 set icon
 set iconstring=vim
 set nowritebackup
-autocmd VimEnter,BufRead,BufNewFile *.m set filetype=objc
+autocmd VimEnter,BufRead,BufNewFile *.m set filetype=matlab
 autocmd VimEnter,BufRead,BufNewFile *.h set filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs set filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
@@ -171,52 +172,16 @@ set shiftround
 set smartcase
 " general indenting
 set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set noexpandtab
-" c indenting
-autocmd FileType c setlocal tabstop=4
-autocmd FileType c setlocal expandtab
-autocmd FileType c setlocal softtabstop=2
-autocmd FileType c setlocal shiftwidth=2
-autocmd FileType c setlocal modeline
-" c++ indenting
-autocmd FileType cpp setlocal tabstop=4
-autocmd FileType cpp setlocal expandtab
-autocmd FileType cpp setlocal softtabstop=2
-autocmd FileType cpp setlocal shiftwidth=2
-autocmd FileType cpp setlocal modeline
+set expandtab
+set softtabstop=2
+set shiftwidth=2
+set modeline
 " python indenting
 autocmd FileType python setlocal tabstop=8
 autocmd FileType python setlocal expandtab
 autocmd FileType python setlocal softtabstop=4
 autocmd FileType python setlocal shiftwidth=4
 autocmd FileType python setlocal modeline
-" matlab indenting
-autocmd FileType matlab setlocal tabstop=4
-autocmd FileType matlab setlocal expandtab
-autocmd FileType matlab setlocal softtabstop=2
-autocmd FileType matlab setlocal shiftwidth=2
-autocmd FileType matlab setlocal modeline
-" indenting html
-autocmd FileType html setlocal tabstop=4
-autocmd FileType html setlocal expandtab
-autocmd FileType html setlocal softtabstop=2
-autocmd FileType html setlocal shiftwidth=2
-autocmd FileType html setlocal modeline
-" indenting javascript
-autocmd FileType javascript setlocal tabstop=4
-autocmd FileType javascript setlocal expandtab
-autocmd FileType javascript setlocal softtabstop=2
-autocmd FileType javascript setlocal shiftwidth=2
-autocmd FileType javascript setlocal modeline
-" indenting css
-autocmd FileType css setlocal tabstop=4
-autocmd FileType css setlocal expandtab
-autocmd FileType css setlocal softtabstop=2
-autocmd FileType css setlocal shiftwidth=2
-autocmd FileType css setlocal modeline
-
 set timeoutlen=1000 ttimeoutlen=0
 set whichwrap+=<,>,b,s,[,],~
 set wrap
@@ -340,74 +305,90 @@ colorscheme malokai
 " }}}
 "" keybindings {{{
 function Toggle_ft_m()
-	if &ft == "objc"
-		execute ":setlocal ft=matlab"
-	elseif &ft == "matlab"
-		execute ":setlocal ft=objc"
-	endif
+  if &ft == "objc"
+    execute ":setlocal ft=matlab"
+  elseif &ft == "matlab"
+    execute ":setlocal ft=objc"
+  endif
 endfunction
 
 function! OutlineToggle()
-	if (! exists ("b:outline_mode"))
-		let b:outline_mode = 0
-	endif
-	if (b:outline_mode == 0)
-		syn region myFold start="{" end="}" transparent fold
-		syn sync fromstart
-		set foldmethod=syntax
-		silent! exec "%s/{{{/<<</"
-		silent! exec "%s/}}}/>>>/"
-		let b:outline_mode = 1
-	else
-		set foldmethod=marker
-		silent! exec "%s/<<</{{{/"
-		silent! exec "%s/>>>/}}}/"
-		let b:outline_mode = 0
-	endif
+  if (! exists ("b:outline_mode"))
+    let b:outline_mode = 0
+  endif
+  if (b:outline_mode == 0)
+    syn region myFold start="{" end="}" transparent fold
+    syn sync fromstart
+    set foldmethod=syntax
+    silent! exec "%s/{{{/<<</"
+    silent! exec "%s/}}}/>>>/"
+    let b:outline_mode = 1
+  else
+    set foldmethod=marker
+    silent! exec "%s/<<</{{{/"
+    silent! exec "%s/>>>/}}}/"
+    let b:outline_mode = 0
+  endif
 endfunction
 
 function! Test_webpage()
-	if &ft == "php"
-		echom "php file type"
-		let dst = expand('%:t') . ".html"
-		let temp = tempname()
-		execute ":silent ! php % > " . dst
-		execute ":silent ! google-chrome " . dst " > " . temp . " 2>&1 "
-		execute ":pclose!"
-		execute ":redraw!"
-		set splitbelow
-		execute ":6split"
-		execute ":e! " . temp
-		set nosplitbelow
-		let delStatus = delete(dst)
-		if delStatus != 0
-			echo "Fail to Delete temp file"
-		endif
-	elseif &ft == "html"
-		let this_file = expand('%:p')
-		echom "html file type"
-		execute ":silent ! google-chrome " . this_file
-		execute ":pclose!"
-		execute ":redraw!"
-	endif
+  if &ft == "php"
+    echom "php file type"
+    let dst = expand('%:t') . ".html"
+    let temp = tempname()
+    execute ":silent ! php % > " . dst
+    execute ":silent ! google-chrome " . dst " > " . temp . " 2>&1 "
+    execute ":pclose!"
+    execute ":redraw!"
+    set splitbelow
+    execute ":6split"
+    execute ":e! " . temp
+    set nosplitbelow
+    let delStatus = delete(dst)
+    if delStatus != 0
+      echo "Fail to Delete temp file"
+    endif
+  elseif &ft == "html"
+    let this_file = expand('%:p')
+    echom "html file type"
+    execute ":silent ! google-chrome " . this_file
+    execute ":pclose!"
+    execute ":redraw!"
+  endif
 endfunction
 
 function ShowSpaces(...)
-	let @/='\v(\s+$)|( +\ze\t)'
-	let oldhlsearch=&hlsearch
-	if !a:0
-		let &hlsearch=!&hlsearch
-	else
-		let &hlsearch=a:1
-	end
-	return oldhlsearch
+  let @/='\v(\s+$)|( +\ze\t)'
+  let oldhlsearch=&hlsearch
+  if !a:0
+    let &hlsearch=!&hlsearch
+  else
+    let &hlsearch=a:1
+  end
+  return oldhlsearch
 endfunction
 
 function TrimSpaces() range
-	let oldhlsearch=ShowSpaces(1)
-	execute a:firstline.",".a:lastline."substitute ///gec"
-	let &hlsearch=oldhlsearch
+  let oldhlsearch=ShowSpaces(1)
+  execute a:firstline.",".a:lastline."substitute ///gec"
+  let &hlsearch=oldhlsearch
 endfunction
+
+function Compile_to_CSS()
+  let src = expand("%:t")
+  let target = expand("%:r") . ".css"
+  let compiler = ""
+  if &ft == "less"
+    let compiler = "less"
+  elseif &ft == "sass"
+    let compiler = "sass"
+  elseif &ft == "scss"
+    let compiler = "scss"
+  endif
+  execute ":silent !".compiler." ".src." > ".target
+endfunction
+
+autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
 
 command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
@@ -654,7 +635,7 @@ let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_start_csharp_server = 1
 let g:ycm_auto_stop_csharp_server = 1
-let g:ycm_csharp_server_port = 1
+let g:ycm_csharp_server_port = 3600
 
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_completion = 0
