@@ -2,69 +2,10 @@ if has('vim_starting')
 	set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
 endif
 call neobundle#begin(expand('~/.config/nvim/bundle/'))
-
 " Let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim'
-
 " Bundles:
-" syntax
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
-NeoBundle 'krisajenkins/vim-java-sql'
-NeoBundle 'OrangeT/vim-csharp'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'kiddos/vim-vhdl'
-NeoBundle 'ashisha/image.vim'
-NeoBundle 'vim-scripts/octave.vim--'
-NeoBundle 'jalvesaq/Nvim-R'
-NeoBundle 'bronson/vim-trailing-whitespace'
-" Web syntax
-NeoBundle 'othree/html5.vim'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'Valloric/MatchTagAlways'
-NeoBundle 'digitaltoad/vim-jade'
-NeoBundle 'briancollins/vim-jst'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'nono/jquery.vim'
-NeoBundle 'ap/vim-css-color'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'groenewege/vim-less'
-NeoBundle 'moll/vim-node'
-NeoBundle 'elzr/vim-json'
-NeoBundle 'burnettk/vim-angular'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'lambdatoast/elm.vim'
-
-" color scheme
-NeoBundle 'kiddos/malokai'
-
-" code completion
-NeoBundle 'Valloric/YouCompleteMe', {
-	\ 'build': {
-		\ 'unix': './install.sh --clang-completer',
-	\ }
-\ }
-NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'shawncplus/phpcomplete.vim'
-NeoBundle 'artur-shaik/vim-javacomplete2'
-NeoBundle '1995eaton/vim-better-css-completion'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'vhda/verilog_systemverilog.vim'
-
-" git
-NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'sjl/gundo.vim'
-NeoBundle 'gregsexton/gitv'
-
-" tmux
-NeoBundle 'erikw/tmux-powerline'
-NeoBundle 'edkolev/tmuxline.vim'
-
-" utils
+" general utilities plugins {{{
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
@@ -77,32 +18,98 @@ NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-projectionist'
-NeoBundle 'mattn/emmet-vim'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'vim-scripts/java_getset.vim'
-NeoBundle 'chrisbra/csv.vim'
-NeoBundle 'kiddos/a.vim'
-NeoBundle 'zeekay/vim-html2jade'
-NeoBundle 'coachshea/jade-vim'
+NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'ashisha/image.vim'
+NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'mbbill/undotree'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
-
-" libs
+NeoBundle 'chrisbra/csv.vim'
+" }}}
+" git {{{
+NeoBundle 'Xuyuanp/nerdtree-git-plugin'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'sjl/gundo.vim'
+NeoBundle 'gregsexton/gitv'
+" }}}
+" tmux {{{
+NeoBundle 'erikw/tmux-powerline'
+NeoBundle 'edkolev/tmuxline.vim'
+" }}}
+" color scheme {{{
+NeoBundle 'kiddos/malokai'
+" }}}
+" libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'tomtom/tlib_vim'
+" }}}
+" language specific
+" C family/vhdl {{{
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'OrangeT/vim-csharp'
+NeoBundle 'kiddos/a.vim'
+NeoBundle 'vhda/verilog_systemverilog.vim'
+NeoBundle 'kiddos/vim-vhdl'
+NeoBundle 'Valloric/YouCompleteMe', {
+	\ 'build': {
+		\ 'unix': './install.sh --clang-completer',
+	\ }
+\ }
+" }}}
+" Java {{{
+NeoBundle 'artur-shaik/vim-javacomplete2'
+NeoBundle 'vim-scripts/java_getset.vim'
+NeoBundle 'krisajenkins/vim-java-sql'
+" }}}
+" Matlab/Octave/R {{{
+NeoBundle 'vim-scripts/octave.vim--'
+NeoBundle 'jalvesaq/Nvim-R'
+" }}}
+" Web syntax {{{
+" html/jade/ejs/jst
+NeoBundle 'othree/html5.vim'
+NeoBundle 'tpope/vim-haml'
+NeoBundle 'Valloric/MatchTagAlways'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'briancollins/vim-jst'
+NeoBundle 'burnettk/vim-angular'
+NeoBundle 'coachshea/jade-vim'
+NeoBundle 'zeekay/vim-html2jade'
+" css/less/stylus/sass/scss
+NeoBundle 'ap/vim-css-color'
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'groenewege/vim-less'
+NeoBundle '1995eaton/vim-better-css-completion'
+" javascript
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'ternjs/tern_for_vim'
+NeoBundle 'nono/jquery.vim'
+NeoBundle 'moll/vim-node'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'elzr/vim-json'
+" rails
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'lambdatoast/elm.vim'
+" php
+NeoBundle 'shawncplus/phpcomplete.vim'
+" }}}
 
 call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
-
 "" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
@@ -388,8 +395,8 @@ function Compile_to_CSS()
   execute ":silent !".compiler." ".src." > ".target
 endfunction
 
-autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
-
+"autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
+command! Compile_to_CSS call Compile_to_CSS()
 command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 
