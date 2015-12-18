@@ -168,8 +168,6 @@ autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
 set altkeymap
 set backspace=indent,eol,start
 set clipboard=unnamedplus
-"set cursorcolumn
-set cursorline
 set encoding=utf-8
 set ignorecase
 set incsearch
@@ -278,9 +276,11 @@ inoremap <expr> <PageUp>	pumvisible() ? "\<PageUp>\<C-P>\<C-N>" : "\<PageUp>"
 "" color settings {{{
 syntax enable
 syntax on
+"set cursorcolumn
+set cursorline
 set t_Co=256
 set background=dark
-set background=light
+"set background=light
 colorscheme malokai
 "colorscheme solarized
 " }}}
