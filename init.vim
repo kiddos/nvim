@@ -50,6 +50,7 @@ NeoBundle 'edkolev/tmuxline.vim'
 " }}}
 " color scheme {{{
 NeoBundle 'kiddos/malokai'
+NeoBundle 'altercation/vim-colors-solarized'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -167,7 +168,7 @@ autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
 set altkeymap
 set backspace=indent,eol,start
 set clipboard=unnamedplus
-set cursorcolumn
+"set cursorcolumn
 set cursorline
 set encoding=utf-8
 set ignorecase
@@ -192,7 +193,7 @@ set whichwrap+=<,>,b,s,[,],~
 set wrap
 " }}}
 "" window settings {{{
-set cmdheight=2
+set cmdheight=1
 set cmdwinheight=6
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
@@ -275,11 +276,13 @@ inoremap <expr> <PageDown>	pumvisible() ? "\<PageDown>\<C-P>\<C-N>" : "\<PageDow
 inoremap <expr> <PageUp>	pumvisible() ? "\<PageUp>\<C-P>\<C-N>" : "\<PageUp>"
 " }}}
 "" color settings {{{
-set background=dark
 syntax enable
 syntax on
 set t_Co=256
+set background=dark
+set background=light
 colorscheme malokai
+"colorscheme solarized
 " }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
@@ -287,13 +290,12 @@ let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
 let g:airline_detect_iminsert = 1
 let g:airline_inactive_collapse = 1
-let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'term'
 let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
-
 "let g:airline_left_sep = '▶'
 "let g:airline_right_sep = '◀'
 "let g:airline_left_sep = '>'
@@ -320,7 +322,6 @@ endif
 "let g:airline_right_sep = '⌫  '
 let g:airline_left_sep = '⊳'
 let g:airline_right_sep = '⊲ '
-
 "let g:airline_right_alt_sep = ''
 "let g:airline_left_alt_sep = '⌲'
 "let g:airline_right_alt_sep = '☄ '
@@ -331,31 +332,25 @@ let g:airline_right_sep = '⊲ '
 "let g:airline_left_alt_sep = '✯ '
 let g:airline_right_alt_sep = '⌘ '
 let g:airline_left_alt_sep = ''
-
 "let g:airline_symbols.crypt = '☢'
 "let g:airline_symbols.crypt = '☣'
 let g:airline_symbols.crypt = '☠'
-
 "let g:airline_symbols.linenr = ''
 "let g:airline_symbols.linenr = '⌮'
 "let g:airline_symbols.linenr = '¶'
 "let g:airline_symbols.linenr = '⇳ '
 let g:airline_symbols.linenr = '⇵ '
-
 "let g:airline_symbols.branch = '☯'
 "let g:airline_symbols.branch = '☻'
 "let g:airline_symbols.branch = '☺'
 "let g:airline_symbols.branch = '☈ '
 let g:airline_symbols.branch = '⎇ '
-
 "let g:airline_symbols.paste = 'Þ'
 "let g:airline_symbols.paste = 'ρ'
 "let g:airline_symbols.paste = '℘'
 let g:airline_symbols.paste = 'ℙ '
-
 "let g:airline_symbols.readonly = ''
 let g:airline_symbols.readonly = 'ℜ '
-
 "let g:airline_symbols.whitespace = 'Ξ'
 "let g:airline_symbols.whitespace = '⇆'
 let g:airline_symbols.whitespace = '⌨  '
@@ -499,7 +494,7 @@ let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 "let g:ycm_server_log_level = 'debug'
 let g:ycm_auto_start_csharp_server = 1
 let g:ycm_auto_stop_csharp_server = 1
-let g:ycm_csharp_server_port = 3600
+let g:ycm_csharp_server_port = 0
 
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_completion = 0
@@ -561,29 +556,6 @@ let g:startify_custom_footer = [
 	\ '  \ \  \\ \  \ \  \_|\ \ \  \\\  \ \    / /   \ \  \ \  \    \ \  \ ',
 	\ '   \ \__\\ \__\ \_______\ \_______\ \__/ /     \ \__\ \__\    \ \__\',
 	\ '    \|__| \|__|\|_______|\|_______|\|__|/       \|__|\|__|     \|__|']
-"" instant-markdown {{{
-let g:instant_markdown_autostart = 0
-function! UpdateMarkdown()
-	if (b:last_num_changes == "" || b:last_num_changes != b:changedtick)
-		let b:last_num_changes = b:changedtick
-		let current_buffer = join(getbufline("%", 1, "$"), "\n")
-		exec "!echo " . escape(shellescape(current_buffer), "%!#") . " | curl -X PUT -T - http://localhost:8090/ &>/dev/null &"
-		call feedkeys("\<Enter>")
-	endif
-endfunction
-function! OpenMarkdown()
-	let b:last_num_changes = ""
-	exec "!echo " . escape(shellescape(join(getbufline("%", 1, "$"), "\n")), "%!#") . " | instant-markdown-d &>/dev/null &"
-	call feedkeys("\<Enter>")
-endfunction
-function! CloseMarkdown()
-	exec "!curl -s -X DELETE http://localhost:8090/ &>/dev/null &"
-	call feedkeys("\<Enter>")
-endfunction
-
-"autocmd BufWritePost *.{md,mkd,mkdn,mark*} call UpdateMarkdown()
-"autocmd BufWinLeave *.{md,mkd,mkdn,mark*} call CloseMarkdown()
-"autocmd BufWinEnter *.{md,mkd,mkdn,mark*} call OpenMarkdown()
 "" }}}
 "" useful functions and keybindings {{{
 function Toggle_ft_m()
@@ -671,31 +643,31 @@ function Compile_to_CSS()
 endfunction
 
 "autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
-command! Compile_to_CSS call Compile_to_CSS()
+command! CompiletoCSS call Compile_to_CSS()
 command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 
-nmap	<silent><F1>	:set columns=999<CR>:set lines=66<CR>:redraw<CR>
-nmap	<silent><F2>	:NERDTreeToggle .<CR>
-nmap	<F3>			:TagbarToggle<CR>
-nmap	<F4>			:GitGutterToggle<CR>
-nmap	<silent><F5>	:call Test_webpage()<CR>
-nmap	<silent><F6>	:setlocal spell!<CR>
-nmap	<silent><F7>	:call Toggle_ft_m()<CR><CR>
-nmap	<silent><F8>	:call OutlineToggle()<CR>
-nmap	<silent><F12>	:Crunch<CR>
+nmap  <silent><F1>	:set columns=999<CR>:set lines=66<CR>:redraw<CR>
+nmap  <silent><F2>	:NERDTreeToggle .<CR>
+nmap  <silent><F3>	:TagbarToggle<CR>
+nmap  <silent><F4>	:GitGutterToggle<CR>
+nmap  <silent><F5>	:call Test_webpage()<CR>
+nmap  <silent><F6>	:setlocal spell!<CR>
+nmap  <silent><F7>	:call Toggle_ft_m()<CR><CR>
+nmap  <silent><F8>	:call OutlineToggle()<CR>
+nmap  <silent><F12>	:Crunch<CR>
 " tabularize shortcut
-nmap	<leader><space>		:Tabularize / <CR>
-nmap	<leader>"			:Tabularize /"[^"]*"<CR>
-nmap	<leader>(			:Tabularize /(.*)<CR>
-nmap	<leader>=			:Tabularize /= <CR>
-nmap	<leader>a			:AV<CR>
+nmap  <leader><space>   :Tabularize / <CR>
+nmap  <leader>"			:Tabularize /"[^"]*"<CR>
+nmap  <leader>(			:Tabularize /(.*)<CR>
+nmap  <leader>=			:Tabularize /= <CR>
+nmap  <leader>a			:AV<CR>
 " large movement
-nmap	J	<C-D>
-nmap	K	<C-U>
-nmap	H	<C-E>
-nmap	L	<C-Y>
+nmap  J	<C-D>
+nmap  K	<C-U>
+nmap  H	<C-E>
+nmap  L	<C-Y>
 " some completion key bindings
-imap	<C-F> <C-R><Tab><C-P>
-imap	<C-D> <Plug>RCompleteArgs
+imap  <C-F> <C-R><Tab><C-P>
+imap  <C-D> <Plug>RCompleteArgs
 " }}}
