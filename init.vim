@@ -165,7 +165,6 @@ autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
 " }}}
 "" editing settings {{{
 set altkeymap
-"set ambiwidth=double
 set backspace=indent,eol,start
 set clipboard=unnamedplus
 set cursorcolumn
@@ -175,7 +174,6 @@ set ignorecase
 set incsearch
 set linebreak
 set shiftround
-"set showbreak=+++\
 set smartcase
 " general indenting
 set tabstop=4
@@ -196,13 +194,10 @@ set wrap
 "" window settings {{{
 set cmdheight=2
 set cmdwinheight=6
-" set columns=100
-" set lines=36
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
 set langmenu=en_US.UTF-8
 set laststatus=2
-" gives the number of lines that is checked for set commands.
 set modeline
 set modelines=30
 set pumheight=6
@@ -217,45 +212,28 @@ set tabpagemax=20
 set title
 set warn
 " }}}
-"" screen size {{{
-if has("gui_running")
-	set lines=999
-	set columns=999
-endif
-"" GUI settings
-if has("unix")
-	set guifont=Ubuntu\ Mono\ 13
-else
-	set guifont=Consolas:h12
-endif
-" }}}
 "" Custom key mappings {{{
 let mapleader=","
-
 " copy, cut, paste, save
-inoremap	<C-C>	<Esc>yy
-inoremap	<C-X>	<Esc>cc
-inoremap	<C-V>	<Esc>pa
-
+inoremap  <C-C> <Esc>yy
+inoremap  <C-X>	<Esc>cc
+inoremap  <C-V>	<Esc>pa
 "" typo
-command!	WQ	wq
-command!	Wq	wq
-command!	W	w
-command!	Q	q
-command!	Qa	qa
-command!	QA	qa
-
-noremap		L	l
-noremap		K	k
-noremap		J	j
-noremap		H	h
-
+command!  WQ  wq
+command!  Wq  wq
+command!  W	  w
+command!  Q	  q
+command!  Qa  qa
+command!  QA  qa
+noremap	  L	l
+noremap	  K	k
+noremap	  J	j
+noremap	  H	h
 "" moving between splits
-nnoremap	<C-H>	<C-W><C-H>
-nnoremap	<C-J>	<C-W><C-J>
-nnoremap	<C-K>	<C-W><C-K>
-nnoremap	<C-L>	<C-W><C-L>
-
+nnoremap  <C-H>	<C-W><C-H>
+nnoremap  <C-J>	<C-W><C-J>
+nnoremap  <C-K>	<C-W><C-K>
+nnoremap  <C-L>	<C-W><C-L>
 "" Tab switching
 nmap	<leader>1	1gt
 nmap	<leader>2	2gt
@@ -266,18 +244,15 @@ nmap	<leader>6	6gt
 nmap	<leader>7	7gt
 nmap	<leader>8	8gt
 nmap	<leader>9	9gt
-
 " split/close tab
 nmap	<leader><Tab>		:tabedit<CR>
 nmap	<leader>v			:vs<CR>
 nmap	<leader>q			:q<CR>
 nmap	<leader>Q			:q<CR>
-
 " buffer scrolling in insert mode
 inoremap	<C-E>	<Esc><C-E>a
 inoremap	<C-W>	<Esc><C-Y>a
-
-"" end line semicolon ;
+" end line semicolon ;
 autocmd		FileType	c		nnoremap ; $a;
 autocmd		FileType	cpp		nnoremap ; $a;
 autocmd		FileType	objc	nnoremap ; $a;
@@ -287,11 +262,9 @@ autocmd		FileType	html	nnoremap ; $a;
 autocmd		FileType	css		nnoremap ; $a;
 autocmd		FileType	javascript nnoremap ; $a;
 autocmd		FileType	matlab	nnoremap ; $a;
-
-"" jump window
+" jump window
 inoremap	<C-]>	<Esc><C-W><C-]>
 nnoremap	<C-]>	<C-W><C-]>
-
 "" Omni Complete
 inoremap <expr>	<CR>		pumvisible() ? "\<C-N><C-Y>" : "\<CR>"
 inoremap <expr>	<Down>		pumvisible() ? "\<C-N>" : "\<Down>"
@@ -300,8 +273,6 @@ inoremap <expr>	<C-J>		pumvisible() ? "\<C-N>" : "\<Esc><C-W><C-J>"
 inoremap <expr>	<C-K>		pumvisible() ? "\<C-P>" : "\<Esc><C-W><C-K>"
 inoremap <expr> <PageDown>	pumvisible() ? "\<PageDown>\<C-P>\<C-N>" : "\<PageDown>"
 inoremap <expr> <PageUp>	pumvisible() ? "\<PageUp>\<C-P>\<C-N>" : "\<PageUp>"
-"inoremap <C-D>	<C-X><C-O><C-P>
-inoremap <C-D>	<C-X><C-U>
 " }}}
 "" color settings {{{
 set background=dark
@@ -309,120 +280,6 @@ syntax enable
 syntax on
 set t_Co=256
 colorscheme malokai
-" }}}
-"" keybindings {{{
-function Toggle_ft_m()
-  if &ft == "objc"
-    execute ":setlocal ft=matlab"
-  elseif &ft == "matlab"
-    execute ":setlocal ft=objc"
-  endif
-endfunction
-
-function! OutlineToggle()
-  if (! exists ("b:outline_mode"))
-    let b:outline_mode = 0
-  endif
-  if (b:outline_mode == 0)
-    syn region myFold start="{" end="}" transparent fold
-    syn sync fromstart
-    set foldmethod=syntax
-    silent! exec "%s/{{{/<<</"
-    silent! exec "%s/}}}/>>>/"
-    let b:outline_mode = 1
-  else
-    set foldmethod=marker
-    silent! exec "%s/<<</{{{/"
-    silent! exec "%s/>>>/}}}/"
-    let b:outline_mode = 0
-  endif
-endfunction
-
-function! Test_webpage()
-  if &ft == "php"
-    echom "php file type"
-    let dst = expand('%:t') . ".html"
-    let temp = tempname()
-    execute ":silent ! php % > " . dst
-    execute ":silent ! google-chrome " . dst " > " . temp . " 2>&1 "
-    execute ":pclose!"
-    execute ":redraw!"
-    set splitbelow
-    execute ":6split"
-    execute ":e! " . temp
-    set nosplitbelow
-    let delStatus = delete(dst)
-    if delStatus != 0
-      echo "Fail to Delete temp file"
-    endif
-  elseif &ft == "html"
-    let this_file = expand('%:p')
-    echom "html file type"
-    execute ":silent ! google-chrome " . this_file
-    execute ":pclose!"
-    execute ":redraw!"
-  endif
-endfunction
-
-function ShowSpaces(...)
-  let @/='\v(\s+$)|( +\ze\t)'
-  let oldhlsearch=&hlsearch
-  if !a:0
-    let &hlsearch=!&hlsearch
-  else
-    let &hlsearch=a:1
-  end
-  return oldhlsearch
-endfunction
-
-function TrimSpaces() range
-  let oldhlsearch=ShowSpaces(1)
-  execute a:firstline.",".a:lastline."substitute ///gec"
-  let &hlsearch=oldhlsearch
-endfunction
-
-function Compile_to_CSS()
-  let src = expand("%:t")
-  let target = expand("%:r") . ".css"
-  let compiler = ""
-  if &ft == "less"
-    let compiler = "less"
-  elseif &ft == "sass"
-    let compiler = "sass"
-  elseif &ft == "scss"
-    let compiler = "scss"
-  endif
-  execute ":silent !".compiler." ".src." > ".target
-endfunction
-
-"autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
-command! Compile_to_CSS call Compile_to_CSS()
-command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
-command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-
-nmap	<silent><F1>	:set columns=999<CR>:set lines=66<CR>:redraw<CR>
-nmap	<silent><F2>	:NERDTreeToggle .<CR>
-nmap	<F3>			:TagbarToggle<CR>
-nmap	<F4>			:GitGutterToggle<CR>
-nmap	<silent><F5>	:call Test_webpage()<CR>
-nmap	<silent><F6>	:setlocal spell!<CR>
-nmap	<silent><F7>	:call Toggle_ft_m()<CR><CR>
-nmap	<silent><F8>	:call OutlineToggle()<CR>
-nmap	<silent><F12>	:Crunch<CR>
-" tabularize shortcut
-nmap	<leader><space>		:Tabularize / <CR>
-nmap	<leader>"			:Tabularize /"[^"]*"<CR>
-nmap	<leader>(			:Tabularize /(.*)<CR>
-nmap	<leader>=			:Tabularize /= <CR>
-nmap	<leader>a			:AV<CR>
-" large movement
-nmap	J	<C-D>
-nmap	K	<C-U>
-nmap	H	<C-E>
-nmap	L	<C-Y>
-" some completion key bindings
-imap	<C-F> <C-R><Tab><C-P>
-imap	<C-D> <Plug>RCompleteArgs
 " }}}
 "" vim-airline configuration {{{
 let g:airline_detect_modified = 1
@@ -728,3 +585,117 @@ endfunction
 "autocmd BufWinLeave *.{md,mkd,mkdn,mark*} call CloseMarkdown()
 "autocmd BufWinEnter *.{md,mkd,mkdn,mark*} call OpenMarkdown()
 "" }}}
+"" useful functions and keybindings {{{
+function Toggle_ft_m()
+  if &ft == "objc"
+    execute ":setlocal ft=matlab"
+  elseif &ft == "matlab"
+    execute ":setlocal ft=objc"
+  endif
+endfunction
+
+function! OutlineToggle()
+  if (! exists ("b:outline_mode"))
+    let b:outline_mode = 0
+  endif
+  if (b:outline_mode == 0)
+    syn region myFold start="{" end="}" transparent fold
+    syn sync fromstart
+    set foldmethod=syntax
+    silent! exec "%s/{{{/<<</"
+    silent! exec "%s/}}}/>>>/"
+    let b:outline_mode = 1
+  else
+    set foldmethod=marker
+    silent! exec "%s/<<</{{{/"
+    silent! exec "%s/>>>/}}}/"
+    let b:outline_mode = 0
+  endif
+endfunction
+
+function! Test_webpage()
+  if &ft == "php"
+    echom "php file type"
+    let dst = expand('%:t') . ".html"
+    let temp = tempname()
+    execute ":silent ! php % > " . dst
+    execute ":silent ! google-chrome " . dst " > " . temp . " 2>&1 "
+    execute ":pclose!"
+    execute ":redraw!"
+    set splitbelow
+    execute ":6split"
+    execute ":e! " . temp
+    set nosplitbelow
+    let delStatus = delete(dst)
+    if delStatus != 0
+      echo "Fail to Delete temp file"
+    endif
+  elseif &ft == "html"
+    let this_file = expand('%:p')
+    echom "html file type"
+    execute ":silent ! google-chrome " . this_file
+    execute ":pclose!"
+    execute ":redraw!"
+  endif
+endfunction
+
+function ShowSpaces(...)
+  let @/='\v(\s+$)|( +\ze\t)'
+  let oldhlsearch=&hlsearch
+  if !a:0
+    let &hlsearch=!&hlsearch
+  else
+    let &hlsearch=a:1
+  end
+  return oldhlsearch
+endfunction
+
+function TrimSpaces() range
+  let oldhlsearch=ShowSpaces(1)
+  execute a:firstline.",".a:lastline."substitute ///gec"
+  let &hlsearch=oldhlsearch
+endfunction
+
+function Compile_to_CSS()
+  let src = expand("%:t")
+  let target = expand("%:r") . ".css"
+  let compiler = ""
+  if &ft == "less"
+    let compiler = "less"
+  elseif &ft == "sass"
+    let compiler = "sass"
+  elseif &ft == "scss"
+    let compiler = "scss"
+  endif
+  execute ":silent !".compiler." ".src." > ".target
+endfunction
+
+"autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
+command! Compile_to_CSS call Compile_to_CSS()
+command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+
+nmap	<silent><F1>	:set columns=999<CR>:set lines=66<CR>:redraw<CR>
+nmap	<silent><F2>	:NERDTreeToggle .<CR>
+nmap	<F3>			:TagbarToggle<CR>
+nmap	<F4>			:GitGutterToggle<CR>
+nmap	<silent><F5>	:call Test_webpage()<CR>
+nmap	<silent><F6>	:setlocal spell!<CR>
+nmap	<silent><F7>	:call Toggle_ft_m()<CR><CR>
+nmap	<silent><F8>	:call OutlineToggle()<CR>
+nmap	<silent><F12>	:Crunch<CR>
+" tabularize shortcut
+nmap	<leader><space>		:Tabularize / <CR>
+nmap	<leader>"			:Tabularize /"[^"]*"<CR>
+nmap	<leader>(			:Tabularize /(.*)<CR>
+nmap	<leader>=			:Tabularize /= <CR>
+nmap	<leader>a			:AV<CR>
+" large movement
+nmap	J	<C-D>
+nmap	K	<C-U>
+nmap	H	<C-E>
+nmap	L	<C-Y>
+" some completion key bindings
+imap	<C-F> <C-R><Tab><C-P>
+imap	<C-D> <Plug>RCompleteArgs
+" }}}
