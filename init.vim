@@ -6,6 +6,7 @@ call neobundle#begin(expand('~/.config/nvim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " Bundles:
 " general utilities plugins {{{
+NeoBundle 'kiddos/vim-after-syntax'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
