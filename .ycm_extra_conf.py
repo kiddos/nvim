@@ -101,17 +101,6 @@ flags = [
     '-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXml',
     '-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXmlPatterns',
     '-I/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib',
-    # ffmpeg libraries
-    '-I/opt/ffmpeg/include/',
-    '-I/opt/ffmpeg/include/libavcodec',
-    '-I/opt/ffmpeg/include/libavdevice',
-    '-I/opt/ffmpeg/include/libavfilter',
-    '-I/opt/ffmpeg/include/libavformat',
-    '-I/opt/ffmpeg/include/libavresample',
-    '-I/opt/ffmpeg/include/libavutil',
-    '-I/opt/ffmpeg/include/libpostproc',
-    '-I/opt/ffmpeg/include/libswresample',
-    '-I/opt/ffmpeg/include/libswscale',
     # GNUstep libraries
     '-I/usr/include/GNUstep/',
     '-I/usr/include/GNUstep/AppKit',
@@ -141,25 +130,9 @@ flags = [
     '-I..',
     '-I include',
     '-I../include',
-    # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
-    # language to use when compiling headers. So it will guess. Badly. So C++
-    # headers will be compiled as C headers. You don't want that so ALWAYS specify
-    # a "-std=<something>".
-    # For a C project, you would set this to something like 'c99' instead of
-    # 'c++11'.
     '-std=c++11',
-    # ...and the same thing goes for the magic -x option which specifies the
-    # language that the files to be compiled are written in. This is mostly
-    # relevant for c++ headers.
-    # For a C project, you would set this to 'c' instead of 'c++'.
     '-x',
     'c++',
-    #'-isystem',
-    #'../BoostParts',
-    #'-isystem',
-    #'isystem', '/usr/local/include/',
-    #'isystem', '/usr/lib/gcc/x86_64-linux-gnu/4.8.4/include/',
-    #'isystem', '/usr/include/',
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
