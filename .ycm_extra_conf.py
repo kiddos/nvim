@@ -128,10 +128,6 @@ flags = [
     '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
     # X11 lib
     '-I/usr/include/X11/',
-    '-I.',
-    '-I..',
-    '-I include',
-    '-I../include',
     '-std=c++11',
     '-x',
     'c++',
