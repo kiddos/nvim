@@ -187,6 +187,12 @@ autocmd FileType python setlocal expandtab
 autocmd FileType python setlocal softtabstop=4
 autocmd FileType python setlocal shiftwidth=4
 autocmd FileType python setlocal modeline
+" snippets indenting
+autocmd FileType snippets setlocal tabstop=4
+autocmd FileType snippets setlocal noexpandtab
+autocmd FileType snippets setlocal softtabstop=4
+autocmd FileType snippets setlocal shiftwidth=4
+autocmd FileType snippets setlocal modeline
 set timeoutlen=1000 ttimeoutlen=0
 set whichwrap+=<,>,b,s,[,],~
 set wrap
