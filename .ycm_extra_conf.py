@@ -125,7 +125,7 @@ flags = [
     '-I/usr/include/GNUstep/Renaissance',
     '-I/usr/include/GNUstep/TalkSoupBundles',
     # standard gcc includes
-    '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include'
+    '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
     # X11 lib
     '-I/usr/include/X11/',
     '-I.',
