@@ -1,11 +1,6 @@
-# ignore vim temp files
+
 *.swp
 
-# ignore object files
 *.o
 
-# ignore repo files
 bundle/*
-
-# ignore python compiled
-*.pyc
