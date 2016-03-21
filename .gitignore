@@ -1,4 +1,11 @@
+# ignore vim temp files
 *.swp
+
+# ignore object files
 *.o
+
+# ignore repo files
 bundle/*
-.ycm_extra_conf.pyc
+
+# ignore python compiled
+*.pyc
