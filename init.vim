@@ -10,6 +10,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " color scheme {{{
 NeoBundle 'kiddos/malokai'
 NeoBundle 'kiddos/vim-after-syntax'
+NeoBundle 'flazz/vim-colorschemes'
 " }}}
 " git {{{
 NeoBundle 'tpope/vim-fugitive'
