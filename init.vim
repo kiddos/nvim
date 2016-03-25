@@ -56,7 +56,11 @@ NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 " }}}
 " deoplete {{{
+NeoBundle 'Shougo/neco-vim'
+NeoBundle 'Shougo/neoinclude.vim'
 NeoBundle 'zchee/deoplete-clang'
+NeoBundle 'carlitux/deoplete-ternjs'
+NeoBundle 'zchee/deoplete-jedi'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -68,6 +72,10 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'jplaut/vim-arduino-ino'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
+" }}}
+" Java {{{
+NeoBundle 'artur-shaik/vim-javacomplete2'
+NeoBundle 'tpope/vim-classpath'
 " }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'

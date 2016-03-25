@@ -6,7 +6,15 @@ call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deo
      \ ])
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/vimshell.vim/rplugin/python3/deoplete', [
      \ ])
+call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/neco-vim/rplugin/python3/deoplete', [
+     \ ])
+call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/neoinclude.vim/rplugin/python3/deoplete', [
+     \ ])
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-clang/rplugin/python3/deoplete', [
+     \ ])
+call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-ternjs/rplugin/python3/deoplete', [
+     \ ])
+call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-jedi/rplugin/python3/deoplete', [
      \ ])
 
 
