@@ -30,16 +30,14 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'majutsushi/tagbar'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
@@ -55,24 +53,14 @@ NeoBundle 'godlygeek/tabular'
 NeoBundle 'kiddos/vim-snippets'
 NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'mileszs/ack.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
+" }}}
+" deoplete {{{
+NeoBundle 'zchee/deoplete-clang'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'tomtom/tlib_vim'
-" }}}
-" deoplete {{{
-NeoBundle 'Shougo/neco-vim'
-NeoBundle 'Shougo/neoinclude.vim'
-NeoBundle 'Shougo/echodoc.vim'
-NeoBundle 'zchee/deoplete-clang'
-NeoBundle 'zchee/deoplete-go'
-NeoBundle 'zchee/deoplete-jedi'
-NeoBundle 'carlitux/deoplete-ternjs'
-NeoBundle 'mhartington/deoplete-typescript'
-NeoBundle 'c9s/perlomni.vim'
-NeoBundle 'm2mdas/phpcomplete-extended'
 " }}}
 " C family {{{
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -92,8 +80,6 @@ NeoBundle 'tpope/vim-rails'
 " Web {{{
 NeoBundle 'othree/html5.vim'
 NeoBundle 'tpope/vim-haml'
-NeoBundle 'Valloric/MatchTagAlways'
-NeoBundle 'mattn/emmet-vim'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'briancollins/vim-jst'
 NeoBundle 'evidens/vim-twig'
@@ -115,7 +101,6 @@ NeoBundle '1995eaton/vim-better-css-completion'
 NeoBundle 'tpope/vim-markdown'
 " }}}
 call neobundle#end()
-
 filetype plugin indent on
 NeoBundleCheck
 
@@ -151,6 +136,7 @@ set shiftround
 set complete=.,w,b,u,U,t,k
 set completeopt=menu
 set number
+set mouse=""
 set expandtab
 set tabstop=4
 set softtabstop=2
@@ -274,16 +260,10 @@ nmap <leader>v :vsplit<CR>
 inoremap  <C-]>	<Esc><C-W><C-]>
 nnoremap  <C-]>	<C-W><C-]>
 "" Omni Complete
-inoremap <expr>	<CR>		pumvisible() ? "\<C-N><C-Y>" : "\<CR>"
-inoremap <expr>	<Down>		pumvisible() ? "\<C-N>" : "\<Down>"
-inoremap <expr>	<Up>		pumvisible() ? "\<C-P>" : "\<Up>"
-inoremap <expr>	<C-J>		pumvisible() ? "\<C-N>" : "\<Esc><C-W><C-J>"
-inoremap <expr>	<C-K>		pumvisible() ? "\<C-P>" : "\<Esc><C-W><C-K>"
-inoremap <expr> <PageDown>	pumvisible() ? "\<PageDown>\<C-P>\<C-N>" : "\<PageDown>"
-inoremap <expr> <PageUp>	pumvisible() ? "\<PageUp>\<C-P>\<C-N>" : "\<PageUp>"
-inoremap <C-D>	<C-X><C-O><C-N>
-inoremap <C-Space>	<C-X><C-O><C-N>
-inoremap <C-F>  <C-R><Tab><C-P>
+inoremap <expr>	<CR>
+\ (pumvisible() &&
+\  matchstr(getline('.'), '\%'.col('.').'c.') != '}') ?
+\ "\<C-N><C-Y>" : "\<CR>"
 "" end line semicolon ;
 autocmd	FileType  c	          nnoremap ; $a;
 autocmd FileType  cpp         nnoremap ; $a;
@@ -475,24 +455,32 @@ let g:indentLine_enabled = 0
 let g:gitgutter_enabled = 0
 "" }}}
 "" deoplete settings {{{
-" C/C++ {{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.4/lib/libclang-3.4.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.4/include/clang'
-let g:deoplete#sources#clang#std#c = 'c11'
-let g:deoplete#sources#clang#std#cpp = 'c++11'
-let g:deoplete#sources#clang#sort_algo = 'priority'
+let g:deoplete#enable_ignore_case = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#enable_camel_case = 1
+let g:deoplete#enable_refresh_always = 0
+let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#enable_debug = 1
-let g:deoplete#sources#clang#debug#log_file = '~/.log/nvim/python/deoplete-clang.log'
-" Javascript {{{
-let g:tern_request_timeout = 1
-let g:tern_show_signature_in_pum = 0
-" }}}
-" Ruby {{{
-let g:deomplete#sources#omni#input_patterns = {
-\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+let g:deoplete#max_list = 60
+let g:deoplete#auto_complete_delay = 66
+let g:deoplete#delimiters = []
+let g:deoplete#_keyword_patterns = {
+\  "c" : ['[a-zA-Z0-9$_]+'],
+\  "cpp" : ['[a-zA-Z0-9$_]+'],
 \}
-" }}}
+let g:deoplete#omni_patterns = {
+\  "c" : ['[a-zA-Z0-9$_]+'],
+\  "cpp" : ['[a-zA-Z0-9$_]+'],
+\}
+"let g:deoplete#sources = {
+"\  "cpp" : ['buffer', 'tag'],
+"\}
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
+let g:deoplete#sources#clang#std#c = 'c11'
+let g:deoplete#sources#clang#std#cpp = 'c++1z'
+let g:deoplete#sources#clang#sort_algo = 'priority'
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
@@ -515,7 +503,6 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 "" }}}
-" }}}
 "" useful functions and keybindings {{{
 function! Toggle_filetype_dot_m()
   if &ft == "objc"

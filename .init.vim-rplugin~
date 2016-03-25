@@ -2,25 +2,11 @@
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete.nvim/rplugin/python3/deoplete', [
      \ ])
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete.nvim/rplugin/python3/deoplete.py', [
-      \ {'sync': 1, 'name': '_deoplete', 'opts': {}, 'type': 'function'},
+      \ {'sync': 1, 'name': '_deoplete', 'type': 'function', 'opts': {}},
      \ ])
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/vimshell.vim/rplugin/python3/deoplete', [
      \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/neco-vim/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/neoinclude.vim/rplugin/python3/deoplete', [
-     \ ])
 call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-clang/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-go/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-jedi/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-ternjs/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/deoplete-typescript/rplugin/python3/deoplete', [
-     \ ])
-call remote#host#RegisterPlugin('python3', '/home/joseph/.config/nvim/bundle/perlomni.vim/rplugin/python3/deoplete', [
      \ ])
 
 
