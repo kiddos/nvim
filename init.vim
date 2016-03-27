@@ -29,6 +29,7 @@ NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'Shougo/dein.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'Shougo/vimshell.vim'
@@ -331,9 +332,11 @@ let g:syntastic_auto_jump = 0
 "" language specific options
 " c options {{{
 let g:syntastic_c_check_header = 1
-let g:syntastic_c_compiler_options = "-std=c99 -Wall -O3 -fopenmp -pthread -fPIC -DDEBUG"
+let g:syntastic_c_compiler_options = "-std=c99 -Wall -O3 -fopenmp "
+let g:syntastic_c_compiler_options += "-pthread -fPIC -DDEBUG"
 let g:syntastic_c_include_dirs = [
 \   '/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '/usr/src/linux-headers-4.2.8/',
 \   '/usr/src/linux-headers-4.2.8/include',
 \   '/usr/src/linux-headers-4.2.8/kernel/',
 \	'`pwd`',
@@ -346,7 +349,9 @@ let g:syntastic_c_include_dirs = [
 " }}}
 " c++ options {{{
 let g:syntastic_cpp_check_header = 1
-let g:syntastic_cpp_compiler_options = "-Wall -g -O3 -fopenmp -std=c++11 -pthread -fPIC -DDEBUG -DQT_DEBUG"
+let g:syntastic_cpp_compiler_options = "-Wall -g -O3 -fopenmp " 
+let g:syntastic_cpp_compiler_options += "-std=c++11 -pthread " 
+let g:syntastic_cpp_compiler_options += "-fPIC -DDEBUG -DQT_DEBUG"
 let g:syntastic_cpp_include_dirs = [
 \	'/opt/Qt5.5.0/5.5/gcc_64/include/',
 \	'/opt/Qt5.5.0/5.5/gcc_64/include/Enginio',
@@ -405,6 +410,9 @@ let g:syntastic_cpp_include_dirs = [
 \	'/opt/Qt5.5.0/5.5/gcc_64/include/QtXmlPatterns',
 \	'/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib',
 \   '/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '/usr/local/share/arduino/hardware/arduino/cores/arduino',
+\   '/usr/local/share/arduino/hardware/arduino/cores/robot',
+\   '/usr/local/share/arduino/libraries',
 \	'.',
 \	'..',
 \	'`pwd`/include',
@@ -469,26 +477,77 @@ let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#enable_refresh_always = 0
 let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#enable_debug = 1
+let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 60
 let g:deoplete#auto_complete_delay = 66
-let g:deoplete#delimiters = []
-let g:deoplete#_keyword_patterns = {
-\  "c" : ['[a-zA-Z0-9$_]+'],
-\  "cpp" : ['[a-zA-Z0-9$_]+'],
-\}
-let g:deoplete#omni_patterns = {
-\  "c" : ['[a-zA-Z0-9$_]+'],
-\  "cpp" : ['[a-zA-Z0-9$_]+'],
-\}
-"let g:deoplete#sources = {
-"\  "cpp" : ['buffer', 'tag'],
-"\}
+" deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
 let g:deoplete#sources#clang#std#c = 'c11'
-let g:deoplete#sources#clang#std#cpp = 'c++1z'
+let g:deoplete#sources#clang#std#cpp = 'c++11'
 let g:deoplete#sources#clang#sort_algo = 'priority'
+let g:deoplete#sources#clang#flags = [
+\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
+\   '-I/usr/local/share/arduino/hardware/arduino/cores/robot',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Enginio',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DCore',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DInput',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DQuick',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DQuickRenderer',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DRenderer',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtBluetooth',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtCLucene',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtConcurrent',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtCore',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDBus',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDeclarative',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDesigner',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDesignerComponents',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtGui',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtHelp',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtLocation',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimedia',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimediaQuick_p',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimediaWidgets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtNetwork',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtNfc',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtOpenGL',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtOpenGLExtensions',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPlatformHeaders',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPlatformSupport',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPositioning',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPrintSupport',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQml',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQmlDevTools',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuick',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickParticles',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickTest',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickWidgets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtScript',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtScriptTools',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSensors',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSerialPort',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSql',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSvg',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtTest',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtUiPlugin',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtUiTools',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebChannel',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebEngine',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebEngineWidgets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebKit',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebKitWidgets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebSockets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebView',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWidgets',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtX11Extras',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXml',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXmlPatterns',
+\	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib',
+\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\]
+" }}}
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
