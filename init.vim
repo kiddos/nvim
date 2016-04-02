@@ -321,7 +321,7 @@ let g:neomake_warning_sign = {
 \   }
 highlight NeomakeError    cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
 highlight NeomakeWarning  cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
-
+" cpp clang maker {{{
 let g:neomake_cpp_clang_args = [
 \   '-fsyntax-only',
 \   '-Wall',
@@ -335,8 +335,43 @@ let g:neomake_cpp_clang_args = [
 \	'-I`pwd`/../include',
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   ]
-
-"let g:neomake_cpp_enabled_makers = ['extra']
+"}}}
+" nvidia cuda maker {{{
+let g:neomake_cuda_nvcc_maker = {
+\   'exe': 'nvcc',
+\   'args': [
+\     '--cuda',
+\     '-O0',
+\     '-Xcompiler',
+\     '-fsyntax-only',
+\   ],
+\   'errorformat':
+\       '%*[^"]"%f"%*\D%l: %m,'.
+\       '"%f"%*\D%l: %m,'.
+\       '%-G%f:%l: (Each undeclared identifier is reported only once,'.
+\       '%-G%f:%l: for each function it appears in.),'.
+\       '%f:%l:%c:%m,'.
+\       '%f(%l):%m,'.
+\       '%f:%l:%m,'.
+\       '"%f"\, line %l%*\D%c%*[^ ] %m,'.
+\       '%D%*\a[%*\d]: Entering directory `%f'','.
+\       '%X%*\a[%*\d]: Leaving directory `%f'','.
+\       '%D%*\a: Entering directory `%f'','.
+\       '%X%*\a: Leaving directory `%f'','.
+\       '%DMaking %*\a in %f,'.
+\       '%f|%l| %m',
+\   }
+let g:neomake_cuda_clean_maker = {
+\   'exe': 'rm',
+\   'args': [expand('%:p').'.cpp.ii'],
+\   'append_file': 0,
+\   'errorformat': '%f:%l:%c: %m'
+\   }
+let g:neomake_serialize = 1
+let g:neomake_serialize_abort_on_error = 1
+let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
+let g:neomake_echo_current_error = 1
+"}}}
 " }}}
 "" Arduino setttings {{{
 let g:vim_arduino_map_keys = 0
@@ -368,9 +403,11 @@ let g:deoplete#sources#clang#std#c = 'c11'
 let g:deoplete#sources#clang#std#cpp = 'c++11'
 let g:deoplete#sources#clang#sort_algo = 'priority'
 let g:deoplete#sources#clang#flags = [
-\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include'
+\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '-I/usr/local/cuda-7.5/include/'
 \   ]
 autocmd FileType arduino let b:deoplete#sources#clang#flags = [
+\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
 \   '-I/usr/local/share/arduino/hardware/arduino/cores/robot',
 \   ]
