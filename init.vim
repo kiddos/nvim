@@ -35,6 +35,7 @@ NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'benekastah/neomake'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
@@ -338,6 +339,10 @@ let g:syntastic_c_include_dirs = [
 \   ]
 " }}}
 " c++ options {{{
+"let g:syntastic_cpp_checkers = ['clang_check']
+"let g:syntastic_cpp_clang_check_post_args = "-Wall -std=c++11 "
+"let g:syntastic_cpp_clang_check_post_args = "-fopenmp -pthread "
+"let g:syntastic_cpp_clang_check_post_args = "-DDEBUG "
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_compiler_options = "-Wall -std=c++11 "
 let g:syntastic_cpp_compiler_options .= "-fopenmp -pthread "

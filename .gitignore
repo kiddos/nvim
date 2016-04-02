@@ -1,6 +1,6 @@
-
+# ignore vim temp files
 *.swp
-
-*.o
-
+# ignore neovim plugin data file
+*.init.vim-rplugin~
+# ignore plugin
 bundle/*
