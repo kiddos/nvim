@@ -321,6 +321,22 @@ let g:neomake_warning_sign = {
 \   }
 highlight NeomakeError    cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
 highlight NeomakeWarning  cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
+" c clang maker {{{
+let g:neomake_c_clang_args = [
+\   '-fsyntax-only',
+\   '-Wall',
+\   '-Wextra',
+\   '-std=c11',
+\   '-fopenmp',
+\   '-pthread',
+\   '-DDEBUG',
+\	'-I`pwd`/include',
+\	'-I`pwd`/../include',
+\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '-I/usr/src/linux-headers-4.2.8',
+\   '-I/usr/src/linux-headers-4.2.8/include/',
+\   ]
+"}}}
 " cpp clang maker {{{
 let g:neomake_cpp_clang_args = [
 \   '-fsyntax-only',
@@ -404,6 +420,7 @@ let g:deoplete#sources#clang#std#cpp = 'c++11'
 let g:deoplete#sources#clang#sort_algo = 'priority'
 let g:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '-I/usr/src/linux-headers-4.2.8/include/',
 \   '-I/usr/local/cuda-7.5/include/'
 \   ]
 autocmd FileType arduino let b:deoplete#sources#clang#flags = [
