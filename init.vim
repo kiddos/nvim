@@ -349,7 +349,8 @@ let g:neomake_cpp_clang_args = [
 \   '-DDEBUG', '-DQT_DEBUG',
 \	'-I`pwd`/include',
 \	'-I`pwd`/../include',
-\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\	'-I../include',
+\	'-Iinclude',
 \   ]
 "}}}
 " nvidia cuda maker {{{
@@ -421,7 +422,11 @@ let g:deoplete#sources#clang#sort_algo = 'priority'
 let g:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
-\   '-I/usr/local/cuda-7.5/include/'
+\   '-I/usr/local/cuda-7.5/include/',
+\   '-I`pwd`/../include',
+\   '-I`pwd`/../src',
+\   '-I`pwd`/include',
+\   '-I`pwd`/src'
 \   ]
 autocmd FileType arduino let b:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
