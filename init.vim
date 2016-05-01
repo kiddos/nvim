@@ -51,8 +51,8 @@ NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'garbas/vim-snipmate'
+NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'godlygeek/tabular'
-NeoBundle 'kiddos/vim-snippets'
 NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
@@ -164,7 +164,7 @@ autocmd FileType make setlocal softtabstop=2
 autocmd FileType make setlocal shiftwidth=2
 " snippet indenting
 autocmd FileType snippets setlocal noexpandtab
-autocmd FileType snippets setlocal tabstop=8
+autocmd FileType snippets setlocal tabstop=4
 autocmd FileType snippets setlocal softtabstop=4
 autocmd FileType snippets setlocal shiftwidth=4
 " solve zsh escap delay
@@ -299,7 +299,7 @@ let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 "" }}}
-"" neomake settings {{{
+"" Neomake settings {{{
 autocmd! BufWritePost * Neomake
 autocmd FileType c setlocal makeprg="gcc"
 autocmd FileType cpp setlocal makeprg="g++"
@@ -351,6 +351,9 @@ let g:neomake_cpp_clang_args = [
 \	'-I`pwd`/../include',
 \	'-I../include',
 \	'-Iinclude',
+\	'-I../../Cserial/include',
+\	'-I../Cserial/include',
+\	'-ICserial/include',
 \   ]
 "}}}
 " nvidia cuda maker {{{
@@ -389,6 +392,12 @@ let g:neomake_serialize_abort_on_error = 1
 let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
 let g:neomake_echo_current_error = 1
 "}}}
+""" pyhon maker {{{
+let g:neomake_python_enabled_makers = ['flake8', 'python']
+let g:neomake_python_flake8_args = [
+\   '--ignore=E501,E225,E302,E303,W391,E226,E231,E701,E128,E113,E125,E127,E221'
+\]
+"""}}}
 " }}}
 "" Arduino setttings {{{
 let g:vim_arduino_map_keys = 0
@@ -399,7 +408,7 @@ let g:indentLine_enabled = 0
 "" GitGutter settings {{{
 let g:gitgutter_enabled = 0
 "" }}}
-"" deoplete settings {{{
+"" Deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
