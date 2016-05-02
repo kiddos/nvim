@@ -180,6 +180,11 @@ autocmd FileType snippets setlocal noexpandtab
 autocmd FileType snippets setlocal tabstop=4
 autocmd FileType snippets setlocal softtabstop=4
 autocmd FileType snippets setlocal shiftwidth=4
+" fuzzy control language
+autocmd FileType fcl setlocal noexpandtab
+autocmd FileType fcl setlocal tabstop=4
+autocmd FileType fcl setlocal softtabstop=4
+autocmd FileType fcl setlocal shiftwidth=4
 " solve zsh escap delay
 set timeoutlen=1000 ttimeoutlen=0
 "" }}}
@@ -194,10 +199,11 @@ set icon
 set iconstring=nvim
 set nowritebackup
 set formatoptions+=t
-autocmd VimEnter,BufRead,BufNewFile *.m set filetype=matlab
-autocmd VimEnter,BufRead,BufNewFile *.h set filetype=cpp
-autocmd VimEnter,BufRead,BufNewFile *.ejs set filetype=html
-autocmd VimEnter,BufRead,BufNewFile *.pro set filetype=make
+autocmd VimEnter,BufRead,BufNewFile *.m setlocal filetype=matlab
+autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
+autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
+autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
+autocmd VimEnter,BufRead,BufNewFile *.fcl setlocal filetype=fcl
 "" }}}
 "" window settings {{{
 set cmdheight=1
