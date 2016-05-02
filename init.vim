@@ -56,6 +56,7 @@ NeoBundle 'godlygeek/tabular'
 NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'thinca/vim-quickrun'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/neco-vim'
@@ -63,6 +64,7 @@ NeoBundle 'Shougo/neoinclude.vim'
 NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'zchee/deoplete-go'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -79,6 +81,9 @@ NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tpope/vim-classpath'
 " }}}
+" python {{{
+NeoBundle 'klen/python-mode'
+" }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'vhda/verilog_systemverilog.vim'
@@ -87,28 +92,36 @@ NeoBundle 'vhda/verilog_systemverilog.vim'
 NeoBundle 'osyo-manga/vim-monster'
 NeoBundle 'tpope/vim-rails'
 " }}}
-" Web {{{
+" php {{{
+NeoBundle 'stanangeloff/php.vim'
+NeoBundle 'shawncplus/phpcomplete.vim'
+" }}}
+" html {{{
 NeoBundle 'othree/html5.vim'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'digitaltoad/vim-jade'
 NeoBundle 'briancollins/vim-jst'
 NeoBundle 'evidens/vim-twig'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'nono/jquery.vim'
+NeoBundle 'lambdatoast/elm.vim'
+NeoBundle 'zeekay/vim-html2jade'
+NeoBundle 'coachshea/jade-vim'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'mattn/emmet-vim'
+" }}}
+" css {{{
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
+NeoBundle '1995eaton/vim-better-css-completion'
+" }}}
+" javascript   {{{
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'nono/jquery.vim'
 NeoBundle 'moll/vim-node'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'lambdatoast/elm.vim'
-NeoBundle 'zeekay/vim-html2jade'
-NeoBundle 'coachshea/jade-vim'
 NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'shawncplus/phpcomplete.vim'
-NeoBundle '1995eaton/vim-better-css-completion'
-NeoBundle 'tpope/vim-markdown'
 " }}}
 call neobundle#end()
 filetype plugin indent on
