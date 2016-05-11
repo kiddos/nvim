@@ -81,9 +81,6 @@ NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tpope/vim-classpath'
 " }}}
-" python {{{
-NeoBundle 'klen/python-mode'
-" }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'vhda/verilog_systemverilog.vim'
@@ -411,10 +408,10 @@ let g:neomake_serialize_abort_on_error = 1
 let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
 let g:neomake_echo_current_error = 1
 "}}}
-""" pyhon maker {{{
+" pyhon maker {{{
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
-\   '--ignore=E501,E225,E302,E303,W391,E226,E231,E701,E128,E113,E125,E127,E221'
+\   '--ignore=E501,E225,E302,E303,W391,E226,E231,E701,E128,E113,E125,E127,E221,E701,W391'
 \]
 """}}}
 " }}}
