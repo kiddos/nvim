@@ -363,10 +363,10 @@ let g:neomake_cpp_clang_args = [
 \   '-pthread',
 \   '-fPIC',
 \   '-DDEBUG', '-DQT_DEBUG',
-\	'-I`pwd`/include',
-\	'-I`pwd`/../include',
-\	'-I../include',
 \	'-Iinclude',
+\	'-I../include',
+\	'-Isrc',
+\	'-I../src',
 \	'-I../../Cserial/include',
 \	'-I../Cserial/include',
 \	'-ICserial/include',
@@ -448,10 +448,10 @@ let g:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
 \   '-I/usr/local/cuda-7.5/include/',
-\   '-I`pwd`/../include',
-\   '-I`pwd`/../src',
-\   '-I`pwd`/include',
-\   '-I`pwd`/src'
+\   '-I../include',
+\   '-Iinclude',
+\   '-I../src',
+\   '-Isrc'
 \   ]
 autocmd FileType arduino let b:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
