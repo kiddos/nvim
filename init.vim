@@ -28,7 +28,6 @@ NeoBundle 'benmills/vimux'
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/dein.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make'}}
@@ -59,12 +58,15 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
 " }}}
 " deoplete {{{
+"NeoBundle 'Shougo/deoplete.nvim'
+"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
-NeoBundle 'zchee/deoplete-clang'
-NeoBundle 'carlitux/deoplete-ternjs'
-NeoBundle 'zchee/deoplete-jedi'
-NeoBundle 'zchee/deoplete-go'
+"NeoBundle 'Rip-Rip/clang_complete'
+"NeoBundle 'zchee/deoplete-clang'
+"NeoBundle 'carlitux/deoplete-ternjs'
+"NeoBundle 'zchee/deoplete-jedi'
+"NeoBundle 'zchee/deoplete-go'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -76,6 +78,7 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'jplaut/vim-arduino-ino'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
+NeoBundle 'Valloric/YouCompleteMe'
 " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -439,8 +442,8 @@ let g:deoplete#omni#_input_patterns = {
 \   "cpp": ['[\w0-9$_]*\.\w*', '[\w0-9$_]*->\w*', '[\w0-9$_]*::\w*']
 \   }
 " deoplete-clang {{{
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.4/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.4/include'
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
 let g:deoplete#sources#clang#std#c = 'c11'
 let g:deoplete#sources#clang#std#cpp = 'c++11'
 let g:deoplete#sources#clang#sort_algo = 'priority'
@@ -729,3 +732,55 @@ nmap  <leader>a :A<CR>
 nmap  <leader>s :AV<CR>
 nmap  <leader>b :call Split_Vimux()<CR>
 "" }}}
+"" YouCompleteMe settings {{{
+let g:ycm_min_num_of_chars_for_completion = 1
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_filetype_blacklist = {
+\ 'tagbar' : 1, 'qf' : 1, 'notes' : 1, 'unite' : 1,
+\ 'text' : 1, 'vimwiki' : 1, 'pandoc' : 1, 'infolog' : 1,
+\ 'mail' : 1
+\}
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_enable_diagnostic_signs = 0
+let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_echo_current_diagnostic = 0
+let g:ycm_max_diagnostics_to_display = 0
+let g:ycm_always_populate_location_list = 0
+let g:ycm_open_loclist_on_ycm_diags = 0
+let g:ycm_allow_changing_updatetime = 0
+
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_string = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_collect_identifiers_from_tags_files = 0
+let g:ycm_seed_identifiers_with_syntax = 1
+
+let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
+let g:ycm_server_log_level = 'critical'
+let g:ycm_auto_start_csharp_server = 0
+
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_extra_conf_globlist = ['~/*']
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_filepath_completion_use_working_dir = 1
+let g:ycm_use_ultisnips_completer = 0
+let g:ycm_disable_for_files_larger_than_kb = 1024
+
+let g:ycm_semantic_triggers =  {
+\   'c' : ['->', '.'],
+\   'cpp,objcpp' : ['->', '.', '::'],
+\   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+\             're!\[.*\]\s'],
+\   'perl' : ['->'],
+\   'php' : ['->', '::', '$'],
+\	'html' : ['"', '<', '='],
+\   'css': [':'],
+\   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+\	'r' : ['$'],
+\   'ocaml' : ['.', '#'],
+\   'ruby' : ['.', '::'],
+\   'lua' : ['.', ':'],
+\   'erlang' : [':'],
+\ }
+"}}}
+
