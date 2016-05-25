@@ -58,14 +58,14 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
 " }}}
 " deoplete {{{
-"NeoBundle 'Shougo/deoplete.nvim'
-"NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
 "NeoBundle 'Rip-Rip/clang_complete'
-"NeoBundle 'zchee/deoplete-clang'
-"NeoBundle 'carlitux/deoplete-ternjs'
-"NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'zchee/deoplete-clang'
+NeoBundle 'carlitux/deoplete-ternjs'
+NeoBundle 'zchee/deoplete-jedi'
 "NeoBundle 'zchee/deoplete-go'
 " }}}
 " libs {{{
@@ -78,7 +78,7 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'jplaut/vim-arduino-ino'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
-NeoBundle 'Valloric/YouCompleteMe'
+"NeoBundle 'Valloric/YouCompleteMe'
 " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
