@@ -1,7 +1,6 @@
-scriptencoding utf-8
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2016/3/21
+""	Last Modified: 2016/5/29
 ""
 if 0 | endif
 
@@ -56,13 +55,13 @@ NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
+" NeoBundle 'vim-scripts/AutoComplPop'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
-"NeoBundle 'Rip-Rip/clang_complete'
+" NeoBundle 'Rip-Rip/clang_complete'
 NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'zchee/deoplete-jedi'
@@ -78,8 +77,12 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'jplaut/vim-arduino-ino'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
-"NeoBundle 'Valloric/YouCompleteMe'
-" }}}
+" NeoBundle 'Valloric/YouCompleteMe', {
+" \ 'build': {
+" \   'unix': './install.sh --clang-completer --tern-completer',
+" \ }
+" \}
+" " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tpope/vim-classpath'
@@ -128,28 +131,37 @@ filetype plugin indent on
 NeoBundleCheck
 
 "" code display setting {{{
+" line width before auto newline
 set modeline
-autocmd FileType c,cpp,objc,objcpp,cs set textwidth=80
-autocmd FileType java,asm,vhdl,ruby,eruby,python,matlab,r set textwidth=80
-autocmd FileType html,css,javascript,less,sass,scss,elm,,vim set textwidth=100
+autocmd FileType c,cpp,objc,objcpp,cs,asm,vhdl set textwidth=80
+autocmd FileType java,python,ruby,eruby,javascript set textwidth=80
+autocmd FileType matlab,r,vim set textwidth=80
+autocmd FileType html,elm,twig,jade,ejs,jst set textwidth=100
+autocmd FileType css,less,sass,scss set textwidth=80
 " code folding
-autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php setlocal foldmarker={,}
-autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php setlocal foldmethod=marker
-autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php setlocal foldlevel=3
-autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php normal zR
-autocmd FileType html,xhtml,xml,haml,jst,python,ruby setlocal foldmethod=indent
-autocmd FileType python,ruby setlocal foldlevel=3
-autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
-autocmd FileType html,xhtml,xml,haml,jst,python,ruby normal zR
 autocmd FileType vim setlocal foldmethod=marker
 autocmd FileType vim setlocal foldmarker={{{,}}}
 autocmd FileType vim setlocal foldlevel=0
+
+autocmd FileType c,cpp,objc,objcpp setlocal foldmethod=marker
+autocmd FileType java,javascript,css,php setlocal foldmethod=marker
+autocmd FileType c,cpp,objc,objcpp setlocal foldmarker={,}
+autocmd FileType java,javascript,css,php setlocal foldmarker={,}
+autocmd FileType c,cpp,objc,objcpp setlocal foldlevel=2
+autocmd FileType java,javascript,css,php setlocal foldlevel=2
+autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php normal zR
+
+autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
+autocmd FileType python,ruby setlocal foldmethod=indent
+autocmd FileType python,ruby setlocal foldlevel=2
+autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
+autocmd FileType html,xhtml,xml,haml,jst,python,ruby normal zR
 "" }}}
 "" editing settings {{{
 set altkeymap
 set autoindent
 set backspace=indent,eol,start
-set clipboard=unnamedplus
+set clipboard=unnamed,unnamedplus
 set cindent
 set encoding=utf-8
 set ignorecase
@@ -157,7 +169,7 @@ set incsearch
 set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
-set completeopt=menu
+set completeopt=menu,noinsert,noselect
 set number
 set mouse=""
 set expandtab
@@ -165,28 +177,32 @@ set tabstop=4
 set softtabstop=2
 set shiftwidth=2
 set smartindent
-" python indenting
+" solve zsh escap delay
+set timeoutlen=1000 ttimeoutlen=0
+" python indenting {{{
 autocmd FileType python setlocal expandtab
 autocmd FileType python setlocal tabstop=8
 autocmd FileType python setlocal softtabstop=4
 autocmd FileType python setlocal shiftwidth=4
-" make indenting
+" }}}
+" make indenting {{{
 autocmd FileType make setlocal noexpandtab
 autocmd FileType make setlocal tabstop=4
 autocmd FileType make setlocal softtabstop=2
 autocmd FileType make setlocal shiftwidth=2
-" snippet indenting
+" }}}
+" snippet indenting {{{
 autocmd FileType snippets setlocal noexpandtab
 autocmd FileType snippets setlocal tabstop=4
 autocmd FileType snippets setlocal softtabstop=4
 autocmd FileType snippets setlocal shiftwidth=4
-" fuzzy control language
+" }}}
+" fuzzy control language {{{
 autocmd FileType fcl setlocal noexpandtab
 autocmd FileType fcl setlocal tabstop=4
 autocmd FileType fcl setlocal softtabstop=4
 autocmd FileType fcl setlocal shiftwidth=4
-" solve zsh escap delay
-set timeoutlen=1000 ttimeoutlen=0
+" }}}
 "" }}}
 "" buffer settings {{{
 set autoread
@@ -247,26 +263,44 @@ autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 "" }}}
 "" custom key maps {{{
-" leader
+" leader {{{
 let mapleader=","
 let localleader="\\"
-" copy, cut, paste, save
-inoremap  <C-C>	<Esc>yy
-inoremap  <C-X>	<Esc>cc
-inoremap  <C-V>	<Esc>pa
-"" typo
+" }}}
+" copy, paste, save, undo {{{
+inoremap <C-C> <Esc>yyi
+inoremap <C-V> <Esc>pa
+inoremap <C-S> <Esc>:w
+inoremap <C-Z> <Esc>ua
+" }}}
+" fix clipboard problem {{{
+function! ClipboardYank()
+  call system('xclip -i -selection clipboard', @@)
+endfunction
+function! ClipboardPaste()
+  let @@ = system('xclip -o -selection clipboard')
+endfunction
+vnoremap <silent> y y:call ClipboardYank()<cr>
+vnoremap <silent> d d:call ClipboardYank()<cr>
+onoremap <silent> y y:call ClipboardYank()<cr>
+onoremap <silent> d d:call ClipboardYank()<cr>
+nnoremap <silent> p :call ClipboardPaste()<cr>p
+" }}}
+" typo {{{
 command!  WQ  wq
 command!  Wq  wq
 command!  W w
 command!  Q q
 command!  Qa  qa
 command!  QA  qa
-"" large movement
+" }}}
+" large movement {{{
 nmap J  <C-D>
 nmap K  <C-U>
 nmap H  <C-E>
 nmap L  <C-Y>
-"" Tab switching
+" }}}
+" tab switching {{{
 nmap  <leader>1	1gt
 nmap  <leader>2	2gt
 nmap  <leader>3	3gt
@@ -276,14 +310,24 @@ nmap  <leader>6	6gt
 nmap  <leader>7	7gt
 nmap  <leader>8	8gt
 nmap  <leader>9	9gt
-" split tab
-nmap <leader>v :vsplit<CR>
-"" Omni Complete
-inoremap <expr>	<CR>
-\ (pumvisible() &&
-\  matchstr(getline('.'), '\%'.col('.').'c.') != '}') ?
-\ "\<C-N><C-Y>" : "\<CR>"
-"" end line semicolon ;
+" }}}
+" split tab {{{
+nmap <leader><leader>v :vsplit<CR>
+nmap <leader><leader>w :tabedit<CR>
+nmap <leader><leader>c :tabclose<CR>
+" }}}
+inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
+function! Toggle_C_Family_Type()
+  if &filetype == 'c'
+    execute ":setlocal filetype=cpp"
+  elseif &filetype == 'cpp'
+    execute ":setlocal filetype=objc"
+  elseif &filetype == 'objc'
+    execute ":setlocal filetype=c"
+  endif
+endfunction
+nmap <silent> <leader><leader>t :call Toggle_C_Family_Type()<CR>
+" end line semicolon ; {{{
 autocmd	FileType  c	          nnoremap ; $a;
 autocmd FileType  cpp         nnoremap ; $a;
 autocmd FileType  arduino     nnoremap ; $a;
@@ -294,6 +338,7 @@ autocmd	FileType  php         nnoremap ; $a;
 autocmd	FileType  html        nnoremap ; $a;
 autocmd	FileType  css         nnoremap ; $a;
 autocmd	FileType  javascript  nnoremap ; $a;
+" }}}
 "" }}}
 "" airline settings {{{
 let g:airline_detect_modified = 1
@@ -341,6 +386,7 @@ let g:neomake_warning_sign = {
 highlight NeomakeError    cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
 highlight NeomakeWarning  cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
 " c clang maker {{{
+let g:neomake_c_enabled_makers = ['clang']
 let g:neomake_c_clang_args = [
 \   '-fsyntax-only',
 \   '-Wall',
@@ -360,6 +406,7 @@ let g:neomake_c_clang_args = [
 \   ]
 "}}}
 " cpp clang maker {{{
+let g:neomake_cpp_enabled_makers = ['clang']
 let g:neomake_cpp_clang_args = [
 \   '-fsyntax-only',
 \   '-Wall',
@@ -421,29 +468,61 @@ let g:neomake_python_flake8_args = [
 \]
 """}}}
 " }}}
+"" NERDcommenter settings {{{
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCustomDelimiters = {
+\   'c': { 'left': '/**', 'right': '*/' },
+\   'vim': { 'left': '"' }
+\}
+"}}}
 "" Arduino setttings {{{
 let g:vim_arduino_map_keys = 0
+" arduino commands
+command! ArduinoCompile       call ArduinoCompile()
+command! ArduinoDeploy        call ArduinoDeploy()
+command! ArduinoSerialMonitor call ArduinoSerialMonitor()
 " }}}
 "" indent line {{{
 let g:indentLine_enabled = 0
-"""}}}
+"" }}}
 "" GitGutter settings {{{
 let g:gitgutter_enabled = 0
 "" }}}
-"" Deoplete settings {{{
+"" deoplete settings {{{
+call deoplete#custom#set('buffer', 'min_pattern_length', 64)
+call deoplete#custom#set('clang', 'max_menu_width', 66)
+call deoplete#custom#set('clang', 'max_abbr_width', 66)
+call deoplete#custom#set('javacomplete2', 'max_abbr_width', 30)
+call deoplete#custom#set('javacomplete2', 'max_menu_width', 36)
+call deoplete#custom#set('c', 'matchers', [
+\   'matcher_full_fuzzy', 'matcher_head'
+\])
+call deoplete#custom#set('cpp', 'matchers', [
+\   'matcher_full_fuzzy', 'matcher_length', 'matcher_head'
+\])
+call deoplete#custom#set('cpp', 'converters', [
+\   'converter_remove_overlap', 'converter_truncate_abbr',
+\   'converter_truncate_menu', 'converter_auto_paren',
+\   'converter_auto_delimiter'
+\])
+call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#enable_refresh_always = 1
 let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#max_menu_width = 10
+let g:deoplete#max_abbr_width = 60
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 30
-let g:deoplete#auto_complete_delay = 66
-let g:deoplete#omni#_input_patterns = {
-\   "c": ['[\w0-9$_]*\.\w*'],
-\   "cpp": ['[\w0-9$_]*\.\w*', '[\w0-9$_]*->\w*', '[\w0-9$_]*::\w*']
-\   }
+let g:deoplete#max_list = 12
+let g:deoplete#sources = {}
+let g:deoplete#sources.c = ['buffer', 'clang']
+let g:deoplete#sources.cpp = ['clang']
+let g:deoplete#sources.java = ['javacomplete2']
+let g:deoplete#sources.python = ['buffer', 'jedi']
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
@@ -528,34 +607,26 @@ endfunction
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
-      \ ['   My most recently used files in the current directory:'],
-      \ 'dir',
-      \ ['   My most recently used files:'],
-      \ 'files',
-      \ ['   Bookmarks:'],
-      \ 'bookmarks',
-      \ ['   Sessions:'],
-      \ 'sessions',
-      \ ]
+\   ['   My most recently used files in the current directory:'],
+\   'dir',
+\   ['   My most recently used files:'],
+\   'files',
+\   ['   Bookmarks:'],
+\   'bookmarks',
+\   ['   Sessions:'],
+\   'sessions',
+\ ]
 let g:startify_files_number = 3
 let g:startify_bookmarks = [
-      \{'vimrc': '  ~/.vim/vimrc'},
-      \{'nvimrc': '  ~/.config/nvim/init.vim'}]
+\   {'vimrc': '  ~/.vim/vimrc'},
+\   {'nvimrc': '  ~/.config/nvim/init.vim'}]
 let g:startify_custom_header =
-      \ map(split(system('tips.py | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
+\   map(split(system('tips.py | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
 let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 "" }}}
 "" useful functions and keybindings {{{
-function! Toggle_filetype_dot_m()
-  if &ft == "objc"
-    execute ":setlocal ft=matlab"
-  elseif &ft == "matlab"
-    execute ":setlocal ft=objc"
-  endif
-endfunction
-
 function! Test_Webpage()
   if &ft == "php"
     echom "php file type"
@@ -697,10 +768,6 @@ command! CompiletoCSS     call Compile_to_CSS()
 command! ToggleDotMFiles  call Toggle_filetype_dot_m()
 command! OpenglGLFW3      call Compile_CPP_OpenGL_GLFW3()
 command! ALLEGRO5         call Compile_CPP_ALLEGRO5()
-" arduino commands
-command! ArduinoCompile       call ArduinoCompile()
-command! ArduinoDeploy        call ArduinoDeploy()
-command! ArduinoSerialMonitor call ArduinoSerialMonitor()
 
 " function keys
 nmap  <silent><F1>  :NERDTreeToggle .<CR>
@@ -709,81 +776,16 @@ nmap  <silent><F2>  :GitGutterToggle<CR>
 imap  <F2>  <Esc>:GitGutterToggle<CR>
 nmap  <silent><F3>  :IndentLinesToggle<CR>
 imap  <F3>  <Esc>:IndentLinesToggle<CR>
-nmap  <silent><F4>  :call Toggle_ft_m()<CR><CR>
-imap  <F4>  <Esc>:call Toggle_ft_m()<CR><CR>
 nmap  <silent><F5>  :call Quick_Compile()<CR>
 imap  <F5>  <Esc>:call Quick_Compile()<CR>
 nmap  <silent><F6>  :setlocal spell!<CR>
 imap  <F6>  <Esc>:setlocal spell!<CR>
-nmap  <silent><F7>  :TagbarToggle<CR>
-imap  <F7>  <Esc>:TagbarToggle<CR>
-" arduino mappings
-nmap  <silent><F8>  :call ArduinoSerialMonitor()<CR>
-imap  <F8>  <Esc>:call ArduinoSerialMonitor()<CR>
-nmap  <silent><F9>  :call ArduinoDeploy()<CR>
-imap  <F9>  <Esc>:call ArduinoDeploy()<CR>
-" toggle .m file type (objc or matlab)
-nmap  <silent><F10>  :call Toggle_filetype_dot_m()<CR>
-imap  <F10>  <Esc>:call Toggle_filetype_dot_m()<CR>
 " tabularize shortcut
 nmap  <leader><space> :Tabularize / <CR>
 nmap  <leader>"       :Tabularize /"[^"]*"<CR>
 nmap  <leader>(       :Tabularize /(.*)<CR>
 nmap  <leader>=       :Tabularize /= <CR>
 " a.vim shortcut
-nmap  <leader>a :A<CR>
-nmap  <leader>s :AV<CR>
+nmap  <leader><leader>a :A<CR>
 nmap  <leader>b :call Split_Vimux()<CR>
 "" }}}
-"" YouCompleteMe settings {{{
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_filetype_blacklist = {
-\ 'tagbar' : 1, 'qf' : 1, 'notes' : 1, 'unite' : 1,
-\ 'text' : 1, 'vimwiki' : 1, 'pandoc' : 1, 'infolog' : 1,
-\ 'mail' : 1
-\}
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_enable_diagnostic_signs = 0
-let g:ycm_enable_diagnostic_highlighting = 0
-let g:ycm_echo_current_diagnostic = 0
-let g:ycm_max_diagnostics_to_display = 0
-let g:ycm_always_populate_location_list = 0
-let g:ycm_open_loclist_on_ycm_diags = 0
-let g:ycm_allow_changing_updatetime = 0
-
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_string = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 0
-let g:ycm_seed_identifiers_with_syntax = 1
-
-let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
-let g:ycm_server_log_level = 'critical'
-let g:ycm_auto_start_csharp_server = 0
-
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_extra_conf_globlist = ['~/*']
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_filepath_completion_use_working_dir = 1
-let g:ycm_use_ultisnips_completer = 0
-let g:ycm_disable_for_files_larger_than_kb = 1024
-
-let g:ycm_semantic_triggers =  {
-\   'c' : ['->', '.'],
-\   'cpp,objcpp' : ['->', '.', '::'],
-\   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-\             're!\[.*\]\s'],
-\   'perl' : ['->'],
-\   'php' : ['->', '::', '$'],
-\	'html' : ['"', '<', '='],
-\   'css': [':'],
-\   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
-\	'r' : ['$'],
-\   'ocaml' : ['.', '#'],
-\   'ruby' : ['.', '::'],
-\   'lua' : ['.', ':'],
-\   'erlang' : [':'],
-\ }
-"}}}
-
