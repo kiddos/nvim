@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2016/5/29
+""	Last Modified: 2016/6/7
 ""
 if 0 | endif
 
@@ -50,6 +50,7 @@ NeoBundle 'arecarn/selection.vim'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
+NeoBundle 'kiddos/compile.vim'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
@@ -141,7 +142,10 @@ autocmd FileType css,less,sass,scss set textwidth=80
 " code folding
 autocmd FileType vim setlocal foldmethod=marker
 autocmd FileType vim setlocal foldmarker={{{,}}}
-autocmd FileType vim setlocal foldlevel=0
+autocmd FileType vim setlocal foldlevel=1
+autocmd FileType conf setlocal foldmethod=marker
+autocmd FileType conf setlocal foldmarker={,}
+autocmd FileType conf setlocal foldlevel=1
 
 autocmd FileType c,cpp,objc,objcpp setlocal foldmethod=marker
 autocmd FileType java,javascript,css,php setlocal foldmethod=marker
@@ -284,7 +288,7 @@ vnoremap <silent> y y:call ClipboardYank()<cr>
 vnoremap <silent> d d:call ClipboardYank()<cr>
 onoremap <silent> y y:call ClipboardYank()<cr>
 onoremap <silent> d d:call ClipboardYank()<cr>
-nnoremap <silent> p :call ClipboardPaste()<cr>p
+" nnoremap <silent> p :call ClipboardPaste()<cr>p
 " }}}
 " typo {{{
 command!  WQ  wq
@@ -383,8 +387,8 @@ let g:neomake_warning_sign = {
 \   'text': '⚠',
 \   'texthl': 'NeomakeWarning',
 \   }
-highlight NeomakeError    cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
-highlight NeomakeWarning  cterm=BOLD  ctermfg=253	ctermbg=124	guifg=white	guibg=red
+highlight NeomakeError    cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
+highlight NeomakeWarning  cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
 " c clang maker {{{
 let g:neomake_c_enabled_makers = ['clang']
 let g:neomake_c_clang_args = [
@@ -430,9 +434,15 @@ let g:neomake_cuda_nvcc_maker = {
 \   'exe': 'nvcc',
 \   'args': [
 \     '--cuda',
-\     '-O0',
+\     '-std=c++11',
 \     '-Xcompiler',
 \     '-fsyntax-only',
+\     '-Xcompiler',
+\     '-Wall',
+\     '-Xcompiler',
+\     '-Wextra',
+\     '-Xcompiler',
+\     '-fopenmp',
 \   ],
 \   'errorformat':
 \       '%*[^"]"%f"%*\D%l: %m,'.
@@ -458,7 +468,7 @@ let g:neomake_cuda_clean_maker = {
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
+let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
 "}}}
 " pyhon maker {{{
@@ -474,7 +484,9 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCustomDelimiters = {
 \   'c': { 'left': '/**', 'right': '*/' },
-\   'vim': { 'left': '"' }
+\   'arduino': { 'left': '/**', 'right': '*/' },
+\   'vim': { 'left': '"' },
+\   'conf': { 'left': '#' }
 \}
 "}}}
 "" Arduino setttings {{{
@@ -519,10 +531,12 @@ let g:deoplete#max_abbr_width = 60
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 12
 let g:deoplete#sources = {}
+let g:deoplete#sources._ = ['buffer', 'file', 'member']
 let g:deoplete#sources.c = ['buffer', 'clang']
 let g:deoplete#sources.cpp = ['clang']
 let g:deoplete#sources.java = ['javacomplete2']
 let g:deoplete#sources.python = ['buffer', 'jedi']
+let g:deoplete#sources.arduino = ['buffer', 'file', 'member']
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
@@ -531,17 +545,14 @@ let g:deoplete#sources#clang#std#cpp = 'c++11'
 let g:deoplete#sources#clang#sort_algo = 'priority'
 let g:deoplete#sources#clang#flags = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
+\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
+\   '-I/usr/local/share/arduino/hardware/arduino/cores/robot',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
 \   '-I/usr/local/cuda-7.5/include/',
 \   '-I../include',
 \   '-Iinclude',
 \   '-I../src',
 \   '-Isrc'
-\   ]
-autocmd FileType arduino let b:deoplete#sources#clang#flags = [
-\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
-\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
-\   '-I/usr/local/share/arduino/hardware/arduino/cores/robot',
 \   ]
 function SetQtSourceFlags()
   let g:deoplete#sources#clang#flags += [
@@ -626,6 +637,13 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 "" }}}
+"" Unite settings {{{
+" fuzzy search
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <leader><leader>f :Unite -start-insert file_rec<CR>
+" bookmark this buffer
+nnoremap <leader><leader>b execute ":UniteBookmarkAdd ".expand('%').'<CR>'
+"" }}}
 "" useful functions and keybindings {{{
 function! Test_Webpage()
   if &ft == "php"
@@ -668,74 +686,6 @@ function! TrimSpaces() range
   let oldhlsearch=ShowSpaces(1)
   execute a:firstline.",".a:lastline."substitute ///gec"
   let &hlsearch=oldhlsearch
-endfunction
-
-function! Compile_to_HTML()
-  execute ":JadeWatch html vert"
-endfunction
-
-function! Compile_to_CSS()
-  let src = expand("%:t")
-  let target = expand("%:r") . ".css"
-  let compiler = ""
-  if &ft == "less"
-    let compiler = "less"
-  elseif &ft == "sass"
-    let compiler = "sass"
-  elseif &ft == "scss"
-    let compiler = "scss"
-  endif
-  execute ":silent !".compiler." ".src." ".target
-  execute ":redraw!"
-endfunction
-
-" tmux compile types of c++ program
-function! Compile_CXX_Basic()
-  let compiler = "gcc "
-  if &ft == "cpp"
-    let compiler = "g++ "
-  endif
-  let target = expand("%:r")
-  let src = expand("%")
-  let flags = " -g -DDEBUG "
-  let standardlibs = "-lm "
-  let libs = standardlibs
-  call VimuxRunCommand("clear;echo \"compiling " . src . " ...\"")
-  call VimuxRunCommand(compiler. "-o " . target . " " . src . flags . libs)
-endfunction
-
-function! Compile_CXX_OpenGL_GLFW3()
-  let compiler = "gcc "
-  if &ft == "cpp"
-    let compiler = "g++ "
-  endif
-  let target = expand("%:r")
-  let src = expand("%")
-  let flags = " -g "
-  let standardlibs = "-lm -lpthread -ldl "
-  let gllibs = "-lglfw3 -lGLEW -lGL "
-  let X11libs = "-lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor "
-  let libs = gllibs . X11libs . standardlibs
-  call VimuxRunCommand("clear;echo \"compiling " . src . " ...\"")
-  call VimuxRunCommand(compiler. "-o " . target . " " . src . flags . libs)
-endfunction
-
-function! Compile_CXX_ALLEGRO5()
-  let compiler = "gcc "
-  if &ft == "cpp"
-    let compiler = "g++ "
-  endif
-  let target = expand("%:r")
-  let src = expand("%")
-  let flags = " -g "
-  let standardlibs = "-lm "
-  let al_core_libs = "-lallegro -lallegro_primitives -lallegro_dialog "
-  let al_image_lib = "-lallegro_image "
-  let al_font_lib = "-lallegro_font -lallegro_ttf "
-  let al_audio_lib = "-lallegro_audio -lallegro_acodec "
-  let libs = standardlibs . al_core_libs . al_image_lib . al_font_lib . al_audio_lib
-  call VimuxRunCommand("clear;echo \"compiling " . src . " ...\"")
-  call VimuxRunCommand(compiler. "-o " . target . " " . src . flags . libs)
 endfunction
 
 function! Quick_Compile()
