@@ -8,8 +8,7 @@ set runtimepath^=~/.config/nvim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.config/nvim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " color scheme {{{
-NeoBundle 'kiddos/malokai'
-NeoBundle 'kiddos/vim-after-syntax'
+NeoBundle 'kiddos/malokai.vim'
 NeoBundle 'flazz/vim-colorschemes'
 " }}}
 " git {{{
@@ -19,7 +18,6 @@ NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 NeoBundle 'gregsexton/gitv'
 " }}}
 " tmux {{{
-NeoBundle 'erikw/tmux-powerline'
 NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'benmills/vimux'
@@ -66,6 +64,7 @@ NeoBundle 'Shougo/neoinclude.vim'
 NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'kiddos/deoplete-cpp'
 "NeoBundle 'zchee/deoplete-go'
 " }}}
 " libs {{{
@@ -367,6 +366,9 @@ let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 "" }}}
+"" tmuxline settings {{{
+" let g:tmuxline_preset = 'airline'
+"" }}}
 "" Neomake settings {{{
 autocmd! BufWritePost * Neomake
 autocmd FileType c setlocal makeprg="gcc"
@@ -508,35 +510,33 @@ call deoplete#custom#set('clang', 'max_menu_width', 66)
 call deoplete#custom#set('clang', 'max_abbr_width', 66)
 call deoplete#custom#set('javacomplete2', 'max_abbr_width', 30)
 call deoplete#custom#set('javacomplete2', 'max_menu_width', 36)
-call deoplete#custom#set('c', 'matchers', [
-\   'matcher_full_fuzzy', 'matcher_head'
-\])
-call deoplete#custom#set('cpp', 'matchers', [
-\   'matcher_full_fuzzy', 'matcher_length', 'matcher_head'
-\])
+
+call deoplete#custom#set('c', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#set('cpp', 'matchers', ['matcher_fuzzy'])
 call deoplete#custom#set('cpp', 'converters', [
 \   'converter_remove_overlap', 'converter_truncate_abbr',
 \   'converter_truncate_menu', 'converter_auto_paren',
 \   'converter_auto_delimiter'
 \])
 call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
+
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_refresh_always = 1
+let g:deoplete#enable_refresh_always = 0
 let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#max_menu_width = 10
-let g:deoplete#max_abbr_width = 60
+let g:deoplete#max_menu_width = 90
+let g:deoplete#max_abbr_width = 90
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 12
+let g:deoplete#max_list = 36
 let g:deoplete#sources = {}
-let g:deoplete#sources._ = ['buffer', 'file', 'member']
-let g:deoplete#sources.c = ['buffer', 'clang']
-let g:deoplete#sources.cpp = ['clang']
+let g:deoplete#sources.c = ['file', 'cpp']
+let g:deoplete#sources.cpp = ['file', 'cpp']
+let g:deoplete#sources.arduino = ['cpp']
 let g:deoplete#sources.java = ['javacomplete2']
-let g:deoplete#sources.python = ['buffer', 'jedi']
-let g:deoplete#sources.arduino = ['buffer', 'file', 'member']
+let g:deoplete#sources.python = ['file', 'jedi']
+let g:deoplete#sources.cmake = ['cmake']
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
