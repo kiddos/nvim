@@ -74,14 +74,8 @@ NeoBundle 'tomtom/tlib_vim'
 " C family {{{
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'kiddos/a.vim'
-NeoBundle 'jplaut/vim-arduino-ino'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
-" NeoBundle 'Valloric/YouCompleteMe', {
-" \ 'build': {
-" \   'unix': './install.sh --clang-completer --tern-completer',
-" \ }
-" \}
 " " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -316,7 +310,7 @@ nmap  <leader>9	9gt
 " }}}
 " split tab {{{
 nmap <leader><leader>v :vsplit<CR>
-nmap <leader><leader>w :tabedit<CR>
+nmap <leader><leader>s :tabedit<CR>
 nmap <leader><leader>c :tabclose<CR>
 " }}}
 inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
@@ -533,6 +527,8 @@ let g:deoplete#max_list = 36
 let g:deoplete#sources = {}
 let g:deoplete#sources.c = ['file', 'cpp']
 let g:deoplete#sources.cpp = ['file', 'cpp']
+let g:deoplete#sources.objc = ['file', 'cpp']
+let g:deoplete#sources.objcpp = ['file', 'cpp']
 let g:deoplete#sources.arduino = ['cpp']
 let g:deoplete#sources.java = ['javacomplete2']
 let g:deoplete#sources.python = ['file', 'jedi']
