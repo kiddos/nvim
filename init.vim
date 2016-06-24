@@ -464,7 +464,7 @@ let g:neomake_cuda_clean_maker = {
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc']
+let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
 let g:neomake_echo_current_error = 1
 "}}}
 " pyhon maker {{{
