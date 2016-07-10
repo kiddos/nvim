@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2016/6/7
+""	Last Modified: 2016/7/10
 ""
 if 0 | endif
 
@@ -54,7 +54,7 @@ NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
-" NeoBundle 'vim-scripts/AutoComplPop'
+NeoBundle 'Konfekt/FastFold'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -76,6 +76,7 @@ NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'kiddos/a.vim'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
+NeoBundle 'vim-scripts/Arduino-syntax-file'
 " " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -152,7 +153,8 @@ autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
 autocmd FileType python,ruby setlocal foldmethod=indent
 autocmd FileType python,ruby setlocal foldlevel=2
 autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
-autocmd FileType html,xhtml,xml,haml,jst,python,ruby normal zR
+autocmd FileType html,xhtml,xml,haml,jst,ruby normal zR
+autocmd FileType vim normal zM
 "" }}}
 "" editing settings {{{
 set altkeymap
@@ -213,6 +215,7 @@ set iconstring=nvim
 set nowritebackup
 set formatoptions+=t
 autocmd VimEnter,BufRead,BufNewFile *.m setlocal filetype=matlab
+autocmd VimEnter,BufRead,BufNewFile *.mm setlocal filetype=objc
 autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
@@ -240,11 +243,10 @@ set warn
 "" color scheme settings {{{
 "set cursorcolumn
 set cursorline
-set background=dark
 syntax enable
 syntax on
-set t_Co=256
 colorscheme malokai
+" set background=dark
 "" }}}
 "" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
@@ -343,7 +345,7 @@ let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
 let g:airline_detect_iminsert = 1
 let g:airline_inactive_collapse = 1
-let g:airline_theme = 'murmur'
+let g:airline_theme = 'wombat'
 let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_symbols')
@@ -420,41 +422,22 @@ let g:neomake_cpp_clang_args = [
 \	'-I../include',
 \	'-Isrc',
 \	'-I../src',
-\	'-I../../Cserial/include',
-\	'-I../Cserial/include',
-\	'-ICserial/include',
+\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
+\   '-I/usr/local/share/arduino/libraries/Servo',
+\   '-I/usr/src/linux-headers-4.2.8/include/',
 \   ]
 "}}}
 " nvidia cuda maker {{{
 let g:neomake_cuda_nvcc_maker = {
 \   'exe': 'nvcc',
 \   'args': [
-\     '--cuda',
 \     '-std=c++11',
 \     '-Xcompiler',
 \     '-fsyntax-only',
 \     '-Xcompiler',
 \     '-Wall',
 \     '-Xcompiler',
-\     '-Wextra',
-\     '-Xcompiler',
-\     '-fopenmp',
-\   ],
-\   'errorformat':
-\       '%*[^"]"%f"%*\D%l: %m,'.
-\       '"%f"%*\D%l: %m,'.
-\       '%-G%f:%l: (Each undeclared identifier is reported only once,'.
-\       '%-G%f:%l: for each function it appears in.),'.
-\       '%f:%l:%c:%m,'.
-\       '%f(%l):%m,'.
-\       '%f:%l:%m,'.
-\       '"%f"\, line %l%*\D%c%*[^ ] %m,'.
-\       '%D%*\a[%*\d]: Entering directory `%f'','.
-\       '%X%*\a[%*\d]: Leaving directory `%f'','.
-\       '%D%*\a: Entering directory `%f'','.
-\       '%X%*\a: Leaving directory `%f'','.
-\       '%DMaking %*\a in %f,'.
-\       '%f|%l| %m',
+\     '-Wextra'],
 \   }
 let g:neomake_cuda_clean_maker = {
 \   'exe': 'rm',
@@ -464,7 +447,7 @@ let g:neomake_cuda_clean_maker = {
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc', 'clean']
+let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
 "}}}
 " pyhon maker {{{
@@ -485,13 +468,6 @@ let g:NERDCustomDelimiters = {
 \   'conf': { 'left': '#' }
 \}
 "}}}
-"" Arduino setttings {{{
-let g:vim_arduino_map_keys = 0
-" arduino commands
-command! ArduinoCompile       call ArduinoCompile()
-command! ArduinoDeploy        call ArduinoDeploy()
-command! ArduinoSerialMonitor call ArduinoSerialMonitor()
-" }}}
 "" indent line {{{
 let g:indentLine_enabled = 0
 "" }}}
@@ -529,8 +505,9 @@ let g:deoplete#sources.c = ['file', 'cpp']
 let g:deoplete#sources.cpp = ['file', 'cpp']
 let g:deoplete#sources.objc = ['file', 'cpp']
 let g:deoplete#sources.objcpp = ['file', 'cpp']
-let g:deoplete#sources.arduino = ['cpp']
-let g:deoplete#sources.java = ['javacomplete2']
+let g:deoplete#sources.cuda = ['file', 'cpp']
+let g:deoplete#sources.arduino = ['file', 'cpp']
+let g:deoplete#sources.java = ['file', 'javacomplete2']
 let g:deoplete#sources.python = ['file', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
 " deoplete-clang {{{
@@ -611,6 +588,13 @@ function SetQtSourceFlags()
   \]
 endfunction
 " }}}
+"" deoplete-cpp {{{
+let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
+let g:deoplete#sources#cpp#cpp_include_path = [
+\   '/usr/local',
+\   '/usr/src/linux-headers-4.2.8/include/',
+\   '.']
+" }}}
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
@@ -625,8 +609,8 @@ let g:startify_list_order = [
 \ ]
 let g:startify_files_number = 3
 let g:startify_bookmarks = [
-\   {'vimrc': '  ~/.vim/vimrc'},
-\   {'nvimrc': '  ~/.config/nvim/init.vim'}]
+\   {'vimrc': '~/.vim/vimrc'},
+\   {'nvimrc': '~/.config/nvim/init.vim'}]
 let g:startify_custom_header =
 \   map(split(system('tips.py | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
 let g:startify_change_to_dir = 1
@@ -693,8 +677,6 @@ function! Quick_Compile()
     call Test_Webpage()
   elseif &ft == "jade"
     call Compile_to_HTML()
-  elseif &ft == "arduino"
-    call ArduinoCompile()
   endif
 endfunction
 
