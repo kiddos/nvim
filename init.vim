@@ -453,7 +453,7 @@ let g:neomake_echo_current_error = 1
 " pyhon maker {{{
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
-\   '--ignore=E501,E225,E302,E303,W391,E226,E231,E701,E128,E113,E125,E127,E221,E701,W391'
+\   '--ignore=W291,W391,E111,E113,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
 \]
 """}}}
 " }}}
