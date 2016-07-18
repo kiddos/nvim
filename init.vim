@@ -87,8 +87,8 @@ NeoBundle 'kiddos/vim-vhdl'
 NeoBundle 'vhda/verilog_systemverilog.vim'
 " }}}
 " ruby {{{
-NeoBundle 'osyo-manga/vim-monster'
 NeoBundle 'tpope/vim-rails'
+NeoBundle 'vim-ruby/vim-ruby'
 " }}}
 " php {{{
 NeoBundle 'stanangeloff/php.vim'
