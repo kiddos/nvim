@@ -162,6 +162,7 @@ set autoindent
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
 set cindent
+set cinoptions=(0
 set encoding=utf-8
 set ignorecase
 set incsearch
@@ -329,8 +330,10 @@ nmap <silent> <leader><leader>t :call Toggle_C_Family_Type()<CR>
 " end line semicolon ; {{{
 autocmd	FileType  c	          nnoremap ; $a;
 autocmd FileType  cpp         nnoremap ; $a;
+autocmd FileType  cuda        nnoremap ; $a;
 autocmd FileType  arduino     nnoremap ; $a;
 autocmd	FileType  objc        nnoremap ; $a;
+autocmd	FileType  objcpp      nnoremap ; $a;
 autocmd	FileType  java        nnoremap ; $a;
 autocmd	FileType  matlab      nnoremap ; $a;
 autocmd	FileType  php         nnoremap ; $a;
@@ -438,12 +441,6 @@ let g:neomake_cuda_nvcc_maker = {
 \     '-Wall',
 \     '-Xcompiler',
 \     '-Wextra'],
-\   }
-let g:neomake_cuda_clean_maker = {
-\   'exe': 'rm',
-\   'args': [expand('%:p').'.cpp.ii'],
-\   'append_file': 0,
-\   'errorformat': '%f:%l:%c: %m'
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
@@ -591,7 +588,8 @@ endfunction
 "" deoplete-cpp {{{
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
 let g:deoplete#sources#cpp#cpp_include_path = [
-\   '/usr/local',
+\   '/usr/local/include',
+\   '/usr/local/cuda/include',
 \   '/usr/src/linux-headers-4.2.8/include/',
 \   '.', '../src', '../include', 'src', 'include']
 " }}}
