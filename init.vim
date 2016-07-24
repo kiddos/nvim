@@ -589,7 +589,6 @@ endfunction
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
 let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/local/include',
-\   '/usr/local/cuda/include',
 \   '/usr/src/linux-headers-4.2.8/include/',
 \   '.', '../src', '../include', 'src', 'include']
 " }}}
