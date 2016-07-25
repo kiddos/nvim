@@ -61,11 +61,11 @@ NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
 " NeoBundle 'Rip-Rip/clang_complete'
-NeoBundle 'zchee/deoplete-clang'
-NeoBundle 'carlitux/deoplete-ternjs'
-NeoBundle 'zchee/deoplete-jedi'
-NeoBundle 'kiddos/deoplete-cpp'
+" NeoBundle 'zchee/deoplete-clang'
 "NeoBundle 'zchee/deoplete-go'
+NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'carlitux/deoplete-ternjs'
+NeoBundle 'kiddos/deoplete-cpp'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -141,17 +141,17 @@ autocmd FileType conf setlocal foldmethod=marker
 autocmd FileType conf setlocal foldmarker={,}
 autocmd FileType conf setlocal foldlevel=1
 
-autocmd FileType c,cpp,objc,objcpp setlocal foldmethod=marker
+autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmethod=marker
 autocmd FileType java,javascript,css,php setlocal foldmethod=marker
-autocmd FileType c,cpp,objc,objcpp setlocal foldmarker={,}
+autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmarker={,}
 autocmd FileType java,javascript,css,php setlocal foldmarker={,}
-autocmd FileType c,cpp,objc,objcpp setlocal foldlevel=2
-autocmd FileType java,javascript,css,php setlocal foldlevel=2
-autocmd FileType c,cpp,objc,objcpp,java,javascript,css,php normal zR
+autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldlevel=1
+autocmd FileType java,javascript,css,php setlocal foldlevel=1
+autocmd FileType c,cpp,objc,objcpp,cuda,java,javascript,css,php normal zR
 
 autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
 autocmd FileType python,ruby setlocal foldmethod=indent
-autocmd FileType python,ruby setlocal foldlevel=2
+autocmd FileType python,ruby setlocal foldlevel=1
 autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
 autocmd FileType html,xhtml,xml,haml,jst,ruby normal zR
 autocmd FileType vim normal zM
@@ -162,7 +162,7 @@ set autoindent
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
 set cindent
-set cinoptions=(0
+set cinoptions=(0,>2,:2,g1,m1,+4
 set encoding=utf-8
 set ignorecase
 set incsearch
@@ -507,6 +507,18 @@ let g:deoplete#sources.arduino = ['file', 'cpp']
 let g:deoplete#sources.java = ['file', 'javacomplete2']
 let g:deoplete#sources.python = ['file', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
+"" deoplete-cpp {{{
+let g:deoplete#sources#cpp#cflags = ['-std=c11']
+let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
+let g:deoplete#sources#cpp#c_include_path = [
+\   '/usr/local/include',
+\   '/usr/src/linux-headers-4.2.8/include/',
+\   '.', '../src', '../include', 'src', 'include']
+let g:deoplete#sources#cpp#arduino_path = '/usr/local/share/arduino'
+let g:deoplete#sources#cpp#cpp_include_path = [
+\   '/usr/local/include',
+\   '.', '../src', '../include', 'src', 'include']
+" }}}
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
@@ -584,13 +596,6 @@ function SetQtSourceFlags()
   \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib'
   \]
 endfunction
-" }}}
-"" deoplete-cpp {{{
-let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
-let g:deoplete#sources#cpp#cpp_include_path = [
-\   '/usr/local/include',
-\   '/usr/src/linux-headers-4.2.8/include/',
-\   '.', '../src', '../include', 'src', 'include']
 " }}}
 " }}}
 "" startify settings {{{
