@@ -50,7 +50,6 @@ NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'godlygeek/tabular'
-NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
@@ -60,8 +59,6 @@ NeoBundle 'Konfekt/FastFold'
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
-" NeoBundle 'Rip-Rip/clang_complete'
-" NeoBundle 'zchee/deoplete-clang'
 "NeoBundle 'zchee/deoplete-go'
 NeoBundle 'zchee/deoplete-jedi'
 NeoBundle 'carlitux/deoplete-ternjs'
@@ -80,7 +77,7 @@ NeoBundle 'vim-scripts/Arduino-syntax-file'
 " " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
-NeoBundle 'tpope/vim-classpath'
+NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
@@ -119,7 +116,6 @@ NeoBundle 'moll/vim-node'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'ternjs/tern_for_vim'
 " }}}
 call neobundle#end()
 filetype plugin indent on
@@ -425,6 +421,7 @@ let g:neomake_cpp_clang_args = [
 \	'-I../include',
 \	'-Isrc',
 \	'-I../src',
+\   '-I/usr/local/cuda/include',
 \   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
 \   '-I/usr/local/share/arduino/libraries/Servo',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
@@ -472,12 +469,6 @@ let g:indentLine_enabled = 0
 let g:gitgutter_enabled = 0
 "" }}}
 "" deoplete settings {{{
-call deoplete#custom#set('buffer', 'min_pattern_length', 64)
-call deoplete#custom#set('clang', 'max_menu_width', 66)
-call deoplete#custom#set('clang', 'max_abbr_width', 66)
-call deoplete#custom#set('javacomplete2', 'max_abbr_width', 30)
-call deoplete#custom#set('javacomplete2', 'max_menu_width', 36)
-
 call deoplete#custom#set('c', 'matchers', ['matcher_fuzzy'])
 call deoplete#custom#set('cpp', 'matchers', ['matcher_fuzzy'])
 call deoplete#custom#set('cpp', 'converters', [
@@ -493,20 +484,22 @@ let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#enable_refresh_always = 0
 let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#max_menu_width = 90
-let g:deoplete#max_abbr_width = 90
+let g:deoplete#max_menu_width = 96
+let g:deoplete#max_abbr_width = 96
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 36
+let g:deoplete#max_list = 666
 let g:deoplete#sources = {}
-let g:deoplete#sources.c = ['file', 'cpp']
-let g:deoplete#sources.cpp = ['file', 'cpp']
-let g:deoplete#sources.objc = ['file', 'cpp']
-let g:deoplete#sources.objcpp = ['file', 'cpp']
-let g:deoplete#sources.cuda = ['file', 'cpp']
-let g:deoplete#sources.arduino = ['file', 'cpp']
-let g:deoplete#sources.java = ['file', 'javacomplete2']
-let g:deoplete#sources.python = ['file', 'jedi']
+let g:deoplete#sources.c = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.cpp = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.objc = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.objcpp = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.cuda = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.arduino = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.java = ['file', 'file/include', 'javacomplete2']
+let g:deoplete#sources.python = ['file', 'file/include', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
+let g:deoplete#sources.vim = ['vim', 'file']
+let g:deoplete#sources.javascript = ['ternjs', 'file']
 "" deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c11']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
