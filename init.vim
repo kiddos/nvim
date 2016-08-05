@@ -74,6 +74,7 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'vim-scripts/Arduino-syntax-file'
+NeoBundle 'chiphogg/vim-prototxt'
 " " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -344,7 +345,7 @@ let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
 let g:airline_detect_iminsert = 1
 let g:airline_inactive_collapse = 1
-let g:airline_theme = 'wombat'
+let g:airline_theme = 'tomorrow'
 let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_symbols')
@@ -590,6 +591,14 @@ function SetQtSourceFlags()
   \]
 endfunction
 " }}}
+"" javacompelte2 {
+let g:JavaComplete_UseFQN = 1
+let g:JavaComplete_ClosingBrace = 1
+let g:JavaComplete_ImportDefault = -1
+" let g:JavaComplete_GradleExecutable = 'gradle'
+let g:JavaComplete_ImportSortType = 'jarName'
+let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
+"}
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
