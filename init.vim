@@ -54,6 +54,7 @@ NeoBundle 'sjl/gundo.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Konfekt/FastFold'
+NeoBundle 'AndrewRadev/switch.vim'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -460,7 +461,8 @@ let g:NERDCustomDelimiters = {
 \   'c': { 'left': '/**', 'right': '*/' },
 \   'arduino': { 'left': '/**', 'right': '*/' },
 \   'vim': { 'left': '"' },
-\   'conf': { 'left': '#' }
+\   'conf': { 'left': '#' },
+\   'prototxt': { 'left': '#' }
 \}
 "}}}
 "" indent line {{{
@@ -591,14 +593,14 @@ function SetQtSourceFlags()
   \]
 endfunction
 " }}}
-"" javacompelte2 {
+"" javacompelte2 {{{
 let g:JavaComplete_UseFQN = 1
 let g:JavaComplete_ClosingBrace = 1
 let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_GradleExecutable = 'gradle'
 let g:JavaComplete_ImportSortType = 'jarName'
 let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
-"}
+"}}}
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
@@ -628,6 +630,20 @@ nnoremap <leader><leader>f :Unite -start-insert file_rec<CR>
 " bookmark this buffer
 nnoremap <leader><leader>b execute ":UniteBookmarkAdd ".expand('%').'<CR>'
 "" }}}
+"" switch.vim settings {{{
+let g:switch_mapping = "-"
+let g:switch_reverse_mapping = '+'
+autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
+\ {
+\     '\<[a-z][a-z0-9]*_\k\+\>': {
+\       '_\(.\)': '\U\1'
+\     },
+\     '\<[a-z0-9]\+[A-Z]\k\+\>': {
+\       '\(\u\)': '_\l\1'
+\     },
+\   }
+\ ]
+" }}}
 "" useful functions and keybindings {{{
 function! Test_Webpage()
   if &ft == "php"
