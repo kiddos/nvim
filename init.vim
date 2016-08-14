@@ -155,12 +155,12 @@ autocmd FileType html,xhtml,xml,haml,jst,ruby normal zR
 autocmd FileType vim normal zM
 "" }}}
 "" editing settings {{{
+" solve zsh escap delay
+set timeoutlen=1000 ttimeoutlen=0
 set altkeymap
 set autoindent
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
-set cindent
-set cinoptions=(0,>2,:2,g1,m1,+4
 set encoding=utf-8
 set ignorecase
 set incsearch
@@ -170,13 +170,18 @@ set complete=.,w,b,u,U,t,k
 set completeopt=menu,noinsert,noselect
 set number
 set mouse=""
+" indent option
 set expandtab
+set cindent
+set cinoptions=>1s,(-1s
 set tabstop=4
 set softtabstop=2
 set shiftwidth=2
 set smartindent
-" solve zsh escap delay
-set timeoutlen=1000 ttimeoutlen=0
+autocmd FileType bzl setlocal nosmartindent
+" c/c++ indenting {{{
+autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>2s,:2,g1,m1,+4
+"}}}
 " python indenting {{{
 autocmd FileType python setlocal expandtab
 autocmd FileType python setlocal tabstop=8
@@ -601,6 +606,12 @@ let g:JavaComplete_ImportDefault = -1
 let g:JavaComplete_ImportSortType = 'jarName'
 let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 "}}}
+"" {{{
+let g:neoinclude#paths = {
+\   'c': '/usr/local/include',
+\   'cpp': '/usr/include',
+\ }
+" }}}
 " }}}
 "" startify settings {{{
 let g:startify_list_order = [
