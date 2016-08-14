@@ -218,8 +218,9 @@ set icon
 set iconstring=nvim
 set nowritebackup
 set formatoptions+=t
+autocmd VimEnter,BufRead,BufNewFile *.BUILD setlocal filetype=bzl
 autocmd VimEnter,BufRead,BufNewFile *.m setlocal filetype=matlab
-autocmd VimEnter,BufRead,BufNewFile *.mm setlocal filetype=objc
+autocmd VimEnter,BufRead,BufNewFile *.mm setlocal filetype=objcpp
 autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
