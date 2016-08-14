@@ -180,7 +180,7 @@ set shiftwidth=2
 set smartindent
 autocmd FileType bzl setlocal nosmartindent
 " c/c++ indenting {{{
-autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>2s,:2,g1,m1,+4
+autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 "}}}
 " python indenting {{{
 autocmd FileType python setlocal expandtab
@@ -408,6 +408,8 @@ let g:neomake_c_clang_args = [
 \	'-I../include',
 \	'-Isrc',
 \	'-I../src',
+\	'-Ilib',
+\	'-I../lib',
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/src/linux-headers-4.2.8',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
@@ -428,6 +430,8 @@ let g:neomake_cpp_clang_args = [
 \	'-I../include',
 \	'-Isrc',
 \	'-I../src',
+\	'-Ilib',
+\	'-I../lib',
 \   '-I/usr/local/cuda/include',
 \   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
 \   '-I/usr/local/share/arduino/libraries/Servo',
