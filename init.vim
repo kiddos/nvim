@@ -518,7 +518,7 @@ let g:deoplete#sources#cpp#c_include_path = [
 let g:deoplete#sources#cpp#arduino_path = '/usr/local/share/arduino'
 let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/local/include',
-\   '.', '../src', '../include', '../lib'  'src', 'include', 'lib']
+\   '.', '../src', '../include', '../lib', 'src', 'include', 'lib']
 " }}}
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
