@@ -483,9 +483,8 @@ let g:indentLine_enabled = 0
 let g:gitgutter_enabled = 0
 "" }}}
 "" deoplete settings {{{
-call deoplete#custom#set('c', 'matchers', ['matcher_fuzzy'])
-call deoplete#custom#set('cpp', 'matchers', ['matcher_fuzzy'])
-call deoplete#custom#set('cpp', 'converters', [
+call deoplete#custom#set('_', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#set('_', 'converters', [
 \   'converter_remove_overlap', 'converter_truncate_abbr',
 \   'converter_truncate_menu', 'converter_auto_paren',
 \   'converter_auto_delimiter'
@@ -503,12 +502,12 @@ let g:deoplete#max_abbr_width = 96
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 666
 let g:deoplete#sources = {}
-let g:deoplete#sources.c = ['file', 'file/include', 'cpp']
-let g:deoplete#sources.cpp = ['file', 'file/include', 'cpp']
-let g:deoplete#sources.objc = ['file', 'file/include', 'cpp']
-let g:deoplete#sources.objcpp = ['file', 'file/include', 'cpp']
-let g:deoplete#sources.cuda = ['file', 'file/include', 'cpp']
-let g:deoplete#sources.arduino = ['file', 'file/include', 'cpp']
+let g:deoplete#sources.c = ['file', 'cpp', 'cpp/include']
+let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include']
+let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include']
+let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include']
+let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include']
+let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include']
 let g:deoplete#sources.java = ['file', 'file/include', 'javacomplete2']
 let g:deoplete#sources.python = ['file', 'file/include', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
