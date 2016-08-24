@@ -427,6 +427,7 @@ let g:neomake_cpp_clang_args = [
 \   '-pthread',
 \   '-fPIC',
 \   '-DDEBUG', '-DQT_DEBUG',
+\   '-Wno-pragma-once-outside-header',
 \   '-I.',
 \	'-Iinclude',
 \	'-I../include',
