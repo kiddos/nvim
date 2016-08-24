@@ -76,6 +76,7 @@ NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'vim-scripts/Arduino-syntax-file'
 NeoBundle 'chiphogg/vim-prototxt'
+NeoBundle 'vim-scripts/SWIG-syntax'
 " " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
@@ -218,6 +219,8 @@ set icon
 set iconstring=nvim
 set nowritebackup
 set formatoptions+=t
+autocmd VimEnter,BufRead,BufNewFile *.i setlocal filetype=swig
+autocmd VimEnter,BufRead,BufNewFile *.swg setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile *.BUILD setlocal filetype=bzl
 autocmd VimEnter,BufRead,BufNewFile *.m setlocal filetype=matlab
 autocmd VimEnter,BufRead,BufNewFile *.mm setlocal filetype=objcpp
