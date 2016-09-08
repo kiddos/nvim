@@ -398,8 +398,8 @@ let g:neomake_warning_sign = {
 highlight NeomakeError    cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
 highlight NeomakeWarning  cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
 " c clang maker {{{
-let g:neomake_c_enabled_makers = ['clang']
-let g:neomake_c_clang_args = [
+let g:neomake_c_enabled_makers = ['gcc']
+let g:neomake_c_gcc_args = [
 \   '-fsyntax-only',
 \   '-Wall',
 \   '-Wextra',
@@ -414,14 +414,15 @@ let g:neomake_c_clang_args = [
 \	'-I../src',
 \	'-Ilib',
 \	'-I../lib',
+\   '-I/usr/local/cuda/include',
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/src/linux-headers-4.2.8',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
 \   ]
 "}}}
 " cpp clang maker {{{
-let g:neomake_cpp_enabled_makers = ['clang']
-let g:neomake_cpp_clang_args = [
+let g:neomake_cpp_enabled_makers = ['gcc']
+let g:neomake_cpp_gcc_args = [
 \   '-fsyntax-only',
 \   '-Wall',
 \   '-Wextra',
@@ -440,8 +441,20 @@ let g:neomake_cpp_clang_args = [
 \	'-I../lib',
 \   '-I/usr/local/cuda/include',
 \   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
-\   '-I/usr/local/share/arduino/libraries/Servo',
-\   '-I/usr/src/linux-headers-4.2.8/include/',
+\   '-I/usr/include/qt5',
+\   '-I/usr/include/qt5/QtConcurrent',
+\   '-I/usr/include/qt5/QtCore',
+\   '-I/usr/include/qt5/QtDBus',
+\   '-I/usr/include/qt5/QtGui',
+\   '-I/usr/include/qt5/QtNetwork',
+\   '-I/usr/include/qt5/QtOpenGL',
+\   '-I/usr/include/qt5/QtOpenGLExtensions',
+\   '-I/usr/include/qt5/QtPlatformSupport',
+\   '-I/usr/include/qt5/QtPrintSupport',
+\   '-I/usr/include/qt5/QtSql',
+\   '-I/usr/include/qt5/QtTest',
+\   '-I/usr/include/qt5/QtWidgets',
+\   '-I/usr/include/qt5/QtXml',
 \   ]
 "}}}
 " nvidia cuda maker {{{
@@ -458,7 +471,7 @@ let g:neomake_cuda_nvcc_maker = {
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc']
+let g:neomake_cuda_enabled_makers = ['nvcc', 'clangtidy']
 let g:neomake_echo_current_error = 1
 "}}}
 " pyhon maker {{{
@@ -522,12 +535,34 @@ let g:deoplete#sources#cpp#cflags = ['-std=c11']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
 let g:deoplete#sources#cpp#c_include_path = [
 \   '/usr/local/include',
+\   '/usr/local/cuda/include',
+\   '/usr/local/cuda',
 \   '/usr/src/linux-headers-4.2.8/include/',
-\   '.', '../src', '../include', 'src', 'include']
+\   '.', 'src', 'include',
+\   '..', '../src', '../include']
 let g:deoplete#sources#cpp#arduino_path = '/usr/local/share/arduino'
 let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/local/include',
-\   '.', '../src', '../include', '../lib', 'src', 'include', 'lib']
+\   '/usr/local/cuda/include',
+\   '/usr/local/cuda',
+\   '.', 'src', 'include', 'lib',
+\   '../', '../src', '../include', '../lib',
+\   '/usr/lib/gcc/x86_64-linux-gnu/4.9/include',
+\   '/usr/include/qt5',
+\   '/usr/include/qt5/QtConcurrent',
+\   '/usr/include/qt5/QtCore',
+\   '/usr/include/qt5/QtDBus',
+\   '/usr/include/qt5/QtGui',
+\   '/usr/include/qt5/QtNetwork',
+\   '/usr/include/qt5/QtOpenGL',
+\   '/usr/include/qt5/QtOpenGLExtensions',
+\   '/usr/include/qt5/QtPlatformSupport',
+\   '/usr/include/qt5/QtPrintSupport',
+\   '/usr/include/qt5/QtSql',
+\   '/usr/include/qt5/QtTest',
+\   '/usr/include/qt5/QtWidgets',
+\   '/usr/include/qt5/QtXml',
+\ ]
 " }}}
 " deoplete-clang {{{
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
