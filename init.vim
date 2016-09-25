@@ -430,8 +430,9 @@ let g:neomake_cpp_gcc_args = [
 \   '-fopenmp',
 \   '-pthread',
 \   '-fPIC',
-\   '-DDEBUG', '-DQT_DEBUG',
+\   '-DDEBUG', '-DQT_DEBUG', '-DDEBUG_MESSAGE',
 \   '-Wno-pragma-once-outside-header',
+\   '-Wno-pragmas',
 \   '-I.',
 \	'-Iinclude',
 \	'-I../include',
@@ -467,11 +468,13 @@ let g:neomake_cuda_nvcc_maker = {
 \     '-Xcompiler',
 \     '-Wall',
 \     '-Xcompiler',
-\     '-Wextra'],
+\     '-Wextra',
+\     '-o',
+\     '-/dev/null'],
 \   }
 let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc', 'clangtidy']
+let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
 "}}}
 " pyhon maker {{{
