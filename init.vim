@@ -503,14 +503,6 @@ let g:indentLine_enabled = 0
 let g:gitgutter_enabled = 0
 "" }}}
 "" deoplete settings {{{
-call deoplete#custom#set('_', 'matchers', ['matcher_fuzzy'])
-call deoplete#custom#set('_', 'converters', [
-\   'converter_remove_overlap', 'converter_truncate_abbr',
-\   'converter_truncate_menu', 'converter_auto_paren',
-\   'converter_auto_delimiter'
-\])
-call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
-
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
