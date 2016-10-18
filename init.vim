@@ -456,6 +456,8 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/include/qt5/QtTest',
 \   '-I/usr/include/qt5/QtWidgets',
 \   '-I/usr/include/qt5/QtXml',
+\   '-I/usr/local/share/jdk1.8.0_66/include',
+\   '-I/usr/local/share/jdk1.8.0_66/include/linux',
 \   ]
 "}}}
 " nvidia cuda maker {{{
@@ -530,6 +532,8 @@ let g:deoplete#sources#cpp#cflags = ['-std=c11']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
 let g:deoplete#sources#cpp#c_include_path = [
 \   '/usr/local/include',
+\   '/usr/local/share/jdk1.8.0_66/include',
+\   '/usr/local/share/jdk1.8.0_66/include/linux',
 \   '/usr/local/cuda/include',
 \   '/usr/local/cuda',
 \   '/usr/src/linux-headers-4.2.8/include/',
@@ -538,6 +542,8 @@ let g:deoplete#sources#cpp#c_include_path = [
 let g:deoplete#sources#cpp#arduino_path = '/usr/local/share/arduino'
 let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/local/include',
+\   '/usr/local/share/jdk1.8.0_66/include',
+\   '/usr/local/share/jdk1.8.0_66/include/linux',
 \   '/usr/local/cuda/include',
 \   '/usr/local/cuda',
 \   '.', 'src', 'include', 'lib',
