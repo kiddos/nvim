@@ -55,6 +55,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Konfekt/FastFold'
 NeoBundle 'AndrewRadev/switch.vim'
+NeoBundle 'rhysd/vim-clang-format'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
