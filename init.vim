@@ -65,6 +65,7 @@ NeoBundle 'zchee/deoplete-go'
 NeoBundle 'zchee/deoplete-jedi'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'kiddos/deoplete-cpp'
+NeoBundle 'kiddos/deoplete-java'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -80,7 +81,7 @@ NeoBundle 'chiphogg/vim-prototxt'
 NeoBundle 'vim-scripts/SWIG-syntax'
 " " }}}
 " Java {{{
-NeoBundle 'artur-shaik/vim-javacomplete2'
+" NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
@@ -262,7 +263,7 @@ autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
-autocmd FileType python setlocal omnifunc=python3complete#Complete
+autocmd FileType python setlocal omnifunc=python2complete#Complete
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -526,7 +527,7 @@ let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include']
 let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include']
 let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include']
 let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.java = ['file', 'file/include', 'javacomplete2']
+let g:deoplete#sources.java = ['file', 'file/include', 'java']
 let g:deoplete#sources.python = ['file', 'file/include', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
 let g:deoplete#sources.vim = ['vim', 'file']
@@ -672,9 +673,9 @@ endfunction
 let g:JavaComplete_UseFQN = 1
 let g:JavaComplete_ClosingBrace = 1
 let g:JavaComplete_ImportDefault = -1
-" let g:JavaComplete_GradleExecutable = 'gradle'
-let g:JavaComplete_ImportSortType = 'jarName'
-let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
+" " let g:JavaComplete_GradleExecutable = 'gradle'
+" let g:JavaComplete_ImportSortType = 'jarName'
+" let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 "}}}
 "" {{{
 let g:neoinclude#paths = {
@@ -724,6 +725,12 @@ autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
 \     },
 \   }
 \ ]
+" }}}
+"" clang-format {{{
+let g:clang_format#code_style = 'google'
+let g:clang_format#style_options = {
+\   "Standard" : "C++11",
+\}
 " }}}
 "" useful functions and keybindings {{{
 function! Test_Webpage()
