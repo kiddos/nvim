@@ -26,9 +26,6 @@ NeoBundle 'benmills/vimux'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'Shougo/dein.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make'}}
-NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'benekastah/neomake'
@@ -51,9 +48,6 @@ NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'Konfekt/FastFold'
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
 " }}}
@@ -65,7 +59,6 @@ NeoBundle 'zchee/deoplete-go'
 NeoBundle 'zchee/deoplete-jedi'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'kiddos/deoplete-cpp'
-NeoBundle 'kiddos/deoplete-java'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -79,9 +72,10 @@ NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'vim-scripts/Arduino-syntax-file'
 NeoBundle 'chiphogg/vim-prototxt'
 NeoBundle 'vim-scripts/SWIG-syntax'
+NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " Java {{{
-" NeoBundle 'artur-shaik/vim-javacomplete2'
+NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
@@ -405,11 +399,14 @@ let g:neomake_c_gcc_args = [
 \   '-fsyntax-only',
 \   '-Wall',
 \   '-Wextra',
+\   '-Wno-pragmas',
+\   '-Wno-unknown-pragmas',
+\   '-Wno-pragma-once-outside-header',
+\   '-DDEBUG', '-DQT_DEBUG', '-DKDEBUG_MESSAGE',
 \   '-std=c11',
 \   '-fopenmp',
 \   '-pthread',
 \   '-fPIC',
-\   '-DDEBUG',
 \	'-Iinclude',
 \	'-I../include',
 \	'-Isrc',
@@ -428,13 +425,14 @@ let g:neomake_cpp_gcc_args = [
 \   '-fsyntax-only',
 \   '-Wall',
 \   '-Wextra',
+\   '-Wno-pragmas',
+\   '-Wno-unknown-pragmas',
+\   '-Wno-pragma-once-outside-header',
 \   '-std=c++11',
 \   '-fopenmp',
 \   '-pthread',
 \   '-fPIC',
-\   '-DDEBUG', '-DQT_DEBUG', '-DDEBUG_MESSAGE',
-\   '-Wno-pragma-once-outside-header',
-\   '-Wno-pragmas',
+\   '-DDEBUG', '-DQT_DEBUG', '-DKDEBUG_MESSAGE',
 \   '-I.',
 \	'-Iinclude',
 \	'-I../include',
@@ -704,13 +702,6 @@ let g:startify_custom_header =
 let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
-"" }}}
-"" Unite settings {{{
-" fuzzy search
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader><leader>f :Unite -start-insert file_rec<CR>
-" bookmark this buffer
-nnoremap <leader><leader>b execute ":UniteBookmarkAdd ".expand('%').'<CR>'
 "" }}}
 "" switch.vim settings {{{
 let g:switch_mapping = "-"
