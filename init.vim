@@ -181,9 +181,9 @@ autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1
 "}}}
 " python indenting {{{
 autocmd FileType python setlocal expandtab
-autocmd FileType python setlocal tabstop=8
-autocmd FileType python setlocal softtabstop=4
-autocmd FileType python setlocal shiftwidth=4
+autocmd FileType python setlocal tabstop=4
+autocmd FileType python setlocal softtabstop=2
+autocmd FileType python setlocal shiftwidth=2
 " }}}
 " make indenting {{{
 autocmd FileType make setlocal noexpandtab
@@ -485,7 +485,7 @@ let g:neomake_echo_current_error = 1
 " pyhon maker {{{
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
-\   '--ignore=W291,W391,E111,E113,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
+\   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
 \]
 """}}}
 " }}}
