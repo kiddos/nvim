@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2016/7/10
+""	Last Modified: 2017/2/5
 ""
 if 0 | endif
 
@@ -120,7 +120,7 @@ call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
 
-"" code display setting {{{
+" code display setting {{{
 " line width before auto newline
 set modeline
 autocmd FileType c,cpp,objc,objcpp,cs,asm,vhdl set textwidth=80
@@ -150,8 +150,8 @@ autocmd FileType python,ruby setlocal foldlevel=1
 autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
 autocmd FileType html,xhtml,xml,haml,jst,ruby normal zR
 autocmd FileType vim normal zM
-"" }}}
-"" editing settings {{{
+" }}}
+" editing settings {{{
 " solve zsh escap delay
 set timeoutlen=1000 ttimeoutlen=0
 set altkeymap
@@ -178,7 +178,7 @@ set smartindent
 autocmd FileType bzl setlocal nosmartindent
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
-"}}}
+" }}}
 " python indenting {{{
 autocmd FileType python setlocal expandtab
 autocmd FileType python setlocal tabstop=4
@@ -203,13 +203,11 @@ autocmd FileType fcl setlocal tabstop=4
 autocmd FileType fcl setlocal softtabstop=4
 autocmd FileType fcl setlocal shiftwidth=4
 " }}}
-"" }}}
-"" buffer settings {{{
+" }}}
+" buffer settings {{{
 set autoread
-set backupdir=.,~/.vimtmp,/tmp
 set confirm
 set cscopepathcomp=2
-set directory=.,~/.vimtmp,/tmp
 set hidden
 set icon
 set iconstring=nvim
@@ -224,15 +222,15 @@ autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile *.fcl setlocal filetype=fcl
-"" }}}
-"" window settings {{{
+" }}}
+" window settings {{{
 set cmdheight=1
 set cmdwinheight=6
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
 set langmenu=en_US.UTF-8
-set laststatus=2
-set pumheight=6
+set laststatus=6
+set pumheight=12
 set report=2
 set ruler
 set showcmd
@@ -243,16 +241,14 @@ set splitright
 set tabpagemax=20
 set title
 set warn
-""" }}}
-"" color scheme settings {{{
-"set cursorcolumn
+" }}}
+" color scheme settings {{{
 set cursorline
 syntax enable
 syntax on
 colorscheme malokai
-" set background=dark
-"" }}}
-"" omni completeion {{{
+" }}}
+" omni completeion {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -264,30 +260,11 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
-"" }}}
-"" custom key maps {{{
+" }}}
+" custom key maps {{{
 " leader {{{
 let mapleader=","
 let localleader="\\"
-" }}}
-" copy, paste, save, undo {{{
-inoremap <C-C> <Esc>yyi
-inoremap <C-V> <Esc>pa
-inoremap <C-S> <Esc>:w
-inoremap <C-Z> <Esc>ua
-" }}}
-" fix clipboard problem {{{
-function! ClipboardYank()
-  call system('xclip -i -selection clipboard', @@)
-endfunction
-function! ClipboardPaste()
-  let @@ = system('xclip -o -selection clipboard')
-endfunction
-vnoremap <silent> y y:call ClipboardYank()<cr>
-vnoremap <silent> d d:call ClipboardYank()<cr>
-onoremap <silent> y y:call ClipboardYank()<cr>
-onoremap <silent> d d:call ClipboardYank()<cr>
-" nnoremap <silent> p :call ClipboardPaste()<cr>p
 " }}}
 " typo {{{
 command!  WQ  wq
@@ -319,17 +296,8 @@ nmap <leader><leader>v :vsplit<CR>
 nmap <leader><leader>s :tabedit<CR>
 nmap <leader><leader>c :tabclose<CR>
 " }}}
+" enter to complete popup
 inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
-function! Toggle_C_Family_Type()
-  if &filetype == 'c'
-    execute ":setlocal filetype=cpp"
-  elseif &filetype == 'cpp'
-    execute ":setlocal filetype=objc"
-  elseif &filetype == 'objc'
-    execute ":setlocal filetype=c"
-  endif
-endfunction
-nmap <silent> <leader><leader>t :call Toggle_C_Family_Type()<CR>
 " end line semicolon ; {{{
 autocmd	FileType  c	          nnoremap ; $a;
 autocmd FileType  cpp         nnoremap ; $a;
@@ -343,9 +311,10 @@ autocmd	FileType  php         nnoremap ; $a;
 autocmd	FileType  html        nnoremap ; $a;
 autocmd	FileType  css         nnoremap ; $a;
 autocmd	FileType  javascript  nnoremap ; $a;
+autocmd	FileType  perl        nnoremap ; $a;
 " }}}
-"" }}}
-"" airline settings {{{
+" }}}
+" airline settings {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
@@ -367,11 +336,11 @@ let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
-"" }}}
-"" tmuxline settings {{{
-" let g:tmuxline_preset = 'airline'
-"" }}}
-"" Neomake settings {{{
+" }}}
+" tmuxline settings {{{
+let g:tmuxline_preset = 'airline'
+" }}}
+" Neomake settings {{{
 autocmd! BufWritePost * Neomake
 autocmd FileType c setlocal makeprg="gcc"
 autocmd FileType cpp setlocal makeprg="g++"
@@ -418,7 +387,7 @@ let g:neomake_c_gcc_args = [
 \   '-I/usr/src/linux-headers-4.2.8',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
 \   ]
-"}}}
+" }}}
 " cpp clang maker {{{
 let g:neomake_cpp_enabled_makers = ['gcc']
 let g:neomake_cpp_gcc_args = [
@@ -462,7 +431,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/local/share/jdk1.8.0_66/include',
 \   '-I/usr/local/share/jdk1.8.0_66/include/linux',
 \   ]
-"}}}
+" }}}
 " nvidia cuda maker {{{
 let g:neomake_cuda_nvcc_maker = {
 \   'exe': 'nvcc',
@@ -481,15 +450,15 @@ let g:neomake_serialize = 1
 let g:neomake_serialize_abort_on_error = 1
 let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
-"}}}
+" }}}
 " pyhon maker {{{
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
 \   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
 \]
-"""}}}
 " }}}
-"" NERDcommenter settings {{{
+" }}}
+" NERDcommenter settings {{{
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
@@ -500,14 +469,14 @@ let g:NERDCustomDelimiters = {
 \   'conf': { 'left': '#' },
 \   'prototxt': { 'left': '#' }
 \}
-"}}}
-"" indent line {{{
+" }}}
+" indent line {{{
 let g:indentLine_enabled = 0
-"" }}}
-"" GitGutter settings {{{
+" }}}
+" GitGutter settings {{{
 let g:gitgutter_enabled = 0
-"" }}}
-"" deoplete settings {{{
+" }}}
+" deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
@@ -530,7 +499,7 @@ let g:deoplete#sources.python = ['file', 'file/include', 'jedi']
 let g:deoplete#sources.cmake = ['cmake']
 let g:deoplete#sources.vim = ['vim', 'file']
 let g:deoplete#sources.javascript = ['ternjs', 'file']
-"" deoplete-cpp {{{
+" deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c11']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
 let g:deoplete#sources#cpp#c_include_path = [
@@ -606,83 +575,17 @@ let g:deoplete#sources#clang#flags = [
 \   '-I../src',
 \   '-Isrc'
 \   ]
-function SetQtSourceFlags()
-  let g:deoplete#sources#clang#flags += [
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Enginio',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DCore',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DInput',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DQuick',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DQuickRenderer',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/Qt3DRenderer',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtBluetooth',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtCLucene',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtConcurrent',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtCore',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDBus',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDeclarative',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDesigner',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtDesignerComponents',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtGui',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtHelp',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtLocation',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimedia',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimediaQuick_p',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtMultimediaWidgets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtNetwork',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtNfc',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtOpenGL',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtOpenGLExtensions',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPlatformHeaders',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPlatformSupport',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPositioning',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtPrintSupport',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQml',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQmlDevTools',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuick',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickParticles',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickTest',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtQuickWidgets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtScript',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtScriptTools',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSensors',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSerialPort',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSql',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtSvg',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtTest',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtUiPlugin',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtUiTools',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebChannel',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebEngine',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebEngineWidgets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebKit',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebKitWidgets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebSockets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWebView',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtWidgets',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtX11Extras',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXml',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtXmlPatterns',
-  \	'-I/opt/Qt5.5.0/5.5/gcc_64/include/QtZlib'
-  \]
-endfunction
 " }}}
 "" javacompelte2 {{{
 let g:JavaComplete_UseFQN = 1
 let g:JavaComplete_ClosingBrace = 1
 let g:JavaComplete_ImportDefault = -1
-" " let g:JavaComplete_GradleExecutable = 'gradle'
+" let g:JavaComplete_GradleExecutable = 'gradle'
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
-"}}}
-"" {{{
-let g:neoinclude#paths = {
-\   'c': '/usr/local/include',
-\   'cpp': '/usr/include',
-\ }
 " }}}
 " }}}
-"" startify settings {{{
+" startify settings {{{
 let g:startify_list_order = [
 \   ['   My most recently used files in the current directory:'],
 \   'dir',
@@ -702,8 +605,8 @@ let g:startify_custom_header =
 let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
-"" }}}
-"" switch.vim settings {{{
+" }}}
+" switch.vim settings {{{
 let g:switch_mapping = "-"
 let g:switch_reverse_mapping = '+'
 autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
@@ -717,7 +620,7 @@ autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
 \   }
 \ ]
 " }}}
-"" clang-format {{{
+" clang-format {{{
 let g:clang_format#code_style = 'google'
 let g:clang_format#style_options = {
 \   "Standard" : "C++11",
@@ -790,7 +693,6 @@ endfunction
 " commands
 command! -bar -nargs=?          ShowSpaces call ShowSpaces(<args>)
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-"autocmd BufWritePost *.less,*.sass,*.scss call Compile_to_CSS()
 command! CompiletoCSS     call Compile_to_CSS()
 command! ToggleDotMFiles  call Toggle_filetype_dot_m()
 command! OpenglGLFW3      call Compile_CPP_OpenGL_GLFW3()
@@ -814,5 +716,4 @@ nmap  <leader>(       :Tabularize /(.*)<CR>
 nmap  <leader>=       :Tabularize /= <CR>
 " a.vim shortcut
 nmap  <leader><leader>a :A<CR>
-nmap  <leader>b :call Split_Vimux()<CR>
 "" }}}
