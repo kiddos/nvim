@@ -337,9 +337,6 @@ let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 " }}}
-" tmuxline settings {{{
-let g:tmuxline_preset = 'airline'
-" }}}
 " Neomake settings {{{
 autocmd! BufWritePost * Neomake
 autocmd FileType c setlocal makeprg="gcc"
