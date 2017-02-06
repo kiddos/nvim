@@ -229,9 +229,9 @@ set cmdwinheight=6
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
 set langmenu=en_US.UTF-8
-set laststatus=6
+set laststatus=2
 set pumheight=12
-set report=2
+set report=6
 set ruler
 set showcmd
 set noshowmode
@@ -623,7 +623,7 @@ let g:clang_format#style_options = {
 \   "Standard" : "C++11",
 \}
 " }}}
-"" useful functions and keybindings {{{
+" useful functions and keybindings {{{
 function! Test_Webpage()
   if &ft == "php"
     echom "php file type"
