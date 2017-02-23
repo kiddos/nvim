@@ -394,7 +394,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-Wno-pragmas',
 \   '-Wno-unknown-pragmas',
 \   '-Wno-pragma-once-outside-header',
-\   '-std=c++11',
+\   '-std=c++14',
 \   '-fopenmp',
 \   '-pthread',
 \   '-fPIC',
