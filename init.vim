@@ -393,7 +393,6 @@ let g:neomake_cpp_gcc_args = [
 \   '-Wextra',
 \   '-Wno-pragmas',
 \   '-Wno-unknown-pragmas',
-\   '-Wno-pragma-once-outside-header',
 \   '-std=c++14',
 \   '-fopenmp',
 \   '-pthread',
@@ -410,7 +409,6 @@ let g:neomake_cpp_gcc_args = [
 \	'-Isrc/main/cpp',
 \	'-Isrc/main/jni',
 \   '-I/usr/local/cuda/include',
-\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
 \   '-I/usr/include/qt5',
 \   '-I/usr/include/qt5/QtConcurrent',
 \   '-I/usr/include/qt5/QtCore',
@@ -425,8 +423,9 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/include/qt5/QtTest',
 \   '-I/usr/include/qt5/QtWidgets',
 \   '-I/usr/include/qt5/QtXml',
-\   '-I/usr/local/share/jdk1.8.0_66/include',
-\   '-I/usr/local/share/jdk1.8.0_66/include/linux',
+\   '-I/usr/lib/jvm/java-8-oracle/include',
+\   '-I/usr/lib/jvm/java-8-oracle/include/linux',
+\   '-I/home/joseph/tools/arduino/hardware/arduino/avr/cores/arduino',
 \   ]
 " }}}
 " nvidia cuda maker {{{
@@ -497,8 +496,8 @@ let g:deoplete#sources.cmake = ['cmake']
 let g:deoplete#sources.vim = ['vim', 'file']
 let g:deoplete#sources.javascript = ['ternjs', 'file']
 " deoplete-cpp {{{
-let g:deoplete#sources#cpp#cflags = ['-std=c11']
-let g:deoplete#sources#cpp#cppflags = ['-std=c++11']
+let g:deoplete#sources#cpp#cflags = ['-std=c14']
+let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
 let g:deoplete#sources#cpp#c_include_path = [
 \   '/usr/local/include',
 \   '/usr/local/share/jdk1.8.0_66/include',
@@ -516,11 +515,9 @@ let g:deoplete#sources#cpp#c_include_path = [
 \	'src/main/cpp',
 \	'src/main/jni',
 \ ]
-let g:deoplete#sources#cpp#arduino_path = '/usr/local/share/arduino'
+let g:deoplete#sources#cpp#arduino_path = '/home/joseph/tools/arduino'
 let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/local/include',
-\   '/usr/local/share/jdk1.8.0_66/include',
-\   '/usr/local/share/jdk1.8.0_66/include/linux',
 \   '/usr/local/cuda/include',
 \   '/usr/local/cuda',
 \   '.',
@@ -538,7 +535,9 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \	'src/main/c',
 \	'src/main/cpp',
 \	'src/main/jni',
-\   '/usr/lib/gcc/x86_64-linux-gnu/4.9/include',
+\   '/usr/lib/jvm/java-8-oracle/include',
+\   '/usr/lib/jvm/java-8-oracle/include/linux',
+\   '/usr/lib/gcc/x86_64-linux-gnu/5/include',
 \   '/usr/include/qt5',
 \   '/usr/include/qt5/QtConcurrent',
 \   '/usr/include/qt5/QtCore',
