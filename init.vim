@@ -50,6 +50,7 @@ NeoBundle 'godlygeek/tabular'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
+NeoBundle 'critiqjo/lldb.nvim'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
