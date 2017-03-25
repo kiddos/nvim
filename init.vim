@@ -51,6 +51,7 @@ NeoBundle 'sjl/gundo.vim'
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
+NeoBundle 'kiddos/vim-ros'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -223,7 +224,11 @@ autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile *.fcl setlocal filetype=fcl
-autocmd VimEnter,BufRead,BufNewFile *.launch setlocal filetype=xml
+" ros
+autocmd VimEnter,BufRead,BufNewFile *.msg setlocal filetype=rosmsg
+autocmd VimEnter,BufRead,BufNewFile *.launch setlocal filetype=roslaunch
+autocmd VimEnter,BufRead,BufNewFile *.action setlocal filetype=rosaction
+autocmd VimEnter,BufRead,BufNewFile *.srv setlocal filetype=rossrv
 " }}}
 " window settings {{{
 set cmdheight=1
@@ -427,7 +432,10 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/include/qt5/QtXml',
 \   '-I/usr/lib/jvm/java-8-oracle/include',
 \   '-I/usr/lib/jvm/java-8-oracle/include/linux',
+\   '-I/opt/ros/kinetic/include',
 \   '-I/home/joseph/tools/arduino/hardware/arduino/avr/cores/arduino',
+\   '-I/home/joseph/catkin/devel/include',
+\   '-I/home/joseph/catkin/install/include',
 \   ]
 " }}}
 " nvidia cuda maker {{{
@@ -554,6 +562,9 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/include/qt5/QtTest',
 \   '/usr/include/qt5/QtWidgets',
 \   '/usr/include/qt5/QtXml',
+\   '/opt/ros/kinetic/include',
+\   '/home/joseph/catkin/devel/include',
+\   '/home/joseph/catkin/install/include',
 \ ]
 " }}}
 " deoplete-clang {{{
