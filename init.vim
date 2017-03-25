@@ -223,6 +223,7 @@ autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile *.fcl setlocal filetype=fcl
+autocmd VimEnter,BufRead,BufNewFile *.launch setlocal filetype=xml
 " }}}
 " window settings {{{
 set cmdheight=1
