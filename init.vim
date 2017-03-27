@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2017/2/5
+""	Last Modified: 2017/3/27
 ""
 if 0 | endif
 
@@ -248,6 +248,8 @@ set splitright
 set tabpagemax=20
 set title
 set warn
+set wildmode=longest,full
+set wildmenu
 " }}}
 " color scheme settings {{{
 set cursorline
@@ -634,6 +636,10 @@ let g:clang_format#code_style = 'google'
 let g:clang_format#style_options = {
 \   "Standard" : "C++11",
 \}
+" }}}
+" ROS {{{
+set shell=zsh\ --login
+let g:ros_catkin_workspace = '~/catkin'
 " }}}
 " useful functions and keybindings {{{
 function! Test_Webpage()
