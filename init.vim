@@ -134,9 +134,9 @@ autocmd FileType css,less,sass,scss set textwidth=80
 autocmd FileType vim setlocal foldmethod=marker
 autocmd FileType vim setlocal foldmarker={{{,}}}
 autocmd FileType vim setlocal foldlevel=1
-autocmd FileType conf setlocal foldmethod=marker
-autocmd FileType conf setlocal foldmarker={,}
-autocmd FileType conf setlocal foldlevel=1
+autocmd FileType conf,zsh setlocal foldmethod=marker
+autocmd FileType conf,zsh setlocal foldmarker={,}
+autocmd FileType conf,zsh setlocal foldlevel=1
 
 autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmethod=marker
 autocmd FileType java,javascript,css,php setlocal foldmethod=marker
