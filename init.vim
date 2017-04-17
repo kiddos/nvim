@@ -436,8 +436,10 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/lib/jvm/java-8-oracle/include/linux',
 \   '-I/opt/ros/kinetic/include',
 \   '-I/home/joseph/tools/arduino/hardware/arduino/avr/cores/arduino',
-\   '-I/home/joseph/catkin/devel/include',
-\   '-I/home/joseph/catkin/install/include',
+\   '-I/home/joseph/catkin_indigo/devel/include',
+\   '-I/home/joseph/catkin_kinetic/devel/include',
+\   '-I/home/joseph/catkin_indigo/install/include',
+\   '-I/home/joseph/catkin_kinetic/install/include',
 \   ]
 " }}}
 " nvidia cuda maker {{{
@@ -459,7 +461,7 @@ let g:neomake_serialize_abort_on_error = 1
 let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
 " }}}
-" pyhon maker {{{
+" python maker {{{
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
 \   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
@@ -565,8 +567,10 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/include/qt5/QtWidgets',
 \   '/usr/include/qt5/QtXml',
 \   '/opt/ros/kinetic/include',
-\   '/home/joseph/catkin/devel/include',
-\   '/home/joseph/catkin/install/include',
+\   '/home/joseph/catkin_indigo/devel/include',
+\   '/home/joseph/catkin_kinetic/devel/include',
+\   '/home/joseph/catkin_indigo/install/include',
+\   '/home/joseph/catkin_kinetic/install/include',
 \ ]
 " }}}
 " deoplete-clang {{{
@@ -725,10 +729,10 @@ imap  <F5>  <Esc>:call Quick_Compile()<CR>
 nmap  <silent><F6>  :setlocal spell!<CR>
 imap  <F6>  <Esc>:setlocal spell!<CR>
 " tabularize shortcut
-nmap  <leader><space> :Tabularize / <CR>
-nmap  <leader>"       :Tabularize /"[^"]*"<CR>
-nmap  <leader>(       :Tabularize /(.*)<CR>
-nmap  <leader>=       :Tabularize /= <CR>
+nmap  <leader><leader><space> :Tabularize / <CR>
+nmap  <leader><leader>"       :Tabularize /"[^"]*"<CR>
+nmap  <leader><leader>(       :Tabularize /(.*)<CR>
+nmap  <leader><leader>=       :Tabularize /= <CR>
 " a.vim shortcut
 nmap  <leader><leader>a :A<CR>
 "" }}}
