@@ -76,6 +76,9 @@ NeoBundle 'chiphogg/vim-prototxt'
 NeoBundle 'vim-scripts/SWIG-syntax'
 NeoBundle 'vim-scripts/google.vim'
 " " }}}
+" python {{{
+NeoBundle 'Vimjas/vim-python-pep8-indent'
+" }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tfnico/vim-gradle'
@@ -599,6 +602,10 @@ let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 " }}}
+" }}}
+" vim-javascript settings {{{
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
 " }}}
 " startify settings {{{
 let g:startify_list_order = [
