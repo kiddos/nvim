@@ -43,7 +43,7 @@ NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
 NeoBundle 'chrisbra/csv.vim'
-NeoBundle 'garbas/vim-snipmate'
+" NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'godlygeek/tabular'
@@ -53,6 +53,8 @@ NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'tpope/vim-heroku'
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -502,17 +504,17 @@ let g:deoplete#max_abbr_width = 96
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 666
 let g:deoplete#sources = {}
-let g:deoplete#sources.c = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include']
-let g:deoplete#sources.java = ['file', 'file/include', 'java']
-let g:deoplete#sources.python = ['file', 'file/include', 'jedi']
-let g:deoplete#sources.cmake = ['cmake']
-let g:deoplete#sources.vim = ['vim', 'file']
-let g:deoplete#sources.javascript = ['ternjs', 'file']
+let g:deoplete#sources.c = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.java = ['file', 'file/include', 'java', 'neosnippet']
+let g:deoplete#sources.python = ['file', 'file/include', 'jedi', 'neosnippet']
+let g:deoplete#sources.cmake = ['cmake', 'file', 'neosnippet']
+let g:deoplete#sources.vim = ['vim', 'file', 'neosnippet']
+let g:deoplete#sources.javascript = ['ternjs', 'file', 'neosnippet']
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
@@ -603,6 +605,25 @@ let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 " }}}
+" }}}
+" neosnippet settings {{{
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='~/.config/nvim/bundle/snippets.vim/snippets'
+imap <expr><TAB>
+\ pumvisible() ? "\<C-n>" :
+\ neosnippet#expandable_or_jumpable() ?
+\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 " }}}
 " vim-javascript settings {{{
 let g:javascript_plugin_jsdoc = 1
