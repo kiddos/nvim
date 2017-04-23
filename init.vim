@@ -53,16 +53,21 @@ NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'tpope/vim-heroku'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'wellle/tmux-complete.vim'
 NeoBundle 'zchee/deoplete-go'
 NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'zchee/deoplete-zsh'
+NeoBundle 'c9s/perlomni.vim'
+NeoBundle 'landaire/deoplete-swift'
 NeoBundle 'carlitux/deoplete-ternjs'
+NeoBundle 'fishbullet/deoplete-ruby'
 NeoBundle 'kiddos/deoplete-cpp'
 " }}}
 " libs {{{
@@ -512,9 +517,9 @@ let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.java = ['file', 'file/include', 'java', 'neosnippet']
 let g:deoplete#sources.python = ['file', 'file/include', 'jedi', 'neosnippet']
-let g:deoplete#sources.cmake = ['cmake', 'file', 'neosnippet']
-let g:deoplete#sources.vim = ['vim', 'file', 'neosnippet']
-let g:deoplete#sources.javascript = ['ternjs', 'file', 'neosnippet']
+let g:deoplete#sources.cmake = ['file', 'cmake', 'neosnippet']
+let g:deoplete#sources.vim = ['file', 'vim', 'neosnippet']
+let g:deoplete#sources.javascript = ['file', 'ternjs', 'neosnippet']
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
