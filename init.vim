@@ -52,6 +52,7 @@ NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
 NeoBundle 'kiddos/vim-ros'
+NeoBundle 'tpope/vim-heroku'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
