@@ -43,7 +43,7 @@ NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
 NeoBundle 'chrisbra/csv.vim'
-" NeoBundle 'garbas/vim-snipmate'
+NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'godlygeek/tabular'
@@ -451,6 +451,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/home/joseph/catkin_kinetic/devel/include',
 \   '-I/home/joseph/catkin_indigo/install/include',
 \   '-I/home/joseph/catkin_kinetic/install/include',
+\   '-I/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \   ]
 " }}}
 " nvidia cuda maker {{{
@@ -582,6 +583,7 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/home/joseph/catkin_kinetic/devel/include',
 \   '/home/joseph/catkin_indigo/install/include',
 \   '/home/joseph/catkin_kinetic/install/include',
+\   '/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \ ]
 " }}}
 " deoplete-clang {{{
@@ -612,16 +614,25 @@ let g:JavaComplete_ImportDefault = -1
 " }}}
 " }}}
 " neosnippet settings {{{
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" {{{ options
 let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory='~/.config/nvim/bundle/snippets.vim/snippets'
-imap <expr><TAB>
-\ pumvisible() ? "\<C-n>" :
-\ neosnippet#expandable_or_jumpable() ?
-\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
+let g:neosnippet#disable_runtime_snippets = {
+\   '_' : 1,
+\ }
+let g:neosnippet#enable_completed_snippet = 1
+" }}}
+" {{{ key maps
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+" imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
@@ -629,6 +640,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+" }}}
 " }}}
 " vim-javascript settings {{{
 let g:javascript_plugin_jsdoc = 1
