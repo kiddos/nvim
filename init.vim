@@ -28,6 +28,7 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'Shougo/dein.vim'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-heroku'
 NeoBundle 'benekastah/neomake'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
@@ -52,7 +53,6 @@ NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
 NeoBundle 'kiddos/vim-ros'
-NeoBundle 'tpope/vim-heroku'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -664,7 +664,7 @@ let g:startify_bookmarks = [
 \   {'vimrc': '~/.vim/vimrc'},
 \   {'nvimrc': '~/.config/nvim/init.vim'}]
 let g:startify_custom_header =
-\   map(split(system('tips.py | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
+\   map(split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
 let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
