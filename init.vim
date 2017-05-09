@@ -47,12 +47,12 @@ NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
+NeoBundle 'kiddos/vim-ros'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'critiqjo/lldb.nvim'
-NeoBundle 'kiddos/vim-ros'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -85,7 +85,6 @@ NeoBundle 'vim-scripts/SWIG-syntax'
 NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
-NeoBundle 'Vimjas/vim-python-pep8-indent'
 " }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
