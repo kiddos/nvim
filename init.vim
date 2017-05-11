@@ -86,6 +86,13 @@ NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
 " }}}
+" lua {{{
+NeoBundle 'xolox/vim-lua-ftplugin'
+NeoBundle 'xolox/vim-misc'
+" }}}
+" perl {{{
+NeoBundle 'vim-perl/vim-perl'
+" }}}
 " Java {{{
 NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tfnico/vim-gradle'
