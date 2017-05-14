@@ -363,18 +363,8 @@ let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 " }}}
-" Neomake settings {{{
+" neomake settings {{{
 autocmd! BufWritePost * Neomake
-autocmd FileType c setlocal makeprg="gcc"
-autocmd FileType cpp setlocal makeprg="g++"
-autocmd FileType java setlocal makeprg="javac"
-autocmd FileType python setlocal makeprg="python"
-autocmd FileType javascript setlocal makeprg="jshint"
-autocmd FileType ruby setlocal makeprg="jruby"
-autocmd FileType css setlocal makeprg="csslint"
-autocmd FileType sh setlocal makeprg="shellcheck"
-autocmd FileType markdown setlocal makeprg="mdl"
-
 let g:neomake_error_sign = {
 \   'text': '✗',
 \   'texthl': 'NeomakeError',
@@ -385,7 +375,7 @@ let g:neomake_warning_sign = {
 \   }
 highlight NeomakeError    cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
 highlight NeomakeWarning  cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
-" c clang maker {{{
+" c gcc maker {{{
 let g:neomake_c_enabled_makers = ['gcc']
 let g:neomake_c_gcc_args = [
 \   '-fsyntax-only',
@@ -411,7 +401,7 @@ let g:neomake_c_gcc_args = [
 \   '-I/usr/src/linux-headers-4.2.8/include/',
 \   ]
 " }}}
-" cpp clang maker {{{
+" cpp gcc maker {{{
 let g:neomake_cpp_enabled_makers = ['gcc']
 let g:neomake_cpp_gcc_args = [
 \   '-fsyntax-only',
@@ -461,7 +451,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \   ]
 " }}}
-" nvidia cuda maker {{{
+" cuda nvcc maker {{{
 let g:neomake_cuda_nvcc_maker = {
 \   'exe': 'nvcc',
 \   'args': [
@@ -485,6 +475,9 @@ let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_python_flake8_args = [
 \   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
 \]
+" }}}
+" {{{ javascript maker
+let g:neomake_javascript_enabled_makers = ['jshint']
 " }}}
 " }}}
 " NERDcommenter settings {{{
