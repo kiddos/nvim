@@ -153,7 +153,8 @@ autocmd FileType vim setlocal foldmarker={{{,}}}
 autocmd FileType vim setlocal foldlevel=1
 autocmd FileType conf,zsh setlocal foldmethod=marker
 autocmd FileType conf,zsh setlocal foldmarker={,}
-autocmd FileType conf,zsh setlocal foldlevel=1
+autocmd FileType conf,zsh setlocal foldlevel=3
+autocmd FileType conf normal zM
 
 autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmethod=marker
 autocmd FileType java,javascript,css,php setlocal foldmethod=marker
