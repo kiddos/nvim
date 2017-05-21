@@ -85,6 +85,7 @@ NeoBundle 'vim-scripts/SWIG-syntax'
 NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
+NeoBundle 'tell-k/vim-autopep8'
 " }}}
 " lua {{{
 NeoBundle 'xolox/vim-lua-ftplugin'
@@ -364,6 +365,21 @@ let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 " }}}
+" tmuxline {{{
+" let g:tmuxline_preset = 'full'
+" let g:tmuxline_separators = {
+"     \ 'left' : '>',
+"     \ 'right' : '',
+"     \ 'space' : ' '}
+" let g:tmuxline_preset = {
+"       \'a'    : '#S',
+"       \'b'    : '#(whoami) #H',
+"       \'win' : '#I #W',
+"       \'cwin' : '#I #W',
+"       \'x'    : '#(date +"%F %A %R:%S")',
+"       \'y'    : '#W',
+"       \'z'    : '#H'}
+" }}}
 " neomake settings {{{
 autocmd! BufWritePost * Neomake
 let g:neomake_error_sign = {
@@ -606,14 +622,13 @@ let g:deoplete#sources#clang#flags = [
 \   '-Isrc'
 \   ]
 " }}}
-"" javacompelte2 {{{
+" javacompelte2 {{{
 let g:JavaComplete_UseFQN = 1
 let g:JavaComplete_ClosingBrace = 1
 let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_GradleExecutable = 'gradle'
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
-" }}}
 " }}}
 " neosnippet settings {{{
 " {{{ options
@@ -642,6 +657,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+" }}}
 " }}}
 " }}}
 " vim-javascript settings {{{
@@ -691,6 +707,12 @@ let g:clang_format#style_options = {
 " }}}
 " ROS {{{
 let g:ros_catkin_workspace = '~/catkin_indigo'
+" }}}
+" autopep8 {{{
+let g:autopep8_indent_size=2
+let g:autopep8_disable_show_diff=1
+let g:autopep8_max_line_length=80
+let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
 " }}}
 " useful functions and keybindings {{{
 function! Test_Webpage()
