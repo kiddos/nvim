@@ -48,7 +48,6 @@ NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
-NeoBundle 'godlygeek/tabular'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
@@ -86,6 +85,15 @@ NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
 NeoBundle 'tell-k/vim-autopep8'
+" }}}
+" javascript   {{{
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'nono/jquery.vim'
+NeoBundle 'moll/vim-node'
+NeoBundle 'elzr/vim-json'
+NeoBundle 'burnettk/vim-angular'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'maksimr/vim-jsbeautify'
 " }}}
 " lua {{{
 NeoBundle 'xolox/vim-lua-ftplugin'
@@ -127,14 +135,6 @@ NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle '1995eaton/vim-better-css-completion'
-" }}}
-" javascript   {{{
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'nono/jquery.vim'
-NeoBundle 'moll/vim-node'
-NeoBundle 'elzr/vim-json'
-NeoBundle 'burnettk/vim-angular'
-NeoBundle 'kchmck/vim-coffee-script'
 " }}}
 call neobundle#end()
 filetype plugin indent on
@@ -364,21 +364,6 @@ let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
-" }}}
-" tmuxline {{{
-" let g:tmuxline_preset = 'full'
-" let g:tmuxline_separators = {
-"     \ 'left' : '>',
-"     \ 'right' : '',
-"     \ 'space' : ' '}
-" let g:tmuxline_preset = {
-"       \'a'    : '#S',
-"       \'b'    : '#(whoami) #H',
-"       \'win' : '#I #W',
-"       \'cwin' : '#I #W',
-"       \'x'    : '#(date +"%F %A %R:%S")',
-"       \'y'    : '#W',
-"       \'z'    : '#H'}
 " }}}
 " neomake settings {{{
 autocmd! BufWritePost * Neomake
@@ -699,20 +684,27 @@ autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
 \   }
 \ ]
 " }}}
+" ROS {{{
+let g:ros_catkin_workspace = '~/catkin_indigo'
+" }}}
 " clang-format {{{
 let g:clang_format#code_style = 'google'
 let g:clang_format#style_options = {
 \   "Standard" : "C++11",
 \}
 " }}}
-" ROS {{{
-let g:ros_catkin_workspace = '~/catkin_indigo'
-" }}}
 " autopep8 {{{
 let g:autopep8_indent_size=2
 let g:autopep8_disable_show_diff=1
 let g:autopep8_max_line_length=80
 let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
+" }}}
+" js-beautify {{{
+autocmd FileType javascript command! JSBeautify call JsBeautify()
+autocmd FileType json command! JSONBeautify call JsonBeautify()
+autocmd FileType jsx command! JSBeautify call JsxBeautify()
+autocmd FileType html command! HTMLBeautify call HtmlBeautify()
+autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " useful functions and keybindings {{{
 function! Test_Webpage()
@@ -797,11 +789,6 @@ nmap  <silent><F5>  :call Quick_Compile()<CR>
 imap  <F5>  <Esc>:call Quick_Compile()<CR>
 nmap  <silent><F6>  :setlocal spell!<CR>
 imap  <F6>  <Esc>:setlocal spell!<CR>
-" tabularize shortcut
-nmap  <leader><leader><space> :Tabularize / <CR>
-nmap  <leader><leader>"       :Tabularize /"[^"]*"<CR>
-nmap  <leader><leader>(       :Tabularize /(.*)<CR>
-nmap  <leader><leader>=       :Tabularize /= <CR>
 " a.vim shortcut
 nmap  <leader><leader>a :A<CR>
 "" }}}
