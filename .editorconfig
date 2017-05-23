@@ -18,4 +18,3 @@ indent_size = 2
 [**.html]
 indent_style = space
 indent_size = 2
-max_char = 80
