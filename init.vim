@@ -193,6 +193,10 @@ autocmd FileType vim setlocal foldlevel=0
 autocmd FileType conf setlocal foldmarker={,}
 autocmd FileType conf setlocal foldlevel=0
 " }}}
+" snippets {{{
+autocmd FileType snippets setlocal foldmarker={,}
+autocmd FileType snippets setlocal foldlevel=0
+" }}}
 " }}}
 " indenting setting {{{
 " default {{{
@@ -221,6 +225,9 @@ autocmd FileType make setlocal shiftwidth=2
 " }}}
 " snippet indenting {{{
 autocmd FileType snippets setlocal noexpandtab
+autocmd FileType snippets setlocal tabstop=4
+autocmd FileType snippets setlocal softtabstop=4
+autocmd FileType snippets setlocal shiftwidth=4
 " }}}
 " fuzzy control language indenting {{{
 autocmd FileType fcl setlocal noexpandtab
