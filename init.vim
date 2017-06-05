@@ -140,55 +140,63 @@ call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
 
-" code display setting {{{
-" line width before auto newline
+" code display settings {{{
 set modeline
-autocmd FileType c,cpp,objc,objcpp,cs,asm,vhdl set textwidth=80
-autocmd FileType java,python,ruby,eruby,javascript set textwidth=80
-autocmd FileType matlab,r,vim set textwidth=80
-autocmd FileType html,elm,twig,jade,ejs,jst set textwidth=100
-autocmd FileType css,less,sass,scss set textwidth=80
-" code folding
-autocmd FileType vim setlocal foldmethod=marker
-autocmd FileType vim setlocal foldmarker={{{,}}}
-autocmd FileType vim setlocal foldlevel=1
-autocmd FileType conf,zsh setlocal foldmethod=marker
-autocmd FileType conf,zsh setlocal foldmarker={,}
-autocmd FileType conf,zsh setlocal foldlevel=3
-autocmd FileType conf normal zM
-
-autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmethod=marker
-autocmd FileType java,javascript,css,php setlocal foldmethod=marker
-autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldmarker={,}
-autocmd FileType java,javascript,css,php setlocal foldmarker={,}
-autocmd FileType c,cpp,objc,objcpp,cuda setlocal foldlevel=1
-autocmd FileType java,javascript,css,php setlocal foldlevel=1
-autocmd FileType c,cpp,objc,objcpp,cuda,java,javascript,css,php normal zR
-
-autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
-autocmd FileType python,ruby setlocal foldmethod=indent
-autocmd FileType python,ruby setlocal foldlevel=1
-autocmd FileType html,xhtml,xml,haml,hst setlocal foldlevel=20
-autocmd FileType html,xhtml,xml,haml,jst,ruby normal zR
-autocmd FileType vim normal zM
+set textwidth=80
 " }}}
-" editing settings {{{
-" solve zsh escap delay
-set timeoutlen=1000 ttimeoutlen=0
-set altkeymap
+" code folding settings {{{
+" default {{{
+set foldmethod=marker
+set foldmarker={,}
+set foldlevel=1
+" }}}
+" c/c++/objc/objc++ {{{
+autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
+" }}}
+" python {{{
+autocmd FileType python setlocal foldmethod=indent
+autocmd FileType python setlocal foldlevel=1
+autocmd FileType python normal zR
+" }}}
+" ruby {{{
+autocmd FileType ruby setlocal foldmethod=indent
+autocmd FileType ruby setlocal foldlevel=1
+autocmd FileType ruby normal zR
+" }}}
+" java {{{
+autocmd FileType java normal zR
+" }}}
+" javascript {{{
+autocmd FileType javascript normal zR
+" }}}
+" typescript {{{
+autocmd FileType typescript normal zR
+" }}}
+" coffee script {{{
+autocmd FileType coffee normal zR
+" }}}
+" sass {{{
+autocmd FileType sass setlocal foldmethod=indent
+" }}}
+" php {{{
+autocmd FileType php normal zR
+" }}}
+" html/xhtml/xml/haml/jst {{{
+autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
+autocmd FileType html,xhtml,xml,haml,jst setlocal foldlevel=0
+" }}}
+" vim {{{
+autocmd FileType vim setlocal foldmarker={{{,}}}
+autocmd FileType vim setlocal foldlevel=0
+" }}}
+" conf {{{
+autocmd FileType conf setlocal foldmarker={,}
+autocmd FileType conf setlocal foldlevel=0
+" }}}
+" }}}
+" indenting setting {{{
+" default {{{
 set autoindent
-set backspace=indent,eol,start
-set clipboard=unnamed,unnamedplus
-set encoding=utf-8
-set ignorecase
-set incsearch
-set linebreak
-set shiftround
-set complete=.,w,b,u,U,t,k
-set completeopt=menu,noinsert,noselect
-set number
-set mouse=""
-" indent option
 set expandtab
 set cindent
 set cinoptions=>1s,(-1s
@@ -196,15 +204,9 @@ set tabstop=4
 set softtabstop=2
 set shiftwidth=2
 set smartindent
-autocmd FileType bzl setlocal nosmartindent
+" }}}
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
-" }}}
-" python indenting {{{
-autocmd FileType python setlocal expandtab
-autocmd FileType python setlocal tabstop=4
-autocmd FileType python setlocal softtabstop=2
-autocmd FileType python setlocal shiftwidth=2
 " }}}
 " make indenting {{{
 autocmd FileType make setlocal noexpandtab
@@ -214,47 +216,62 @@ autocmd FileType make setlocal shiftwidth=2
 " }}}
 " snippet indenting {{{
 autocmd FileType snippets setlocal noexpandtab
-autocmd FileType snippets setlocal tabstop=4
-autocmd FileType snippets setlocal softtabstop=4
-autocmd FileType snippets setlocal shiftwidth=4
 " }}}
-" fuzzy control language {{{
+" fuzzy control language indenting {{{
 autocmd FileType fcl setlocal noexpandtab
-autocmd FileType fcl setlocal tabstop=4
-autocmd FileType fcl setlocal softtabstop=4
-autocmd FileType fcl setlocal shiftwidth=4
+" }}}
+" bazel build indenting {{{
+autocmd FileType bzl setlocal nosmartindent
 " }}}
 " }}}
-" buffer settings {{{
+" editing settings {{{
+set altkeymap
+set backspace=indent,eol,start
+set clipboard=unnamed,unnamedplus
+set linebreak
+set shiftround
+set complete=.,w,b,u,U,t,k
+set completeopt=menu,noinsert,noselect
+set mouse=""
 set autoread
-set confirm
-set cscopepathcomp=2
 set hidden
-set icon
-set iconstring=nvim
+set cscopepathcomp=2
 set nowritebackup
 set formatoptions+=t
-autocmd VimEnter,BufRead,BufNewFile *.i setlocal filetype=swig
-autocmd VimEnter,BufRead,BufNewFile *.swg setlocal filetype=swig
-autocmd VimEnter,BufRead,BufNewFile *.BUILD setlocal filetype=bzl
-autocmd VimEnter,BufRead,BufNewFile *.m setlocal filetype=matlab
-autocmd VimEnter,BufRead,BufNewFile *.mm setlocal filetype=objcpp
-autocmd VimEnter,BufRead,BufNewFile *.h setlocal filetype=cpp
-autocmd VimEnter,BufRead,BufNewFile *.ejs setlocal filetype=html
-autocmd VimEnter,BufRead,BufNewFile *.pro setlocal filetype=make
-autocmd VimEnter,BufRead,BufNewFile *.fcl setlocal filetype=fcl
+" }}}
+" search settings {{{
+set incsearch
+set ignorecase
+" }}}
+" encoding settings {{{
+set encoding=utf-8
+set langmenu=en_US.UTF-8
+" }}}
+" file type settings {{{
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=matlab
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.mm setlocal filetype=objcpp
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
 " ros
-autocmd VimEnter,BufRead,BufNewFile *.msg setlocal filetype=rosmsg
-autocmd VimEnter,BufRead,BufNewFile *.launch setlocal filetype=roslaunch
-autocmd VimEnter,BufRead,BufNewFile *.action setlocal filetype=rosaction
-autocmd VimEnter,BufRead,BufNewFile *.srv setlocal filetype=rossrv
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.msg setlocal filetype=rosmsg
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.launch setlocal filetype=xml
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.action setlocal filetype=rosaction
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.srv setlocal filetype=rossrv
 " }}}
 " window settings {{{
+set confirm
+set icon
+set iconstring=nvim
+set number
 set cmdheight=1
 set cmdwinheight=6
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
-set langmenu=en_US.UTF-8
 set laststatus=2
 set pumheight=12
 set report=6
@@ -270,13 +287,7 @@ set warn
 set wildmode=longest,full
 set wildmenu
 " }}}
-" color scheme settings {{{
-set cursorline
-syntax enable
-syntax on
-colorscheme malokai
-" }}}
-" omni completeion {{{
+" omni completeion settings {{{
 autocmd FileType c setlocal omnifunc=ccomplete#Complete
 autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -289,7 +300,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 " }}}
-" custom key maps {{{
+" key maps settings {{{
 " leader {{{
 let mapleader=","
 let localleader="\\"
@@ -324,24 +335,25 @@ nmap <leader><leader>v :vsplit<CR>
 nmap <leader><leader>s :tabedit<CR>
 nmap <leader><leader>c :tabclose<CR>
 " }}}
-" enter to complete popup
+" enter to complete popup {{{
 inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
+" }}}
 " end line semicolon ; {{{
-autocmd	FileType  c	          nnoremap ; $a;
-autocmd FileType  cpp         nnoremap ; $a;
-autocmd FileType  cuda        nnoremap ; $a;
-autocmd FileType  arduino     nnoremap ; $a;
-autocmd	FileType  objc        nnoremap ; $a;
-autocmd	FileType  objcpp      nnoremap ; $a;
-autocmd	FileType  java        nnoremap ; $a;
-autocmd	FileType  matlab      nnoremap ; $a;
-autocmd	FileType  php         nnoremap ; $a;
-autocmd	FileType  html        nnoremap ; $a;
-autocmd	FileType  css         nnoremap ; $a;
-autocmd	FileType  javascript  nnoremap ; $a;
-autocmd	FileType  perl        nnoremap ; $a;
+autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
+autocmd FileType java,javascript,css,html,matlab,php,perl nnoremap ; $a;
 " }}}
 " }}}
+" color scheme settings {{{
+set cursorline
+syntax enable
+syntax on
+colorscheme malokai
+" }}}
+" fixes {{{
+" fix zsh escape lag
+set timeoutlen=1000 ttimeoutlen=0
+" }}}
+" plugin settings {{{
 " airline settings {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
@@ -707,6 +719,7 @@ autocmd FileType json command! JSONBeautify call JsonBeautify()
 autocmd FileType jsx command! JSBeautify call JsxBeautify()
 autocmd FileType html command! HTMLBeautify call HtmlBeautify()
 autocmd FileType css command! CSSBeautify call CSSBeautify()
+" }}}
 " }}}
 " useful functions and keybindings {{{
 function! Test_Webpage()
