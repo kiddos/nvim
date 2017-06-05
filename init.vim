@@ -208,6 +208,11 @@ set smartindent
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 " }}}
+" python indenting {{{
+autocmd FileType python setlocal tabstop=4
+autocmd FileType python setlocal softtabstop=2
+autocmd FileType python setlocal shiftwidth=2
+" }}}
 " make indenting {{{
 autocmd FileType make setlocal noexpandtab
 autocmd FileType make setlocal tabstop=4
@@ -698,26 +703,26 @@ autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
 \   }
 \ ]
 " }}}
-" ROS {{{
+" vim-ros setting {{{
 let g:ros_catkin_workspace = '~/catkin_indigo'
 " }}}
-" clang-format {{{
+" clang-format settings {{{
 let g:clang_format#code_style = 'google'
 let g:clang_format#style_options = {
 \   "Standard" : "C++11",
 \}
 " }}}
-" autopep8 {{{
+" autopep8 settings {{{
 let g:autopep8_indent_size=2
-let g:autopep8_disable_show_diff=1
+let g:autopep8_disable_show_diff=0
 let g:autopep8_max_line_length=80
-let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
+" let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
 " }}}
-" js-beautify {{{
+" js-beautify settings {{{
 autocmd FileType javascript command! JSBeautify call JsBeautify()
 autocmd FileType json command! JSONBeautify call JsonBeautify()
 autocmd FileType jsx command! JSBeautify call JsxBeautify()
-autocmd FileType html command! HTMLBeautify call HtmlBeautify()
+autocmd FileType html,htmldjango command! HTMLBeautify call HtmlBeautify()
 autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " }}}
