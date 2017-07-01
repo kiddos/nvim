@@ -725,9 +725,15 @@ let g:ros_catkin_workspace = '~/catkin_indigo'
 " }}}
 " clang-format settings {{{
 let g:clang_format#code_style = 'google'
-let g:clang_format#style_options = {
-\   "Standard" : "C++11",
-\}
+let g:clang_format#filetype_style_options = {
+\   'cpp' : {
+\     'Standard': 'C++11',
+\     'ColumnLimit': 79,
+\   },
+\   'javascript' : {
+\     'ColumnLimit': 79,
+\   },
+\ }
 " }}}
 " autopep8 settings {{{
 let g:autopep8_indent_size=2
