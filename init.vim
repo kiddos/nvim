@@ -480,7 +480,8 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/home/joseph/catkin_kinetic/install/include',
 \   '-I/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \   '-I/usr/include/mpi',
-\   '-I/usr/include/pcl-1.7/',
+\   '-I/usr/include/pcl-1.7',
+\   '-I/usr/include/libusb-1.0',
 \   ]
 " }}}
 " cuda nvcc maker {{{
@@ -622,7 +623,8 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/home/joseph/catkin_kinetic/install/include',
 \   '/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \   '/usr/include/mpi',
-\   '/usr/include/pcl-1.7/',
+\   '/usr/include/pcl-1.7',
+\   '/usr/include/libusb-1.0',
 \ ]
 " }}}
 " deoplete-clang {{{
