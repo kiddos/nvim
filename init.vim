@@ -9,7 +9,6 @@ call neobundle#begin(expand('~/.config/nvim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " color scheme {{{
 NeoBundle 'kiddos/malokai.vim'
-NeoBundle 'flazz/vim-colorschemes'
 " }}}
 " git {{{
 NeoBundle 'tpope/vim-fugitive'
@@ -25,7 +24,6 @@ NeoBundle 'benmills/vimux'
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'Shougo/dein.vim'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-heroku'
@@ -43,15 +41,12 @@ NeoBundle 'mbbill/undotree'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
-NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'rhysd/vim-clang-format'
-NeoBundle 'critiqjo/lldb.nvim'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -109,7 +104,6 @@ NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
-NeoBundle 'vhda/verilog_systemverilog.vim'
 " }}}
 " ruby {{{
 NeoBundle 'tpope/vim-rails'
@@ -129,7 +123,6 @@ NeoBundle 'lambdatoast/elm.vim'
 NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'coachshea/jade-vim'
 NeoBundle 'tpope/vim-markdown'
-NeoBundle 'mattn/emmet-vim'
 " }}}
 " css {{{
 NeoBundle 'ap/vim-css-color'
@@ -203,12 +196,12 @@ autocmd FileType snippets setlocal foldlevel=0
 " default {{{
 set autoindent
 set expandtab
-set cindent
-set cinoptions=>1s,(-1s
+set smartindent
+autocmd FileType c,cpp setlocal cindent
+autocmd FileType c,cpp setlocal cinoptions=>1s,(-1s
 set tabstop=4
 set softtabstop=2
 set shiftwidth=2
-set smartindent
 " }}}
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
@@ -554,15 +547,15 @@ let g:gitgutter_enabled = 0
 " }}}
 " deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_refresh_always = 0
 let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#max_menu_width = 96
-let g:deoplete#max_abbr_width = 96
+let g:deoplete#max_menu_width = 36
+let g:deoplete#max_abbr_width = 36
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 666
+let g:deoplete#max_list = 66
+let g:deoplete#auto_complete_delay = 60
+let g:deoplete#auto_refresh_delay = 600
 let g:deoplete#sources = {}
 let g:deoplete#sources.c = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
@@ -693,6 +686,9 @@ let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_GradleExecutable = 'gradle'
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
+" }}}
+" jedi {{{
+let g:deoplete#sources#jedi#server_timeout = 60
 " }}}
 " neosnippet settings {{{
 " {{{ options
