@@ -567,7 +567,7 @@ let g:deoplete#sources.java = ['file', 'file/include', 'java', 'neosnippet']
 let g:deoplete#sources.python = ['file', 'file/include', 'jedi', 'neosnippet']
 let g:deoplete#sources.cmake = ['file', 'cmake', 'neosnippet']
 let g:deoplete#sources.vim = ['file', 'vim', 'neosnippet']
-let g:deoplete#sources.javascript = ['file', 'ternjs', 'neosnippet']
+let g:deoplete#sources.javascript = ['file', 'tern']
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
@@ -678,6 +678,14 @@ let g:deoplete#sources#clang#flags = [
 \   '-I../src',
 \   '-Isrc'
 \   ]
+" }}}
+" ternjs {{{
+let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
+let g:deoplete#sources#ternjs#timeout = 3
+let g:deoplete#sources#ternjs#types = 1
+let g:deoplete#sources#ternjs#depths = 1
+let g:deoplete#sources#ternjs#include_keywords = 1
+let g:deoplete#sources#ternjs#in_literal = 0
 " }}}
 " javacompelte2 {{{
 let g:JavaComplete_UseFQN = 1
