@@ -115,13 +115,11 @@ NeoBundle 'shawncplus/phpcomplete.vim'
 " }}}
 " html {{{
 NeoBundle 'othree/html5.vim'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'digitaltoad/vim-pug'
 NeoBundle 'briancollins/vim-jst'
 NeoBundle 'evidens/vim-twig'
-NeoBundle 'lambdatoast/elm.vim'
 NeoBundle 'zeekay/vim-html2jade'
-NeoBundle 'coachshea/jade-vim'
+NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
 " }}}
 " css {{{
