@@ -427,6 +427,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-Wextra',
 \   '-Wno-pragmas',
 \   '-Wno-unknown-pragmas',
+\   '-Wno-sign-compare',
 \   '-std=c++14',
 \   '-fopenmp',
 \   '-pthread',
