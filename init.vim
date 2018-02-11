@@ -433,6 +433,9 @@ let g:neomake_cpp_gcc_args = [
 \   '-pthread',
 \   '-fPIC',
 \   '-DDEBUG', '-DQT_DEBUG', '-DKDEBUG_MESSAGE',
+\	'-I../../devel/include',
+\	'-I../devel/include',
+\	'-I./devel/include',
 \   '-I.',
 \	'-Iinclude',
 \	'-I../include',
@@ -589,6 +592,9 @@ let g:deoplete#sources#cpp#c_include_path = [
 \ ]
 let g:deoplete#sources#cpp#arduino_path = '/home/joseph/tools/arduino'
 let g:deoplete#sources#cpp#cpp_include_path = [
+\	'../../devel/include',
+\	'../devel/include',
+\	'./devel/include',
 \   '/usr/local/include',
 \   '/usr/local/cuda/include',
 \   '/usr/local/cuda',
