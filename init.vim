@@ -74,7 +74,7 @@ NeoBundle 'kiddos/a.vim'
 NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'beyondmarc/hlsl.vim'
-NeoBundle 'vim-scripts/Arduino-syntax-file'
+" NeoBundle 'vim-scripts/Arduino-syntax-file'
 NeoBundle 'chiphogg/vim-prototxt'
 NeoBundle 'vim-scripts/SWIG-syntax'
 NeoBundle 'vim-scripts/google.vim'
@@ -132,6 +132,22 @@ call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
 
+" file type settings {{{
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=matlab
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.mm setlocal filetype=objcpp
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
+" ros
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.msg setlocal filetype=rosmsg
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.launch setlocal filetype=xml
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.action setlocal filetype=rosaction
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.srv setlocal filetype=rossrv
+" }}}
 " code display settings {{{
 set modeline
 set textwidth=80
@@ -195,8 +211,8 @@ autocmd FileType snippets setlocal foldlevel=0
 set autoindent
 set expandtab
 set smartindent
-autocmd FileType c,cpp setlocal cindent
-autocmd FileType c,cpp setlocal cinoptions=>1s,(-1s
+autocmd FileType c,cpp,arduino,cuda setlocal cindent
+autocmd FileType c,cpp,arduino,cuda setlocal cinoptions=>1s,(-1s
 set tabstop=4
 set softtabstop=2
 set shiftwidth=2
@@ -250,22 +266,6 @@ set ignorecase
 " encoding settings {{{
 set encoding=utf-8
 set langmenu=en_US.UTF-8
-" }}}
-" file type settings {{{
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=matlab
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.mm setlocal filetype=objcpp
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
-" ros
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.msg setlocal filetype=rosmsg
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.launch setlocal filetype=xml
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.action setlocal filetype=rosaction
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.srv setlocal filetype=rossrv
 " }}}
 " window settings {{{
 set confirm
@@ -567,7 +567,7 @@ let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.cuda = ['file', 'cpp', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.arduino = ['file', 'cpp', 'cpp/include', 'neosnippet']
+let g:deoplete#sources.arduino = ['file', 'arduino', 'cpp/include', 'neosnippet']
 let g:deoplete#sources.java = ['file', 'file/include', 'java', 'neosnippet']
 let g:deoplete#sources.python = ['file', 'file/include', 'jedi', 'neosnippet']
 let g:deoplete#sources.cmake = ['file', 'cmake', 'neosnippet']
@@ -593,7 +593,7 @@ let g:deoplete#sources#cpp#c_include_path = [
 \	'src/main/cpp',
 \	'src/main/jni',
 \ ]
-let g:deoplete#sources#cpp#arduino_path = '/home/joseph/tools/arduino'
+let g:deoplete#sources#cpp#arduino_path = '/usr/share/arduino/'
 let g:deoplete#sources#cpp#cpp_include_path = [
 \	'../../devel/include',
 \	'../devel/include',
@@ -711,8 +711,10 @@ let g:deoplete#sources#jedi#server_timeout = 60
 " }}}
 " neosnippet settings {{{
 " {{{ options
-let g:neosnippet#disable_select_mode_mappings = 0
+let g:neosnippet#disable_select_mode_mappings = 1
 let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#enable_completed_snippet = 1
+let g:neosnippet#expand_word_boundary = 0
 let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
 let g:neosnippet#disable_runtime_snippets = {
 \   '_' : 1,
