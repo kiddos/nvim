@@ -63,6 +63,7 @@ NeoBundle 'c9s/perlomni.vim'
 NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'fishbullet/deoplete-ruby'
 NeoBundle 'kiddos/deoplete-cpp'
+NeoBundle 'mhartington/nvim-typescript'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
