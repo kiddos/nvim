@@ -90,6 +90,7 @@ NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'maksimr/vim-jsbeautify'
+NeoBundle 'HerringtonDarkholme/yats.vim'
 " }}}
 " lua {{{
 NeoBundle 'xolox/vim-lua-ftplugin'
