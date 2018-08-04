@@ -579,25 +579,14 @@ let g:gitgutter_enabled = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#max_menu_width = 36
+let g:deoplete#auto_complete_start_length = 0
+let g:deoplete#num_processes = 4
+let g:deoplete#max_menu_width = 90
 let g:deoplete#max_abbr_width = 36
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 66
+let g:deoplete#max_list = 6000
 let g:deoplete#auto_complete_delay = 60
-let g:deoplete#auto_refresh_delay = 600
-let g:deoplete#sources = {}
-let g:deoplete#sources.c = ['file', 'cpp', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.cpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.objc = ['file', 'cpp', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.objcpp = ['file', 'cpp', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.cuda = ['file', 'cuda', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.arduino = ['file', 'arduino', 'cpp/include', 'neosnippet']
-let g:deoplete#sources.java = ['file', 'file/include', 'java', 'neosnippet']
-let g:deoplete#sources.python = ['file', 'file/include', 'jedi', 'neosnippet']
-let g:deoplete#sources.cmake = ['file', 'cmake', 'neosnippet']
-let g:deoplete#sources.vim = ['file', 'vim', 'neosnippet']
-let g:deoplete#sources.javascript = ['file', 'tern']
+let g:deoplete#auto_refresh_delay = 1000
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
@@ -692,6 +681,7 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \   '/usr/include/mpi',
 \   '/usr/include/pcl-1.7',
 \   '/usr/include/libusb-1.0',
+\   '/usr/include/eigen3',
 \	$HOME . '/.platformio/packages/framework-arduinoavr/cores/arduino',
 \	$HOME . '/.platformio/packages/framework-arduinostm32/STM32F1/cores/maple',
 \	$HOME . '/.platformio/packages/framework-arduinostm32/STM32F4/cores/maple',
