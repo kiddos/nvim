@@ -590,6 +590,7 @@ let g:deoplete#auto_refresh_delay = 1000
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
+let g:deoplete#sources#cpp#clang_version = '6.0'
 let g:deoplete#sources#cpp#c_include_path = [
 \   '/usr/local/include',
 \   '/usr/local/share/jdk1.8.0_66/include',
