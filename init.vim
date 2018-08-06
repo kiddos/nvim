@@ -526,6 +526,11 @@ let g:neomake_cpp_gcc_args = [
 \	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/STM32F4xx_HAL_Driver/Inc',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduino',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32',
+\	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/Wire',
+\	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/SPI',
+\	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/SoftwareSerial',
+\	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/HID',
+\	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/EEPROM',
 \   ]
 " }}}
 " cuda nvcc maker {{{
