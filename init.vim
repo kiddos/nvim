@@ -474,6 +474,7 @@ let g:neomake_cpp_gcc_args = [
 \	'-Isrc/main/cpp',
 \	'-Isrc/main/jni',
 \   '-I/usr/local/cuda/include',
+\   '-I/usr/include/eigen3',
 \   '-I/usr/include/x86_64-linux-gnu/qt5',
 \   '-I/usr/include/x86_64-linux-gnu/qt5/QtCLucene',
 \   '-I/usr/include/x86_64-linux-gnu/qt5/QtConcurrent',
