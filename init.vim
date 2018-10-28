@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2017/3/27
+""	Last Modified: 2018/10/29
 ""
 if 0 | endif
 
@@ -85,12 +85,13 @@ NeoBundle 'tell-k/vim-autopep8'
 " javascript   {{{
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'nono/jquery.vim'
-NeoBundle 'moll/vim-node'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
-NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'maksimr/vim-jsbeautify'
-NeoBundle 'HerringtonDarkholme/yats.vim'
+NeoBundle 'leafgarland/typescript-vim'
+" }}}
+" go {{{
+NeoBundle 'fatih/vim-go'
 " }}}
 " lua {{{
 NeoBundle 'xolox/vim-lua-ftplugin'
@@ -165,30 +166,13 @@ autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
 " python {{{
 autocmd FileType python setlocal foldmethod=indent
 autocmd FileType python setlocal foldlevel=1
-autocmd FileType python normal zR
 " }}}
 " ruby {{{
 autocmd FileType ruby setlocal foldmethod=indent
 autocmd FileType ruby setlocal foldlevel=1
-autocmd FileType ruby normal zR
-" }}}
-" java {{{
-autocmd FileType java normal zR
-" }}}
-" javascript {{{
-autocmd FileType javascript normal zR
-" }}}
-" typescript {{{
-autocmd FileType typescript normal zR
-" }}}
-" coffee script {{{
-autocmd FileType coffee normal zR
 " }}}
 " sass {{{
 autocmd FileType sass setlocal foldmethod=indent
-" }}}
-" php {{{
-autocmd FileType php normal zR
 " }}}
 " html/xhtml/xml/haml/jst {{{
 autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
@@ -293,11 +277,11 @@ set wildmode=longest,full
 set wildmenu
 " }}}
 " omni completeion settings {{{
-autocmd FileType c setlocal omnifunc=ccomplete#Complete
-autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-autocmd FileType python setlocal omnifunc=python2complete#Complete
+" autocmd FileType c setlocal omnifunc=ccomplete#Complete
+" autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
+" autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+" autocmd FileType java setlocal omnifunc=javacomplete#Complete
+" autocmd FileType python setlocal omnifunc=python2complete#Complete
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -345,7 +329,7 @@ inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
 " }}}
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
-autocmd FileType java,javascript,css,html,matlab,php,perl nnoremap ; $a;
+autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; $a;
 " }}}
 " }}}
 " color scheme settings {{{
@@ -418,6 +402,7 @@ let g:neomake_c_gcc_args = [
 \   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
 \   '-I/usr/src/linux-headers-4.2.8',
 \   '-I/usr/src/linux-headers-4.2.8/include/',
+\   '-I' . $HOME . '/.platformio/packages/framework-simba/src',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduinoavr',
 \	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/STM32F0xx_HAL_Driver/Inc',
 \	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/CMSIS/Include',
@@ -554,13 +539,13 @@ let g:neomake_cuda_enabled_makers = ['nvcc']
 let g:neomake_echo_current_error = 1
 " }}}
 " python maker {{{
-let g:neomake_python_enabled_makers = ['flake8', 'python']
+let g:neomake_python_enabled_makers = ['flake8']
 let g:neomake_python_flake8_args = [
 \   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
 \]
 " }}}
 " {{{ javascript maker
-let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_javascript_enabled_makers = ['jshint']
 " }}}
 " }}}
 " NERDcommenter settings {{{
@@ -568,8 +553,8 @@ let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCustomDelimiters = {
-\   'c': { 'left': '/**', 'right': '*/' },
-\   'arduino': { 'left': '/**', 'right': '*/' },
+\   'c': { 'left': '//' },
+\   'arduino': { 'left': '//' },
 \   'vim': { 'left': '"' },
 \   'conf': { 'left': '#' },
 \   'prototxt': { 'left': '#' }
@@ -587,12 +572,14 @@ let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#auto_complete_start_length = 0
 let g:deoplete#num_processes = 4
-let g:deoplete#max_menu_width = 90
+let g:deoplete#max_menu_width = 80
 let g:deoplete#max_abbr_width = 36
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 6000
-let g:deoplete#auto_complete_delay = 60
+let g:deoplete#auto_complete_delay = 0
 let g:deoplete#auto_refresh_delay = 1000
+call deoplete#custom#option('ignore_sources', {'_': ['around']})
+
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#cflags = ['-std=c14']
 let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
@@ -604,6 +591,7 @@ let g:deoplete#sources#cpp#c_include_path = [
 \   '/usr/local/cuda/include',
 \   '/usr/local/cuda',
 \   '/usr/src/linux-headers-4.2.8/include/',
+\   $HOME . '/.platformio/packages/framework-simba/src',
 \   '.',
 \   'src',
 \   'include',
@@ -711,28 +699,7 @@ let g:deoplete#sources#cpp#cpp_include_path = [
 \	$HOME . '/.platformio/packages/framework-stm32cube/l1/Drivers/CMSIS/Include',
 \	$HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/STM32L4xx_HAL_Driver/Inc',
 \	$HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/toolchain-atmelavr/avr/include',
-\	$HOME . '/.platformio/packages/toolchain-atmelavr/include',
-\	$HOME . '/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include',
 \ ]
-" }}}
-" deoplete-clang {{{
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.6/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/llvm-3.6/include'
-let g:deoplete#sources#clang#std#c = 'c11'
-let g:deoplete#sources#clang#std#cpp = 'c++11'
-let g:deoplete#sources#clang#sort_algo = 'priority'
-let g:deoplete#sources#clang#flags = [
-\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
-\   '-I/usr/local/share/arduino/hardware/arduino/cores/arduino',
-\   '-I/usr/local/share/arduino/hardware/arduino/cores/robot',
-\   '-I/usr/src/linux-headers-4.2.8/include/',
-\   '-I/usr/local/cuda-7.5/include/',
-\   '-I../include',
-\   '-Iinclude',
-\   '-I../src',
-\   '-Isrc'
-\   ]
 " }}}
 " ternjs {{{
 let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
@@ -750,21 +717,11 @@ let g:JavaComplete_ImportDefault = -1
 " let g:JavaComplete_ImportSortType = 'jarName'
 " let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 " }}}
-" jedi {{{
-let g:deoplete#sources#jedi#server_timeout = 60
-" }}}
 " neosnippet settings {{{
 " {{{ options
-let g:neosnippet#disable_select_mode_mappings = 1
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
-let g:neosnippet#expand_word_boundary = 0
 let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
-let g:neosnippet#disable_runtime_snippets = {
-\   '_' : 1,
-\ }
-let g:neosnippet#expand_word_boundary = 1
-let g:neosnippet#enable_completed_snippet = 1
 " }}}
 " {{{ key maps
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -787,10 +744,6 @@ endif
 " }}}
 " }}}
 " }}}
-" vim-javascript settings {{{
-let g:javascript_plugin_jsdoc = 1
-let g:javascript_plugin_ngdoc = 1
-" }}}
 " startify settings {{{
 let g:startify_list_order = [
 \   ['   My most recently used files in the current directory:'],
@@ -812,32 +765,18 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 " }}}
-" switch.vim settings {{{
-let g:switch_mapping = "-"
-let g:switch_reverse_mapping = '+'
-autocmd FileType c,cpp,objc,objcpp,cuda let b:switch_custom_definitions = [
-\ {
-\     '\<[a-z][a-z0-9]*_\k\+\>': {
-\       '_\(.\)': '\U\1'
-\     },
-\     '\<[a-z0-9]\+[A-Z]\k\+\>': {
-\       '\(\u\)': '_\l\1'
-\     },
-\   }
-\ ]
-" }}}
 " vim-ros setting {{{
-let g:ros_catkin_workspace = '~/catkin_indigo'
+let g:ros_catkin_workspace = '~/catkin_kinetic'
 " }}}
 " clang-format settings {{{
 let g:clang_format#code_style = 'google'
 let g:clang_format#filetype_style_options = {
 \   'cpp' : {
 \     'Standard': 'C++11',
-\     'ColumnLimit': 79,
+\     'ColumnLimit': 80,
 \   },
 \   'javascript' : {
-\     'ColumnLimit': 79,
+\     'ColumnLimit': 80,
 \   },
 \ }
 " }}}
@@ -909,14 +848,6 @@ function! Quick_Compile()
   elseif &ft == "jade"
     call Compile_to_HTML()
   endif
-endfunction
-
-function! Split_Vimux()
-  let g:VimuxOrientation="h"
-  let g:VimuxHeight="50"
-  call VimuxOpenRunner()
-  let g:VimuxOrientation="v"
-  let g:VimuxHeight="20"
 endfunction
 
 " commands
