@@ -545,7 +545,7 @@ let g:neomake_python_flake8_args = [
 \]
 " }}}
 " {{{ javascript maker
-let g:neomake_javascript_enabled_makers = ['jshint']
+let g:neomake_javascript_enabled_makers = ['eslint']
 " }}}
 " }}}
 " NERDcommenter settings {{{
