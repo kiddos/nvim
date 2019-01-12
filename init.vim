@@ -123,6 +123,7 @@ NeoBundle 'evidens/vim-twig'
 NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
+NeoBundle 'padawan-php/deoplete-padawan'
 " }}}
 " css {{{
 NeoBundle 'ap/vim-css-color'
@@ -175,8 +176,8 @@ autocmd FileType ruby setlocal foldlevel=1
 autocmd FileType sass setlocal foldmethod=indent
 " }}}
 " html/xhtml/xml/haml/jst {{{
-autocmd FileType html,xhtml,xml,haml,jst setlocal foldmethod=indent
-autocmd FileType html,xhtml,xml,haml,jst setlocal foldlevel=0
+autocmd FileType php,html,xhtml,xml,haml,jst setlocal foldmethod=indent
+autocmd FileType php,html,xhtml,xml,haml,jst setlocal foldlevel=0
 " }}}
 " vim {{{
 autocmd FileType vim setlocal foldmarker={{{,}}}
@@ -193,14 +194,14 @@ autocmd FileType snippets setlocal foldlevel=0
 " }}}
 " indenting setting {{{
 " default {{{
+set tabstop=4
+set softtabstop=2
+set shiftwidth=2
 set autoindent
 set expandtab
 set smartindent
 autocmd FileType c,cpp,arduino,cuda setlocal cindent
 autocmd FileType c,cpp,arduino,cuda setlocal cinoptions=>1s,(-1s
-set tabstop=4
-set softtabstop=2
-set shiftwidth=2
 " }}}
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
@@ -227,6 +228,10 @@ autocmd FileType fcl setlocal noexpandtab
 " }}}
 " bazel build indenting {{{
 autocmd FileType bzl setlocal nosmartindent
+" }}}
+" html,php {{{
+autocmd FileType php,html setlocal autoindent
+autocmd FileType php,html setlocal smartindent
 " }}}
 " }}}
 " editing settings {{{
@@ -570,7 +575,7 @@ let g:gitgutter_enabled = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#auto_complete_start_length = 0
+let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#num_processes = 4
 let g:deoplete#max_menu_width = 80
 let g:deoplete#max_abbr_width = 36
