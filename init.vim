@@ -131,6 +131,9 @@ NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle '1995eaton/vim-better-css-completion'
 " }}}
+" solidity {{{
+NeoBundle 'tomlion/vim-solidity'
+" }}}
 call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
