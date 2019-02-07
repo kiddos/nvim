@@ -584,7 +584,7 @@ let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 10000
 let g:deoplete#auto_complete_delay = 0
 let g:deoplete#auto_refresh_delay = 10
-call deoplete#custom#option('ignore_sources', {'_': ['around'], 'cpp': ['neosnippet']})
+call deoplete#custom#option('ignore_sources', {'_': ['around']})
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
