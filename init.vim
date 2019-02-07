@@ -332,9 +332,6 @@ nmap <leader><leader>v :vsplit<CR>
 nmap <leader><leader>s :tabedit<CR>
 nmap <leader><leader>c :tabclose<CR>
 " }}}
-" enter to complete popup {{{
-inoremap <expr>	<CR> pumvisible() ? "\<C-N>\<C-Y>" : "\<CR>"
-" }}}
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
 autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; $a;
@@ -512,6 +509,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/include/mpi',
 \   '-I/usr/include/pcl-1.7',
 \   '-I/usr/include/libusb-1.0',
+\   '-I./build/clang/include',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduinoavr/cores/arduino',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32/STM32F1/cores/maple',
 \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32/STM32F4/cores/maple',
@@ -578,136 +576,26 @@ let g:gitgutter_enabled = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#auto_complete_start_length = 0
 let g:deoplete#num_processes = 4
-let g:deoplete#max_menu_width = 80
+let g:deoplete#max_menu_width = 90
 let g:deoplete#max_abbr_width = 36
 let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 6000
+let g:deoplete#max_list = 10000
 let g:deoplete#auto_complete_delay = 0
-let g:deoplete#auto_refresh_delay = 1000
-call deoplete#custom#option('ignore_sources', {'_': ['around']})
+let g:deoplete#auto_refresh_delay = 10
+call deoplete#custom#option('ignore_sources', {'_': ['around'], 'cpp': ['neosnippet']})
 
 " deoplete-cpp {{{
-let g:deoplete#sources#cpp#cflags = ['-std=c14']
-let g:deoplete#sources#cpp#cppflags = ['-std=c++14']
-let g:deoplete#sources#cpp#clang_version = '6.0'
-let g:deoplete#sources#cpp#c_include_path = [
-\   '/usr/local/include',
-\   '/usr/local/share/jdk1.8.0_66/include',
-\   '/usr/local/share/jdk1.8.0_66/include/linux',
-\   '/usr/local/cuda/include',
-\   '/usr/local/cuda',
-\   '/usr/src/linux-headers-4.2.8/include/',
-\   $HOME . '/.platformio/packages/framework-simba/src',
-\   '.',
-\   'src',
-\   'include',
-\   '..',
-\   '../src',
-\   '../include',
-\	'src/main/c',
-\	'src/main/cpp',
-\	'src/main/jni',
-\ ]
-let g:deoplete#sources#cpp#arduino_path = '/usr/share/arduino/'
-let g:deoplete#sources#cpp#cpp_include_path = [
-\	'../../devel/include',
-\	'../devel/include',
-\	'./devel/include',
-\	'../../build',
-\	'../build',
-\	'./build',
-\   '/usr/local/include',
-\   '/usr/local/cuda/include',
-\   '/usr/local/cuda',
-\   '.',
-\   'src',
-\   'include',
-\   'lib',
-\	'build',
-\	'build/src',
-\   'third_party',
-\   '../',
-\   '../src',
-\   '../include',
-\   '../lib',
-\   '../src',
-\   '../include',
-\	'../build',
-\	'../build/src',
-\   '../third_party',
-\	'src/main/c',
-\	'src/main/cpp',
-\	'src/main/jni',
+let g:deoplete#sources#cpp#include_paths = [
+\   '/usr/include/eigen3',
+\   '/usr/include/pcl-1.7',
+\   '/usr/include/mpi',
+\   '/usr/include/libusb-1.0',
 \   '/usr/lib/jvm/java-8-oracle/include',
 \   '/usr/lib/jvm/java-8-oracle/include/linux',
-\   '/usr/lib/gcc/x86_64-linux-gnu/5/include',
-\   '/usr/include/x86_64-linux-gnu/qt5',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtCLucene',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtConcurrent',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtCore',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtDBus',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtDesigner',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtDesignerComponents',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtGui',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtHelp',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtMultimedia',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtNetwork',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtOpenGL',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtOpenGLExtensions',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtPlatformHeaders',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtPlatformSupport',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQml',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQmlDevTools',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQuick',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQuickParticles',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQuickTest',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtQuickWidgets',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtScript',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtScriptTools',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtSql',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtSvg',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtTest',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtUiPlugin',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtUiTools',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtWebKit',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtWidgets',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtXml',
-\   '/usr/include/x86_64-linux-gnu/qt5/QtXmlPatterns',
-\   '/opt/ros/kinetic/include',
-\   '/home/joseph/catkin_kinetic/devel/include',
-\   '/home/joseph/catkin_kinetic/install/include',
 \   '/usr/local/lib/python2.7/dist-packages/tensorflow/include',
-\   '/usr/include/mpi',
-\   '/usr/include/pcl-1.7',
-\   '/usr/include/libusb-1.0',
-\   '/usr/include/eigen3',
-\	$HOME . '/.platformio/packages/framework-arduinoavr/cores/arduino',
-\	$HOME . '/.platformio/packages/framework-arduinostm32/STM32F1/cores/maple',
-\	$HOME . '/.platformio/packages/framework-arduinostm32/STM32F4/cores/maple',
-\	$HOME . '/.platformio/packages/framework-mbed',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/STM32F0xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f1/Drivers/STM32F1xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f1/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f2/Drivers/STM32F2xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f2/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f3/Drivers/STM32F3xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f3/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/STM32F4xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f7/Drivers/STM32F7xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l0/Drivers/STM32L0xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l0/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l1/Drivers/STM32L1xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l1/Drivers/CMSIS/Include',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/STM32L4xx_HAL_Driver/Inc',
-\	$HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/CMSIS/Include',
-\ ]
+\   ]
 " }}}
 " ternjs {{{
 let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
@@ -730,25 +618,6 @@ let g:JavaComplete_ImportDefault = -1
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
 let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
-" }}}
-" {{{ key maps
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-" imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 " }}}
 " }}}
 " }}}
@@ -803,32 +672,6 @@ autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " }}}
 " useful functions and keybindings {{{
-function! Test_Webpage()
-  if &ft == "php"
-    echom "php file type"
-    let dst = expand('%:t') . ".html"
-    let temp = tempname()
-    execute ":silent ! php % > " . dst
-    execute ":silent ! google-chrome " . dst " > " . temp . " 2>&1 "
-    execute ":pclose!"
-    execute ":redraw!"
-    set splitbelow
-    execute ":6split"
-    execute ":e! " . temp
-    set nosplitbelow
-    let delStatus = delete(dst)
-    if delStatus != 0
-      echo "Fail to Delete temp file"
-    endif
-  elseif &ft == "html"
-    let this_file = expand('%:p')
-    echom "html file type"
-    execute ":silent ! google-chrome \"" . this_file . "\""
-    execute ":pclose!"
-    execute ":redraw!"
-  endif
-endfunction
-
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
   let oldhlsearch=&hlsearch
@@ -846,25 +689,8 @@ function! TrimSpaces() range
   let &hlsearch=oldhlsearch
 endfunction
 
-function! Quick_Compile()
-  if &ft == "c" || &ft == "cpp"
-    call Compile_CXX_Basic()
-  elseif &ft == "less" || &ft == "scss" || &ft == "sass"
-    call Compile_to_CSS()
-  elseif &ft == "php" || &ft == "html"
-    call Test_Webpage()
-  elseif &ft == "jade"
-    call Compile_to_HTML()
-  endif
-endfunction
-
 " commands
-command! -bar -nargs=?          ShowSpaces call ShowSpaces(<args>)
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-command! CompiletoCSS     call Compile_to_CSS()
-command! ToggleDotMFiles  call Toggle_filetype_dot_m()
-command! OpenglGLFW3      call Compile_CPP_OpenGL_GLFW3()
-command! ALLEGRO5         call Compile_CPP_ALLEGRO5()
 
 " function keys
 nmap  <silent><F1>  :NERDTreeToggle .<CR>
@@ -873,10 +699,6 @@ nmap  <silent><F2>  :GitGutterToggle<CR>
 imap  <F2>  <Esc>:GitGutterToggle<CR>
 nmap  <silent><F3>  :IndentLinesToggle<CR>
 imap  <F3>  <Esc>:IndentLinesToggle<CR>
-nmap  <silent><F5>  :call Quick_Compile()<CR>
-imap  <F5>  <Esc>:call Quick_Compile()<CR>
-nmap  <silent><F6>  :setlocal spell!<CR>
-imap  <F6>  <Esc>:setlocal spell!<CR>
 " a.vim shortcut
 nmap  <leader><leader>a :A<CR>
 "" }}}
