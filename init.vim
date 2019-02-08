@@ -585,7 +585,6 @@ let g:deoplete#max_list = 10000
 let g:deoplete#auto_complete_delay = 0
 let g:deoplete#auto_refresh_delay = 10
 call deoplete#custom#option('ignore_sources', {'_': ['around']})
-inoremap <silent><expr> <CR> pumvisible() ? "\<C-n>\<C-y>\<CR>" : "<CR>"
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
@@ -673,6 +672,18 @@ autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " }}}
 " useful functions and keybindings {{{
+inoremap <silent><expr> <CR> pumvisible() ? "\<C-x>\<CR>" : "<CR>"
+
+function TabFunction()
+  if neosnippet#expandable_or_jumpable()
+    return "\<Plug>(neosnippet_expand_or_jump)"
+  elseif pumvisible()
+    return "\<C-n>\<C-y>"
+  endif
+  return "\<Tab>"
+endfunction
+imap <silent><expr> <Tab> TabFunction()
+
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
   let oldhlsearch=&hlsearch
