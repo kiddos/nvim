@@ -670,6 +670,30 @@ autocmd FileType jsx command! JSBeautify call JsxBeautify()
 autocmd FileType html,htmldjango command! HTMLBeautify call HtmlBeautify()
 autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
+" tmuxline {{{
+function StartAPMServer()
+  silent exec ':!python ~/.config/nvim/apm_server.py --debug=False &'
+endfunction
+call StartAPMServer()
+
+let g:tmuxline_preset = {
+\   'a'       : '#S',
+\   'b'       : '#W',
+\   'c'       : '',
+\   'win'     : '#I #W',
+\   'cwin'    : '#I #W',
+\   'x'       : ['APM: #(python ~/.config/nvim/apm_client.py)', '%a'],
+\   'y'       : '#(uptime  | cut -d " " -f 1,2)',
+\   'z'       : '#(whoami)@#H',
+\   'options' : {'status-justify' : 'left'}
+\   }
+let g:tmuxline_separators = {
+\   'left' : '➤',
+\   'left_alt': '➡',
+\   'right' : '⏎ ',
+\   'right_alt' : '⇦ ',
+\   'space' : ' '
+\   }
 " }}}
 " useful functions and keybindings {{{
 inoremap <silent><expr> <CR> pumvisible() ? "\<C-x>\<CR>" : "<CR>"
@@ -677,12 +701,12 @@ inoremap <silent><expr> <CR> pumvisible() ? "\<C-x>\<CR>" : "<CR>"
 function TabFunction()
   if neosnippet#expandable_or_jumpable()
     return "\<Plug>(neosnippet_expand_or_jump)"
-  elseif pumvisible()
-    return "\<C-n>\<C-y>"
   endif
   return "\<Tab>"
 endfunction
 imap <silent><expr> <Tab> TabFunction()
+imap <C-j> <C-n>
+imap <C-k> <C-p>
 
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
