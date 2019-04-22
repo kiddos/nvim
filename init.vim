@@ -589,7 +589,7 @@ call deoplete#custom#option('ignore_sources', {'_': ['around']})
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
 \   '/usr/include/eigen3',
-\   '/usr/include/pcl-1.7',
+\   '/usr/include/pcl-1.8',
 \   '/usr/include/mpi',
 \   '/usr/include/libusb-1.0',
 \   '/usr/lib/jvm/java-8-oracle/include',
