@@ -164,9 +164,6 @@ set foldmethod=marker
 set foldmarker={,}
 set foldlevel=1
 " }}}
-" c/c++/objc/objc++ {{{
-autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
-" }}}
 " python {{{
 autocmd FileType python setlocal foldmethod=indent
 autocmd FileType python setlocal foldlevel=1
@@ -193,6 +190,11 @@ autocmd FileType conf setlocal foldlevel=0
 " snippets {{{
 autocmd FileType snippets setlocal foldmarker={,}
 autocmd FileType snippets setlocal foldlevel=0
+" }}}
+" unfold at start {{{
+autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
+autocmd FileType python,javascript normal zR
+autocmd FileType html normal zR
 " }}}
 " }}}
 " indenting setting {{{
