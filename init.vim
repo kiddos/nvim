@@ -83,6 +83,7 @@ NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
 NeoBundle 'tell-k/vim-autopep8'
+NeoBundle 'Vimjas/vim-python-pep8-indent'
 " }}}
 " javascript   {{{
 NeoBundle 'pangloss/vim-javascript'
@@ -207,8 +208,8 @@ set shiftwidth=2
 set autoindent
 set expandtab
 set smartindent
-autocmd FileType c,cpp,arduino,cuda setlocal cindent
-autocmd FileType c,cpp,arduino,cuda setlocal cinoptions=>1s,(-1s
+autocmd FileType c,cpp,arduino,cuda,python setlocal cindent
+autocmd FileType c,cpp,arduino,cuda,python setlocal cinoptions=>1s,(-1s
 " }}}
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
