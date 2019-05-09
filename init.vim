@@ -26,7 +26,6 @@ NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-heroku'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'benekastah/neomake'
 NeoBundle 'ctrlpvim/ctrlp.vim'
@@ -38,15 +37,12 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'mbbill/undotree'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
-NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
-NeoBundle 'sjl/gundo.vim'
 NeoBundle 'rhysd/vim-clang-format'
 " }}}
 " deoplete {{{
@@ -587,7 +583,7 @@ let g:deoplete#max_menu_width = 90
 let g:deoplete#max_abbr_width = 36
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 10000
-let g:deoplete#auto_complete_delay = 0
+let g:deoplete#auto_complete_delay = 666
 let g:deoplete#auto_refresh_delay = 10
 call deoplete#custom#option('ignore_sources', {'_': ['around']})
 
@@ -621,8 +617,12 @@ let g:JavaComplete_ImportDefault = -1
 " neosnippet settings {{{
 " {{{ options
 let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#enable_completed_snippet = 1
 let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
+
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 " }}}
 " }}}
 " }}}
@@ -701,15 +701,8 @@ let g:tmuxline_separators = {
 \   }
 " }}}
 " useful functions and keybindings {{{
-inoremap <silent><expr> <CR> pumvisible() ? "\<C-x>\<CR>" : "<CR>"
+inoremap <silent><expr> <CR> pumvisible() ? "\<C-n>\<C-y>" : "<CR>"
 
-function TabFunction()
-  if neosnippet#expandable_or_jumpable()
-    return "\<Plug>(neosnippet_expand_or_jump)"
-  endif
-  return "\<Tab>"
-endfunction
-imap <silent><expr> <Tab> TabFunction()
 imap <C-j> <C-n>
 imap <C-k> <C-p>
 
