@@ -62,6 +62,7 @@ NeoBundle 'carlitux/deoplete-ternjs'
 NeoBundle 'fishbullet/deoplete-ruby'
 NeoBundle 'kiddos/deoplete-cpp'
 NeoBundle 'mhartington/nvim-typescript'
+NeoBundle 'padawan-php/deoplete-padawan'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -100,14 +101,12 @@ NeoBundle 'xolox/vim-misc'
 NeoBundle 'vim-perl/vim-perl'
 " }}}
 " Java {{{
-NeoBundle 'artur-shaik/vim-javacomplete2'
 NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
 " }}}
 " ruby {{{
-NeoBundle 'tpope/vim-rails'
 NeoBundle 'vim-ruby/vim-ruby'
 " }}}
 " php {{{
@@ -122,7 +121,6 @@ NeoBundle 'evidens/vim-twig'
 NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
-NeoBundle 'padawan-php/deoplete-padawan'
 " }}}
 " css {{{
 NeoBundle 'ap/vim-css-color'
