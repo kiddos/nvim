@@ -602,7 +602,7 @@ let g:deoplete#sources#cpp#include_paths = [
 \   "../../src",
 \   "../../include",
 \   '../../lib',
-\   "../../third_party"
+\   "../../third_party",
 \   '/usr/include/eigen3',
 \   '/usr/include/pcl-1.8',
 \   ]
