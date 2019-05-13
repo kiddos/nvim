@@ -587,13 +587,24 @@ call deoplete#custom#option('ignore_sources', {'_': ['around']})
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
+\   ".",
+\   'src',
+\   "build",
+\   "include",
+\   "third_party",
+\   'lib',
+\   "..",
+\   "../src",
+\   "../include",
+\   "../build",
+\   '../lib',
+\   "../third_party",
+\   "../../src",
+\   "../../include",
+\   '../../lib',
+\   "../../third_party"
 \   '/usr/include/eigen3',
 \   '/usr/include/pcl-1.8',
-\   '/usr/include/mpi',
-\   '/usr/include/libusb-1.0',
-\   '/usr/lib/jvm/java-8-oracle/include',
-\   '/usr/lib/jvm/java-8-oracle/include/linux',
-\   '/usr/local/lib/python2.7/dist-packages/tensorflow/include',
 \   ]
 " }}}
 " ternjs {{{
