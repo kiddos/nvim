@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from time import time, sleep
@@ -82,7 +82,8 @@ class APMServer(asyncore.dispatcher):
     pair = self.accept()
     if pair is not None:
       sock, addr = pair
-      sock.sendall('% 4.2f' % self.listener.compute_apm())
+      data = '% 4.2f' % self.listener.compute_apm()
+      sock.sendall(bytes(data, 'utf8'))
 
   def start_asyncore(self):
     try:
