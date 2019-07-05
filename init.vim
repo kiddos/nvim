@@ -63,6 +63,7 @@ NeoBundle 'fishbullet/deoplete-ruby'
 NeoBundle 'kiddos/deoplete-cpp'
 NeoBundle 'mhartington/nvim-typescript'
 NeoBundle 'padawan-php/deoplete-padawan'
+NeoBundle 'OmniSharp/omnisharp-vim'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -207,6 +208,12 @@ autocmd FileType c,cpp,arduino,cuda,python setlocal cinoptions=>1s,(-1s
 " }}}
 " c/c++ indenting {{{
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
+" }}}
+" c# {{{
+autocmd Filetype cs setlocal cinoptions=(0,>1s,:2,g1,m1,+4
+autocmd FileType cs setlocal tabstop=4
+autocmd FileType cs setlocal softtabstop=4
+autocmd FileType cs setlocal shiftwidth=4
 " }}}
 " python indenting {{{
 autocmd FileType python setlocal tabstop=4
