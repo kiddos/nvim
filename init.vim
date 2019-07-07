@@ -340,6 +340,7 @@ nmap <leader><leader>c :tabclose<CR>
 " }}}
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
+autocmd FileType csharp nnoremap ; $a;
 autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; $a;
 " }}}
 " }}}
