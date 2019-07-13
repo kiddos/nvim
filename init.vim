@@ -140,17 +140,12 @@ NeoBundleCheck
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=matlab
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=objc
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.mm setlocal filetype=objcpp
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
-" ros
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.msg setlocal filetype=rosmsg
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.launch setlocal filetype=xml
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.action setlocal filetype=rosaction
-autocmd VimEnter,BufRead,BufNewFile,BufEnter *.srv setlocal filetype=rossrv
 " }}}
 " code display settings {{{
 set modeline
@@ -191,6 +186,7 @@ autocmd FileType snippets setlocal foldlevel=0
 " }}}
 " unfold at start {{{
 autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
+autocmd FileType csharp normal zR
 autocmd FileType python,javascript normal zR
 autocmd FileType html normal zR
 " }}}
@@ -291,17 +287,11 @@ set wildmode=longest,full
 set wildmenu
 " }}}
 " omni completeion settings {{{
-" autocmd FileType c setlocal omnifunc=ccomplete#Complete
-" autocmd FileType cpp setlocal omnifunc=ccomplete#Complete
-" autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-" autocmd FileType java setlocal omnifunc=javacomplete#Complete
-" autocmd FileType python setlocal omnifunc=python2complete#Complete
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-autocmd FileType javascript setlocal omnifunc=tern#Complete
 " }}}
 " key maps settings {{{
 " leader {{{
@@ -349,10 +339,6 @@ set cursorline
 syntax enable
 syntax on
 colorscheme malokai
-" }}}
-" fixes {{{
-" fix zsh escape lag
-set timeoutlen=1000 ttimeoutlen=0
 " }}}
 " plugin settings {{{
 " airline settings {{{
