@@ -44,6 +44,7 @@ NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'rhysd/vim-clang-format'
+NeoBundle 'kiddos/templates.vim'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
