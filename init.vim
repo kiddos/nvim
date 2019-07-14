@@ -34,8 +34,6 @@ NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
@@ -43,8 +41,8 @@ NeoBundle 'arecarn/selection.vim'
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
-NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'kiddos/templates.vim'
+NeoBundle 'rhysd/vim-clang-format'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -101,9 +99,6 @@ NeoBundle 'xolox/vim-misc'
 " }}}
 " perl {{{
 NeoBundle 'vim-perl/vim-perl'
-" }}}
-" Java {{{
-NeoBundle 'tfnico/vim-gradle'
 " }}}
 " vhdl {{{
 NeoBundle 'kiddos/vim-vhdl'
@@ -560,9 +555,6 @@ let g:NERDCustomDelimiters = {
 \   'prototxt': { 'left': '#' }
 \}
 " }}}
-" indent line {{{
-let g:indentLine_enabled = 0
-" }}}
 " GitGutter settings {{{
 let g:gitgutter_enabled = 0
 " }}}
@@ -609,14 +601,6 @@ let g:deoplete#sources#ternjs#types = 1
 let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#include_keywords = 1
 let g:deoplete#sources#ternjs#in_literal = 0
-" }}}
-" javacompelte2 {{{
-let g:JavaComplete_UseFQN = 1
-let g:JavaComplete_ClosingBrace = 1
-let g:JavaComplete_ImportDefault = -1
-" let g:JavaComplete_GradleExecutable = 'gradle'
-" let g:JavaComplete_ImportSortType = 'jarName'
-" let g:JavaComplete_LibsPath = '.:/home/joseph/.m2/repository:./libs:./lib'
 " }}}
 " neosnippet settings {{{
 " {{{ options
@@ -735,8 +719,6 @@ nmap  <silent><F1>  :NERDTreeToggle .<CR>
 imap  <F1>  <Esc>:NERDTreeToggle .<CR>
 nmap  <silent><F2>  :GitGutterToggle<CR>
 imap  <F2>  <Esc>:GitGutterToggle<CR>
-nmap  <silent><F3>  :IndentLinesToggle<CR>
-imap  <F3>  <Esc>:IndentLinesToggle<CR>
 " a.vim shortcut
 nmap  <leader><leader>a :A<CR>
 "" }}}
