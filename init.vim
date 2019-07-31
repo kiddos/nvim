@@ -563,12 +563,12 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#auto_complete_start_length = 0
-let g:deoplete#num_processes = 4
-let g:deoplete#max_menu_width = 90
-let g:deoplete#max_abbr_width = 36
+let g:deoplete#num_processes = 1
+let g:deoplete#max_menu_width = 120
+let g:deoplete#max_abbr_width = 60
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 10000
-let g:deoplete#auto_complete_delay = 666
+let g:deoplete#auto_complete_delay = 366
 let g:deoplete#auto_refresh_delay = 10
 call deoplete#custom#option('ignore_sources', {'_': ['around']})
 
