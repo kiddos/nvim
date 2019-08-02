@@ -128,6 +128,9 @@ NeoBundle '1995eaton/vim-better-css-completion'
 " solidity {{{
 NeoBundle 'tomlion/vim-solidity'
 " }}}
+" Julia {{{
+NeoBundle 'JuliaEditorSupport/julia-vim'
+" }}}
 call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
