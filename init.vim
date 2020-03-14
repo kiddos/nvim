@@ -239,7 +239,7 @@ autocmd FileType php,html setlocal smartindent
 " }}}
 " }}}
 " editing settings {{{
-set altkeymap
+" set altkeymap
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
 set linebreak
@@ -571,9 +571,11 @@ let g:deoplete#max_menu_width = 120
 let g:deoplete#max_abbr_width = 60
 let g:deoplete#enable_debug = 0
 let g:deoplete#max_list = 10000
-let g:deoplete#auto_complete_delay = 366
+let g:deoplete#auto_complete_delay = 30
 let g:deoplete#auto_refresh_delay = 10
 call deoplete#custom#option('ignore_sources', {'_': ['around']})
+inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
+inoremap <S-k> pumvisible() ? "\<C-p>\<C-y>" : ""
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
@@ -676,8 +678,6 @@ let g:tmuxline_separators = {
 \   }
 " }}}
 " useful functions and keybindings {{{
-inoremap <silent><expr> <CR> pumvisible() ? "\<C-n>\<C-y>" : "<CR>"
-
 imap <C-j> <C-n>
 imap <C-k> <C-p>
 
