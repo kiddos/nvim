@@ -148,7 +148,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
 " }}}
 " code display settings {{{
 set modeline
-set textwidth=80
+set textwidth=120
 " }}}
 " code folding settings {{{
 " default {{{
