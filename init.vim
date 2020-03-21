@@ -574,8 +574,9 @@ let g:deoplete#max_list = 10000
 let g:deoplete#auto_complete_delay = 30
 let g:deoplete#auto_refresh_delay = 10
 call deoplete#custom#option('ignore_sources', {'_': ['around']})
+inoremap <silent><expr> <CR> pumvisible() ? "\<C-x><CR>" : "<CR>"
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
-inoremap <S-k> pumvisible() ? "\<C-p>\<C-y>" : ""
+inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
