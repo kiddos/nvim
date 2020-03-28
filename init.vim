@@ -494,6 +494,7 @@ let g:neomake_cpp_gcc_args = [
 \   '-I/usr/lib/jvm/java-8-oracle/include',
 \   '-I/usr/lib/jvm/java-8-oracle/include/linux',
 \   '-I/opt/ros/kinetic/include',
+\   '-I/opt/ros/melodic/include',
 \   '-I/home/joseph/catkin_kinetic/devel/include',
 \   '-I/home/joseph/catkin_indigo/install/include',
 \   '-I/home/joseph/catkin_kinetic/install/include',
