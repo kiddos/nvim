@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2018/10/29
+""	Last Modified: 2020/07/11
 ""
 if 0 | endif
 
@@ -49,20 +49,17 @@ NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
 NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'wellle/tmux-complete.vim'
 NeoBundle 'deoplete-plugins/deoplete-go'
 NeoBundle 'deoplete-plugins/deoplete-zsh'
 NeoBundle 'deoplete-plugins/deoplete-jedi'
 NeoBundle 'deoplete-plugins/deoplete-asm'
 NeoBundle 'deoplete-plugins/deoplete-docker'
-NeoBundle 'c9s/perlomni.vim'
-NeoBundle 'carlitux/deoplete-ternjs'
+NeoBundle 'carlitux/deoplete-ternjs', { 'build': {'unix': 'npm install && npm install -g tern'}}
 NeoBundle 'fishbullet/deoplete-ruby'
-NeoBundle 'kiddos/deoplete-cpp'
+NeoBundle 'kiddos/deoplete-cpp', { 'build': {'unix': './install.sh'}}
 NeoBundle 'mhartington/nvim-typescript'
-NeoBundle 'padawan-php/deoplete-padawan'
-NeoBundle 'OmniSharp/omnisharp-vim'
+NeoBundle 'padawan-php/deoplete-padawan', { 'build': {'unix': 'composer install' }}
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -112,10 +109,6 @@ NeoBundle 'shawncplus/phpcomplete.vim'
 " }}}
 " html {{{
 NeoBundle 'othree/html5.vim'
-NeoBundle 'digitaltoad/vim-pug'
-NeoBundle 'briancollins/vim-jst'
-NeoBundle 'evidens/vim-twig'
-NeoBundle 'zeekay/vim-html2jade'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
 " }}}
@@ -564,18 +557,23 @@ let g:gitgutter_enabled = 0
 " }}}
 " deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#auto_complete_start_length = 0
-let g:deoplete#num_processes = 1
-let g:deoplete#max_menu_width = 120
-let g:deoplete#max_abbr_width = 60
-let g:deoplete#enable_debug = 0
-let g:deoplete#max_list = 10000
-let g:deoplete#auto_complete_delay = 30
-let g:deoplete#auto_refresh_delay = 10
-call deoplete#custom#option('ignore_sources', {'_': ['around']})
-inoremap <silent><expr> <CR> pumvisible() ? "\<C-x><CR>" : "<CR>"
+call deoplete#custom#option({
+\  'auto_complete_delay': 10,
+\  'auto_refresh_delay': 1000,
+\  'camel_case': v:true,
+\  'check_stderr': v:false,
+\  'ignore_case': v:true,
+\  'ignore_sources': {
+\     '_': ['around'],
+\     'cpp': ['around', 'buffer', 'tmux-complete'],
+\  },
+\  'refresh_always': v:true,
+\  'skip_chars': [],
+\  'max_list': 100,
+\  'smart_case': v:true,
+\  'min_pattern_length': 1,
+\})
+inoremap <silent><expr> <CR> pumvisible() ? "\<C-n><C-y>" : "<CR>"
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
 inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
 
@@ -586,17 +584,18 @@ let g:deoplete#sources#cpp#include_paths = [
 \   ]
 " }}}
 " ternjs {{{
-let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
+" let g:deoplete#sources#ternjs#tern_bin = '/home/kiddos/.npm-packages/bin/tern'
 let g:deoplete#sources#ternjs#timeout = 3
 let g:deoplete#sources#ternjs#types = 1
 let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#include_keywords = 1
 let g:deoplete#sources#ternjs#in_literal = 0
+let g:deoplete#sources#ternjs#filetypes = ['jsx', 'javascript.jsx', 'vue']
 " }}}
 " neosnippet settings {{{
 " {{{ options
 let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
+" let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
 
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
