@@ -573,6 +573,8 @@ call deoplete#custom#option({
 \  'smart_case': v:true,
 \  'min_pattern_length': 1,
 \})
+
+call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
 inoremap <silent><expr> <CR> pumvisible() ? "\<C-n><C-y>" : "<CR>"
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
 inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
