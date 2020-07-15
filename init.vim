@@ -43,6 +43,7 @@ NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'kiddos/templates.vim'
 NeoBundle 'rhysd/vim-clang-format'
+NeoBundle 'janko-m/vim-test'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -80,12 +81,11 @@ NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'Vimjas/vim-python-pep8-indent'
 " }}}
 " javascript   {{{
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'nono/jquery.vim'
+NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
-NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'leafgarland/typescript-vim'
+NeoBundle 'neoclide/vim-jsx-improve'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
