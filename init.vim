@@ -539,6 +539,9 @@ let g:neomake_python_flake8_args = [
 " {{{ javascript maker
 let g:neomake_javascript_enabled_makers = ['eslint']
 " }}}
+" java {{{
+autocmd Filetype java execute ":NeomakeDisableBuffer"
+" }}}
 " }}}
 " NERDcommenter settings {{{
 let g:NERDSpaceDelims = 1
