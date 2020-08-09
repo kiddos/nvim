@@ -85,6 +85,8 @@ NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'mxw/vim-jsx'
 NeoBundle 'neoclide/vim-jsx-improve'
 " }}}
 " go {{{
