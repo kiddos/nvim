@@ -9,6 +9,9 @@ call neobundle#begin(expand('~/.config/nvim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " color scheme {{{
 NeoBundle 'kiddos/malokai.vim'
+NeoBundle 'kaicataldo/material.vim'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'morhetz/gruvbox'
 " }}}
 " git {{{
 NeoBundle 'tpope/vim-fugitive'
@@ -43,7 +46,6 @@ NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'kiddos/templates.vim'
 NeoBundle 'rhysd/vim-clang-format'
-NeoBundle 'janko-m/vim-test'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -74,7 +76,6 @@ NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'beyondmarc/hlsl.vim'
 NeoBundle 'kiddos/vim-protobuf'
 NeoBundle 'vim-scripts/SWIG-syntax'
-NeoBundle 'vim-scripts/google.vim'
 " " }}}
 " python {{{
 NeoBundle 'tell-k/vim-autopep8'
@@ -87,7 +88,8 @@ NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'mxw/vim-jsx'
-NeoBundle 'neoclide/vim-jsx-improve'
+" NeoBundle 'neoclide/vim-jsx-improve'
+" NeoBundle 'chemzqm/vim-jsx-improve'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
@@ -187,20 +189,20 @@ autocmd FileType html normal zR
 " }}}
 " indenting setting {{{
 " default {{{
-set tabstop=4
+set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 set autoindent
 set expandtab
 set smartindent
-autocmd FileType c,cpp,arduino,cuda,python setlocal cindent
-autocmd FileType c,cpp,arduino,cuda,python setlocal cinoptions=>1s,(-1s
+set cindent
+set copyindent
+set preserveindent
 " }}}
 " c/c++ indenting {{{
-autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
+" autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10
 " }}}
 " c# {{{
-autocmd Filetype cs setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 autocmd FileType cs setlocal tabstop=4
 autocmd FileType cs setlocal softtabstop=4
 autocmd FileType cs setlocal shiftwidth=4
@@ -227,10 +229,6 @@ autocmd FileType fcl setlocal noexpandtab
 " }}}
 " bazel build indenting {{{
 autocmd FileType bzl setlocal nosmartindent
-" }}}
-" html,php {{{
-autocmd FileType php,html setlocal autoindent
-autocmd FileType php,html setlocal smartindent
 " }}}
 " }}}
 " editing settings {{{
@@ -329,10 +327,15 @@ autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; 
 " }}}
 " }}}
 " color scheme settings {{{
+let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+set termguicolors
 set cursorline
 syntax enable
 syntax on
+let g:material_theme_style = 'darker'
 colorscheme malokai
+" colorscheme material
+" colorscheme molokai
 " }}}
 " plugin settings {{{
 " airline settings {{{
