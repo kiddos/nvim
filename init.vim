@@ -200,7 +200,8 @@ set copyindent
 set preserveindent
 " }}}
 " c/c++ indenting {{{
-" autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10
+" autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0
+autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 " }}}
 " c# {{{
 autocmd FileType cs setlocal tabstop=4
@@ -338,6 +339,14 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
+" delimitMate settings {{{
+autocmd FileType javascript,html setlocal matchpairs+=<:>
+autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+let delimitMate_expand_cr = 1
+let delimitMate_expand_space = 1
+let delimitMate_jump_expansion = 1
+imap <expr> <CR> pumvisible() ? "\<C-n><C-y>" : "<Plug>delimitMateCR"
+" }}}
 " airline settings {{{
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
@@ -583,7 +592,6 @@ call deoplete#custom#option({
 \})
 
 call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
-inoremap <silent><expr> <CR> pumvisible() ? "\<C-n><C-y>" : "<CR>"
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
 inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
 
