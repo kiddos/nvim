@@ -87,9 +87,8 @@ NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'mxw/vim-jsx'
-" NeoBundle 'neoclide/vim-jsx-improve'
-" NeoBundle 'chemzqm/vim-jsx-improve'
+" NeoBundle 'mxw/vim-jsx'
+NeoBundle 'MaxMEllon/vim-jsx-pretty'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
@@ -339,6 +338,17 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
+" jsx-pretty settings {{{
+let g:vim_jsx_pretty_enable_jsx_highlight = 0
+highlight def link jsxTag Function
+highlight def link jsxTagName Function
+highlight def link jsxString String
+highlight def link jsxNameSpace Function
+highlight def link jsxComment Error
+highlight def link jsxAttrib Type
+highlight def link jsxCloseTag Identifier
+highlight def link jsxCloseString Identifier
+" }}}
 " delimitMate settings {{{
 autocmd FileType javascript,html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
