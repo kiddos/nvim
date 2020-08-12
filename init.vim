@@ -390,8 +390,16 @@ let g:neomake_warning_sign = {
 \   'text': '⚠',
 \   'texthl': 'NeomakeWarning',
 \   }
-highlight NeomakeError    cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
-highlight NeomakeWarning  cterm=BOLD  ctermfg=253 ctermbg=124 guifg=white guibg=red
+let g:neomake_message_sign = {
+\   'text': '➤',
+\   'texthl': 'NeomakeMessageSign',
+\ }
+let g:neomake_info_sign = {
+\ 'text': 'ℹ',
+\ 'texthl': 'NeomakeInfoSign'
+\ }
+highlight NeomakeError    cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
+highlight NeomakeWarning  cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
 " c gcc maker {{{
 let g:neomake_c_enabled_makers = ['gcc']
 let g:neomake_c_gcc_args = [
