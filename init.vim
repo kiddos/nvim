@@ -89,6 +89,7 @@ NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'pangloss/vim-javascript'
 " NeoBundle 'mxw/vim-jsx'
 NeoBundle 'MaxMEllon/vim-jsx-pretty'
+NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
