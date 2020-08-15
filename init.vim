@@ -593,7 +593,7 @@ let g:gitgutter_enabled = 0
 " deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option({
-\  'auto_complete_delay': 10,
+\  'auto_complete_delay': 60,
 \  'auto_refresh_delay': 1000,
 \  'camel_case': v:true,
 \  'check_stderr': v:false,
@@ -609,7 +609,6 @@ call deoplete#custom#option({
 \  'min_pattern_length': 1,
 \})
 
-call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
 inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
 
@@ -620,13 +619,14 @@ let g:deoplete#sources#cpp#include_paths = [
 \   ]
 " }}}
 " ternjs {{{
-" let g:deoplete#sources#ternjs#tern_bin = '/home/kiddos/.npm-packages/bin/tern'
 let g:deoplete#sources#ternjs#timeout = 3
 let g:deoplete#sources#ternjs#types = 1
 let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#include_keywords = 1
 let g:deoplete#sources#ternjs#in_literal = 0
 let g:deoplete#sources#ternjs#filetypes = ['jsx', 'javascript.jsx', 'vue']
+call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
+autocmd FileType javascript,typescript,html call deoplete#custom#option('auto_complete_delay', 200)
 " }}}
 " neosnippet settings {{{
 " {{{ options
