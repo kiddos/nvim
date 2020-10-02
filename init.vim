@@ -46,6 +46,7 @@ NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
 NeoBundle 'kiddos/templates.vim'
 NeoBundle 'rhysd/vim-clang-format'
+NeoBundle 'dyng/ctrlsf.vim'
 " }}}
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
@@ -448,9 +449,9 @@ let g:neomake_c_gcc_args = [
 \   ]
 " }}}
 " cpp gcc maker {{{
-let g:neomake_cpp_enabled_makers = ['clangtidy']
-let g:neomake_cpp_clangtidy_args = [
-\ '--format-style=google'
+let g:neomake_cpp_enabled_makers = ['clang']
+let g:neomake_cpp_clang_args = [
+\   '-std=c++1z',
 \]
 " let g:neomake_cpp_gcc_args = [
 " \   '-fsyntax-only',
@@ -695,7 +696,7 @@ autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " tmuxline {{{
 function StartAPMServer()
-  silent exec ':!python ~/.config/nvim/apm_server.py --debug=False &'
+  silent exec ':!python3 ~/.config/nvim/apm_server.py --debug=False &'
 endfunction
 call StartAPMServer()
 
@@ -705,8 +706,7 @@ let g:tmuxline_preset = {
 \   'c'       : '',
 \   'win'     : '#I #W',
 \   'cwin'    : '#I #W',
-\   'x'       : ['APM: #(python ~/.config/nvim/apm_client.py)', '%a'],
-\   'y'       : '#(uptime  | cut -d " " -f 1,2)',
+\   'y'       : 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
 \   'z'       : '#(whoami)@#H',
 \   'options' : {'status-justify' : 'left'}
 \   }
@@ -743,10 +743,10 @@ endfunction
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 
 " function keys
-nmap  <silent><F1>  :NERDTreeToggle .<CR>
-imap  <F1>  <Esc>:NERDTreeToggle .<CR>
-nmap  <silent><F2>  :GitGutterToggle<CR>
-imap  <F2>  <Esc>:GitGutterToggle<CR>
+nmap <silent><F1> :NERDTreeToggle .<CR>
+imap <F1> <Esc>:NERDTreeToggle .<CR>
+nmap <silent><F2> :GitGutterToggle<CR>
+imap <F2> <Esc>:GitGutterToggle<CR>
 " a.vim shortcut
-nmap  <leader><leader>a :A<CR>
+nmap <leader><leader>a :A<CR>
 "" }}}
