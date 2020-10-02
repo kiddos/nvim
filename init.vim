@@ -129,6 +129,9 @@ NeoBundle 'tomlion/vim-solidity'
 " Julia {{{
 NeoBundle 'JuliaEditorSupport/julia-vim'
 " }}}
+" Rust {{{
+NeoBundle 'rust-lang/rust.vim'
+" }}}
 call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
@@ -383,18 +386,19 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
 " }}}
 " neomake settings {{{
-autocmd! BufWritePost * Neomake
+autocmd BufWritePost *.c,*.cc,*.py,*.js,*.ts Neomake
+" neomake highlight {{{
 let g:neomake_error_sign = {
-\   'text': '✗',
-\   'texthl': 'NeomakeError',
-\   }
+\ 'text': '✗',
+\ 'texthl': 'NeomakeError',
+\ }
 let g:neomake_warning_sign = {
-\   'text': '⚠',
-\   'texthl': 'NeomakeWarning',
-\   }
+\ 'text': '⚠',
+\ 'texthl': 'NeomakeWarning',
+\ }
 let g:neomake_message_sign = {
-\   'text': '➤',
-\   'texthl': 'NeomakeMessageSign',
+\ 'text': '➤',
+\ 'texthl': 'NeomakeMessageSign',
 \ }
 let g:neomake_info_sign = {
 \ 'text': 'ℹ',
@@ -402,151 +406,12 @@ let g:neomake_info_sign = {
 \ }
 highlight NeomakeError    cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
 highlight NeomakeWarning  cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
+" }}}
 " c gcc maker {{{
-let g:neomake_c_enabled_makers = ['gcc']
-let g:neomake_c_gcc_args = [
-\   '-fsyntax-only',
-\   '-Wall',
-\   '-Wextra',
-\   '-Wno-pragmas',
-\   '-Wno-unknown-pragmas',
-\   '-Wno-pragma-once-outside-header',
-\   '-DDEBUG', '-DQT_DEBUG', '-DKDEBUG_MESSAGE',
-\   '-std=c11',
-\   '-fopenmp',
-\   '-pthread',
-\   '-fPIC',
-\	'-Iinclude',
-\	'-I../include',
-\	'-Isrc',
-\	'-I../src',
-\	'-Ilib',
-\	'-I../lib',
-\   '-I/usr/local/cuda/include',
-\   '-I/usr/lib/gcc/x86_64-linux-gnu/4.8/include',
-\   '-I/usr/src/linux-headers-4.2.8',
-\   '-I/usr/src/linux-headers-4.2.8/include/',
-\   '-I' . $HOME . '/.platformio/packages/framework-simba/src',
-\	'-I' . $HOME . '/.platformio/packages/framework-arduinoavr',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/STM32F0xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f0/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f1/Drivers/STM32F1xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f1/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f2/Drivers/STM32F2xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f2/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f3/Drivers/STM32F3xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f3/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/STM32F4xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f7/Drivers/STM32F7xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l0/Drivers/STM32L0xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l0/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l1/Drivers/STM32L1xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l1/Drivers/CMSIS/Include',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/STM32L4xx_HAL_Driver/Inc',
-\	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/l4/Drivers/CMSIS/Include',
-\   ]
+let g:neomake_c_enabled_makers = ['cpplint']
 " }}}
 " cpp gcc maker {{{
-let g:neomake_cpp_enabled_makers = ['clang']
-let g:neomake_cpp_clang_args = [
-\   '-std=c++1z',
-\]
-" let g:neomake_cpp_gcc_args = [
-" \   '-fsyntax-only',
-" \   '-Wall',
-" \   '-Wextra',
-" \   '-Wno-pragmas',
-" \   '-Wno-unknown-pragmas',
-" \   '-Wno-sign-compare',
-" \   '-std=c++14',
-" \   '-fopenmp',
-" \   '-pthread',
-" \   '-fPIC',
-" \   '-DDEBUG', '-DQT_DEBUG', '-DKDEBUG_MESSAGE',
-" \	'-I../../devel/include',
-" \	'-I../devel/include',
-" \	'-I./devel/include',
-" \	'-I../../build',
-" \	'-I../build',
-" \	'-I./build',
-" \   '-I.',
-" \	'-Iinclude',
-" \	'-I../include',
-" \	'-Ibuild',
-" \	'-Ibuild/src',
-" \	'-I../build',
-" \	'-I../build/src',
-" \	'-Isrc',
-" \	'-I../src',
-" \	'-Ilib',
-" \	'-I../lib',
-" \	'-Isrc/main/c',
-" \	'-Isrc/main/cpp',
-" \	'-Isrc/main/jni',
-" \   '-I/usr/local/cuda/include',
-" \   '-I/usr/include/eigen3',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtCLucene',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtConcurrent',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtCore',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtDBus',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtDesigner',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtDesignerComponents',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtGui',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtHelp',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtNetwork',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtOpenGLExtensions',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtPlatformHeaders',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtPlatformSupport',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQml',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQmlDevTools',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQuick',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQuickParticles',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQuickTest',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtQuickWidgets',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtScript',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtScriptTools',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtSql',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtSvg',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtTest',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtUiPlugin',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtUiTools',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtWebKit',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtWidgets',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtXml',
-" \   '-I/usr/include/x86_64-linux-gnu/qt5/QtXmlPatterns',
-" \   '-I/usr/lib/jvm/java-8-oracle/include',
-" \   '-I/usr/lib/jvm/java-8-oracle/include/linux',
-" \   '-I/opt/ros/kinetic/include',
-" \   '-I/opt/ros/melodic/include',
-" \   '-I/home/joseph/catkin_kinetic/devel/include',
-" \   '-I/home/joseph/catkin_indigo/install/include',
-" \   '-I/home/joseph/catkin_kinetic/install/include',
-" \   '-I/usr/local/lib/python2.7/dist-packages/tensorflow/include',
-" \   '-I/usr/include/mpi',
-" \   '-I/usr/include/pcl-1.7',
-" \   '-I/usr/include/libusb-1.0',
-" \   '-I./build/clang/include',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduinoavr/cores/arduino',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32/STM32F1/cores/maple',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32/STM32F4/cores/maple',
-" \	'-I' . $HOME . '/.platformio/packages/framework-mbed',
-" \	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f1/Drivers/STM32F1xx_HAL_Driver/Inc',
-" \	'-I' . $HOME . '/.platformio/packages/framework-stm32cube/f4/Drivers/STM32F4xx_HAL_Driver/Inc',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduinostm32',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/Wire',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/SPI',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/SoftwareSerial',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/HID',
-" \	'-I' . $HOME . '/.platformio/packages/framework-arduino/libraries/__cores__/arduino/EEPROM',
-" \   ]
+let g:neomake_cpp_enabled_makers = ['cpplint']
 " }}}
 " cuda nvcc maker {{{
 let g:neomake_cuda_nvcc_maker = {
@@ -575,9 +440,6 @@ let g:neomake_python_flake8_args = [
 " }}}
 " {{{ javascript maker
 let g:neomake_javascript_enabled_makers = ['eslint']
-" }}}
-" java {{{
-autocmd Filetype java execute ":NeomakeDisableBuffer"
 " }}}
 " }}}
 " NERDcommenter settings {{{
@@ -749,4 +611,5 @@ nmap <silent><F2> :GitGutterToggle<CR>
 imap <F2> <Esc>:GitGutterToggle<CR>
 " a.vim shortcut
 nmap <leader><leader>a :A<CR>
-"" }}}
+" }}}
+" }}}
