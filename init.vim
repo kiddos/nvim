@@ -207,6 +207,11 @@ set preserveindent
 " autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 " }}}
+" rust indenting {{{
+autocmd FileType rust setlocal tabstop=4
+autocmd FileType rust setlocal softtabstop=2
+autocmd FileType rust setlocal shiftwidth=2
+" }}}
 " c# {{{
 autocmd FileType cs setlocal tabstop=4
 autocmd FileType cs setlocal softtabstop=4
