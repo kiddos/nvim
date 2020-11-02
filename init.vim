@@ -51,19 +51,23 @@ NeoBundle 'dyng/ctrlsf.vim'
 " deoplete {{{
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neco-vim'
-NeoBundle 'Shougo/neoinclude.vim'
+" NeoBundle 'Shougo/neoinclude.vim'
 NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'wellle/tmux-complete.vim'
-NeoBundle 'deoplete-plugins/deoplete-go'
-NeoBundle 'deoplete-plugins/deoplete-zsh'
-NeoBundle 'deoplete-plugins/deoplete-jedi'
-NeoBundle 'deoplete-plugins/deoplete-asm'
-NeoBundle 'deoplete-plugins/deoplete-docker'
-NeoBundle 'carlitux/deoplete-ternjs', { 'build': {'unix': 'npm install && npm install -g tern'}}
-NeoBundle 'fishbullet/deoplete-ruby'
-NeoBundle 'kiddos/deoplete-cpp', { 'build': {'unix': './install.sh'}}
-NeoBundle 'mhartington/nvim-typescript'
-NeoBundle 'padawan-php/deoplete-padawan', { 'build': {'unix': 'composer install' }}
+" NeoBundle 'wellle/tmux-complete.vim'
+" NeoBundle 'deoplete-plugins/deoplete-go'
+" NeoBundle 'deoplete-plugins/deoplete-zsh'
+" NeoBundle 'deoplete-plugins/deoplete-jedi'
+" NeoBundle 'deoplete-plugins/deoplete-asm'
+" NeoBundle 'deoplete-plugins/deoplete-docker'
+" NeoBundle 'carlitux/deoplete-ternjs', { 'build': {'unix': 'npm install && npm install -g tern'}}
+" NeoBundle 'fishbullet/deoplete-ruby'
+" NeoBundle 'kiddos/deoplete-cpp', { 'build': {'unix': './install.sh'}}
+" NeoBundle 'mhartington/nvim-typescript'
+" NeoBundle 'padawan-php/deoplete-padawan', { 'build': {'unix': 'composer install' }}
+" NeoBundle 'autozimu/LanguageClient-neovim'
+NeoBundle 'prabirshrestha/vim-lsp'
+NeoBundle 'mattn/vim-lsp-settings'
+NeoBundle 'lighttiger2505/deoplete-vim-lsp'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -131,6 +135,9 @@ NeoBundle 'JuliaEditorSupport/julia-vim'
 " }}}
 " Rust {{{
 NeoBundle 'rust-lang/rust.vim'
+" }}}
+" Dart {{{
+NeoBundle 'dart-lang/dart-vim-plugin'
 " }}}
 call neobundle#end()
 filetype plugin indent on
@@ -466,7 +473,7 @@ let g:gitgutter_enabled = 0
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option({
 \  'auto_complete_delay': 60,
-\  'auto_refresh_delay': 1000,
+\  'auto_refresh_delay': 200,
 \  'camel_case': v:true,
 \  'check_stderr': v:false,
 \  'ignore_case': v:true,
@@ -483,6 +490,8 @@ call deoplete#custom#option({
 
 inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
 inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
+
+let g:lsp_diagnostics_enabled = 0
 
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
@@ -584,6 +593,9 @@ let g:tmuxline_separators = {
 \   'right_alt' : '⇦ ',
 \   'space' : ' '
 \   }
+" }}}
+" emmet {{{
+let g:user_emmet_togglecomment_key = '<C-y>#'
 " }}}
 " useful functions and keybindings {{{
 imap <C-j> <C-n>
