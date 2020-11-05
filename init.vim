@@ -55,7 +55,7 @@ NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neosnippet.vim'
 " NeoBundle 'wellle/tmux-complete.vim'
 " NeoBundle 'deoplete-plugins/deoplete-go'
-" NeoBundle 'deoplete-plugins/deoplete-zsh'
+NeoBundle 'deoplete-plugins/deoplete-zsh'
 " NeoBundle 'deoplete-plugins/deoplete-jedi'
 " NeoBundle 'deoplete-plugins/deoplete-asm'
 " NeoBundle 'deoplete-plugins/deoplete-docker'
@@ -479,7 +479,7 @@ call deoplete#custom#option({
 \  'ignore_case': v:true,
 \  'ignore_sources': {
 \     '_': ['around'],
-\     'cpp': ['around', 'buffer', 'tmux-complete'],
+\     'cpp': ['around', 'tmux-complete'],
 \  },
 \  'refresh_always': v:true,
 \  'skip_chars': [],
@@ -487,17 +487,21 @@ call deoplete#custom#option({
 \  'smart_case': v:true,
 \  'min_pattern_length': 1,
 \})
-
-inoremap <C-j> pumvisible() ? "\<C-n>\<C-y>" : ""
-inoremap <C-k> pumvisible() ? "\<C-p>\<C-y>" : ""
-
+call deoplete#custom#option('keyword_patterns', {
+\ '_': '[a-zA-Z_^{};]*',
+\})
+call deoplete#custom#source('buffer', 'min_pattern_length', 3)
+inoremap <expr> <C-Space> deoplete#complete()
+" LSP {{{
+let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
+" autocmd FileType c,cpp let b:lsp_diagnostics_enabled = 0
 let g:lsp_diagnostics_enabled = 0
-
+" }}}
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
-\   '/usr/include/eigen3',
-\   '/usr/include/pcl-1.8',
-\   ]
+\ '/usr/include/eigen3',
+\ '/usr/include/pcl-1.8',
+\]
 " }}}
 " ternjs {{{
 let g:deoplete#sources#ternjs#timeout = 3
@@ -510,7 +514,6 @@ call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
 autocmd FileType javascript,typescript,html call deoplete#custom#option('auto_complete_delay', 200)
 " }}}
 " neosnippet settings {{{
-" {{{ options
 let g:neosnippet#enable_snipmate_compatibility = 1
 " let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
 
@@ -518,7 +521,6 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" }}}
 " }}}
 " }}}
 " startify settings {{{
@@ -594,13 +596,16 @@ let g:tmuxline_separators = {
 \   'space' : ' '
 \   }
 " }}}
+" ctrlp setting {{{
+let g:ctrlp_custom_ignore = {
+\ 'dir':  '\v[\/]\.(git|hg|svn|node_modules)$',
+\ 'file': '\v\.(exe|so|dll|o|class)$',
+\ }
+" }}}
 " emmet {{{
 let g:user_emmet_togglecomment_key = '<C-y>#'
 " }}}
 " useful functions and keybindings {{{
-imap <C-j> <C-n>
-imap <C-k> <C-p>
-
 function! ShowSpaces(...)
   let @/='\v(\s+$)|( +\ze\t)'
   let oldhlsearch=&hlsearch
