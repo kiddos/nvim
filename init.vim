@@ -91,10 +91,11 @@ NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
-NeoBundle 'pangloss/vim-javascript'
+" NeoBundle 'pangloss/vim-javascript'
 " NeoBundle 'mxw/vim-jsx'
-NeoBundle 'MaxMEllon/vim-jsx-pretty'
-NeoBundle 'peitalin/vim-jsx-typescript'
+NeoBundle 'chemzqm/vim-jsx-improve'
+" NeoBundle 'MaxMEllon/vim-jsx-pretty'
+" NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
@@ -255,7 +256,7 @@ set clipboard=unnamed,unnamedplus
 set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
-set completeopt=menu,noinsert,noselect
+set completeopt=menu,menuone
 set mouse=""
 set autoread
 set hidden
@@ -281,7 +282,7 @@ set cmdwinheight=6
 set relativenumber
 set fillchars=stl:\ ,stlnc:-,vert:\|,fold:-,diff:-
 set laststatus=2
-set pumheight=12
+set pumheight=20
 set report=6
 set ruler
 set showcmd
@@ -300,7 +301,6 @@ autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 " }}}
 " key maps settings {{{
 " leader {{{
@@ -372,7 +372,6 @@ autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
-imap <expr> <CR> pumvisible() ? "\<C-n><C-y>" : "<Plug>delimitMateCR"
 " }}}
 " airline settings {{{
 let g:airline_detect_modified = 1
@@ -472,8 +471,8 @@ let g:gitgutter_enabled = 0
 " deoplete settings {{{
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option({
-\  'auto_complete_delay': 60,
-\  'auto_refresh_delay': 200,
+\  'auto_complete_delay': 30,
+\  'auto_refresh_delay': 100,
 \  'camel_case': v:true,
 \  'check_stderr': v:false,
 \  'ignore_case': v:true,
@@ -483,7 +482,7 @@ call deoplete#custom#option({
 \  },
 \  'refresh_always': v:true,
 \  'skip_chars': [],
-\  'max_list': 100,
+\  'max_list': 600,
 \  'smart_case': v:true,
 \  'min_pattern_length': 1,
 \})
@@ -491,11 +490,13 @@ call deoplete#custom#option('keyword_patterns', {
 \ '_': '[a-zA-Z_^{};]*',
 \})
 call deoplete#custom#source('buffer', 'min_pattern_length', 3)
-inoremap <expr> <C-Space> deoplete#complete()
+
+inoremap <expr> <C-Space> deoplete#manual_complete()
+inoremap <expr> <CR> pumvisible() ? "\<C-N><C-Y>": "\<CR>"
 " LSP {{{
 let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
-" autocmd FileType c,cpp let b:lsp_diagnostics_enabled = 0
 let g:lsp_diagnostics_enabled = 0
+" autocmd FileType c,cpp let b:lsp_diagnostics_enabled = 0
 " }}}
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
@@ -504,14 +505,14 @@ let g:deoplete#sources#cpp#include_paths = [
 \]
 " }}}
 " ternjs {{{
-let g:deoplete#sources#ternjs#timeout = 3
-let g:deoplete#sources#ternjs#types = 1
-let g:deoplete#sources#ternjs#depths = 1
-let g:deoplete#sources#ternjs#include_keywords = 1
-let g:deoplete#sources#ternjs#in_literal = 0
-let g:deoplete#sources#ternjs#filetypes = ['jsx', 'javascript.jsx', 'vue']
-call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
-autocmd FileType javascript,typescript,html call deoplete#custom#option('auto_complete_delay', 200)
+" let g:deoplete#sources#ternjs#timeout = 3
+" let g:deoplete#sources#ternjs#types = 1
+" let g:deoplete#sources#ternjs#depths = 1
+" let g:deoplete#sources#ternjs#include_keywords = 1
+" let g:deoplete#sources#ternjs#in_literal = 0
+" let g:deoplete#sources#ternjs#filetypes = ['jsx', 'javascript.jsx', 'vue']
+" call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
+" autocmd FileType javascript,typescript,html call deoplete#custom#option('auto_complete_delay', 200)
 " }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
