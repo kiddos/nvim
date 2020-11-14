@@ -432,7 +432,7 @@ call deoplete#custom#option({
 \  'min_pattern_length': 1,
 \})
 call deoplete#custom#option('keyword_patterns', {
-\ '_': '[a-zA-Z_^{};]*',
+\  '_': '(?<!^)[a-zA-Z_^{};]*',
 \})
 call deoplete#custom#source('buffer', 'min_pattern_length', 3)
 
