@@ -87,15 +87,16 @@ NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'Vimjas/vim-python-pep8-indent'
 " }}}
 " javascript   {{{
-NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'elzr/vim-json'
+NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
-" NeoBundle 'pangloss/vim-javascript'
-" NeoBundle 'mxw/vim-jsx'
+NeoBundle 'peitalin/vim-jsx-typescript'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'mxw/vim-jsx'
 NeoBundle 'chemzqm/vim-jsx-improve'
-" NeoBundle 'MaxMEllon/vim-jsx-pretty'
-" NeoBundle 'peitalin/vim-jsx-typescript'
+NeoBundle 'MaxMEllon/vim-jsx-pretty'
+NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
@@ -367,7 +368,7 @@ highlight def link jsxCloseTag Identifier
 highlight def link jsxCloseString Identifier
 " }}}
 " delimitMate settings {{{
-autocmd FileType javascript,html setlocal matchpairs+=<:>
+autocmd FileType html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
@@ -495,8 +496,9 @@ inoremap <expr> <C-Space> deoplete#manual_complete()
 inoremap <expr> <CR> pumvisible() ? "\<C-N><C-Y>": "\<CR>"
 " LSP {{{
 let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
+let g:lsp_settings_filetype_javascript = 'javascript-typescript-stdio'
 let g:lsp_diagnostics_enabled = 0
-" autocmd FileType c,cpp let b:lsp_diagnostics_enabled = 0
+autocmd FileType javascript,html let b:lsp_diagnostics_enabled = 1
 " }}}
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
