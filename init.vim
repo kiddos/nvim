@@ -30,7 +30,7 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'mattn/emmet-vim'
-NeoBundle 'benekastah/neomake'
+NeoBundle 'dense-analysis/ale'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
@@ -89,7 +89,6 @@ NeoBundle 'Vimjas/vim-python-pep8-indent'
 " javascript   {{{
 NeoBundle 'elzr/vim-json'
 NeoBundle 'maksimr/vim-jsbeautify'
-NeoBundle 'burnettk/vim-angular'
 NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'peitalin/vim-jsx-typescript'
 NeoBundle 'pangloss/vim-javascript'
@@ -370,9 +369,11 @@ highlight def link jsxCloseString Identifier
 " delimitMate settings {{{
 autocmd FileType html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-let delimitMate_expand_cr = 1
+let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
+let delimitMate_balance_matchpairs = 1
+imap <expr> <CR> pumvisible() ? "\<C-N><C-Y>": "<Plug>delimitMateCR"
 " }}}
 " airline settings {{{
 let g:airline_detect_modified = 1
@@ -396,63 +397,6 @@ let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.paste = '℘  '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.whitespace = '⇆ '
-" }}}
-" neomake settings {{{
-autocmd BufWritePost *.c,*.cc,*.py,*.js,*.ts Neomake
-" neomake highlight {{{
-let g:neomake_error_sign = {
-\ 'text': '✗',
-\ 'texthl': 'NeomakeError',
-\ }
-let g:neomake_warning_sign = {
-\ 'text': '⚠',
-\ 'texthl': 'NeomakeWarning',
-\ }
-let g:neomake_message_sign = {
-\ 'text': '➤',
-\ 'texthl': 'NeomakeMessageSign',
-\ }
-let g:neomake_info_sign = {
-\ 'text': 'ℹ',
-\ 'texthl': 'NeomakeInfoSign'
-\ }
-highlight NeomakeError    cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
-highlight NeomakeWarning  cterm=BOLD  ctermfg=248 ctermbg=160 gui=bold guifg=#A8A8A8 guibg=#D70000
-" }}}
-" c gcc maker {{{
-let g:neomake_c_enabled_makers = ['cpplint']
-" }}}
-" cpp gcc maker {{{
-let g:neomake_cpp_enabled_makers = ['cpplint']
-" }}}
-" cuda nvcc maker {{{
-let g:neomake_cuda_nvcc_maker = {
-\   'exe': 'nvcc',
-\   'args': [
-\     '-std=c++11',
-\     '-Xcompiler',
-\     '-fsyntax-only',
-\     '-Xcompiler',
-\     '-Wall',
-\     '-Xcompiler',
-\     '-Wextra',
-\     '-o',
-\     '-/dev/null'],
-\   }
-let g:neomake_serialize = 1
-let g:neomake_serialize_abort_on_error = 1
-let g:neomake_cuda_enabled_makers = ['nvcc']
-let g:neomake_echo_current_error = 1
-" }}}
-" python maker {{{
-let g:neomake_python_enabled_makers = ['flake8']
-let g:neomake_python_flake8_args = [
-\   '--ignore=W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401'
-\]
-" }}}
-" {{{ javascript maker
-let g:neomake_javascript_enabled_makers = ['eslint']
-" }}}
 " }}}
 " NERDcommenter settings {{{
 let g:NERDSpaceDelims = 1
@@ -493,7 +437,6 @@ call deoplete#custom#option('keyword_patterns', {
 call deoplete#custom#source('buffer', 'min_pattern_length', 3)
 
 inoremap <expr> <C-Space> deoplete#manual_complete()
-inoremap <expr> <CR> pumvisible() ? "\<C-N><C-Y>": "\<CR>"
 " LSP {{{
 let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
 let g:lsp_settings_filetype_javascript = 'javascript-typescript-stdio'
@@ -600,10 +543,15 @@ let g:tmuxline_separators = {
 \   }
 " }}}
 " ctrlp setting {{{
+let g:ctrlp_show_hidden = 1
 let g:ctrlp_custom_ignore = {
-\ 'dir':  '\v[\/]\.(git|hg|svn|node_modules)$',
+\ 'dir':  '\v[\/](.git|.hg|.svn|node_modules)$',
 \ 'file': '\v\.(exe|so|dll|o|class)$',
 \ }
+let g:ctrlp_max_files = 0
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_open_multiple_files = 't'
+
 " }}}
 " emmet {{{
 let g:user_emmet_togglecomment_key = '<C-y>#'
