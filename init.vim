@@ -1,10 +1,9 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2020/07/11
+""	Last Modified: 2020/11/28
 ""
-if 0 | endif
 
-set runtimepath^=~/.config/nvim/bundle/neobundle.vim/
+set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.config/nvim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " color scheme {{{
@@ -37,37 +36,16 @@ NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
-NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
 NeoBundle 'kiddos/snippets.vim'
-NeoBundle 'kiddos/compile.vim'
 NeoBundle 'kiddos/vim-ros'
-NeoBundle 'kiddos/templates.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'dyng/ctrlsf.vim'
-" }}}
-" deoplete {{{
-NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'Shougo/neco-vim'
-" NeoBundle 'Shougo/neoinclude.vim'
+NeoBundle 'neovim/nvim-lspconfig'
+NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'Shougo/neosnippet.vim'
-" NeoBundle 'wellle/tmux-complete.vim'
-" NeoBundle 'deoplete-plugins/deoplete-go'
-NeoBundle 'deoplete-plugins/deoplete-zsh'
-" NeoBundle 'deoplete-plugins/deoplete-jedi'
-" NeoBundle 'deoplete-plugins/deoplete-asm'
-" NeoBundle 'deoplete-plugins/deoplete-docker'
-" NeoBundle 'carlitux/deoplete-ternjs', { 'build': {'unix': 'npm install && npm install -g tern'}}
-" NeoBundle 'fishbullet/deoplete-ruby'
-" NeoBundle 'kiddos/deoplete-cpp', { 'build': {'unix': './install.sh'}}
-" NeoBundle 'mhartington/nvim-typescript'
-" NeoBundle 'padawan-php/deoplete-padawan', { 'build': {'unix': 'composer install' }}
-" NeoBundle 'autozimu/LanguageClient-neovim'
-NeoBundle 'prabirshrestha/vim-lsp'
-NeoBundle 'mattn/vim-lsp-settings'
-NeoBundle 'lighttiger2505/deoplete-vim-lsp'
 " }}}
 " libs {{{
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -90,19 +68,14 @@ NeoBundle 'Vimjas/vim-python-pep8-indent'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'leafgarland/typescript-vim'
-NeoBundle 'peitalin/vim-jsx-typescript'
 NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'mxw/vim-jsx'
-NeoBundle 'chemzqm/vim-jsx-improve'
+" NeoBundle 'mxw/vim-jsx'
+" NeoBundle 'chemzqm/vim-jsx-improve'
 NeoBundle 'MaxMEllon/vim-jsx-pretty'
 NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
 NeoBundle 'fatih/vim-go'
-" }}}
-" lua {{{
-NeoBundle 'xolox/vim-lua-ftplugin'
-NeoBundle 'xolox/vim-misc'
 " }}}
 " perl {{{
 NeoBundle 'vim-perl/vim-perl'
@@ -119,7 +92,6 @@ NeoBundle 'shawncplus/phpcomplete.vim'
 " }}}
 " html {{{
 NeoBundle 'othree/html5.vim'
-NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-markdown'
 " }}}
 " css {{{
@@ -127,9 +99,6 @@ NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle '1995eaton/vim-better-css-completion'
-" }}}
-" solidity {{{
-NeoBundle 'tomlion/vim-solidity'
 " }}}
 " Julia {{{
 NeoBundle 'JuliaEditorSupport/julia-vim'
@@ -141,9 +110,59 @@ NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'dart-lang/dart-vim-plugin'
 " }}}
 call neobundle#end()
-filetype plugin indent on
 NeoBundleCheck
 
+" lsp settings {{{
+" setup {{{
+lua << EOF
+local lspconfig = require('lspconfig');
+lspconfig.clangd.setup({
+  cmd={"clangd-10", "--background-index"},
+  handlers = {
+    ["textDocument/publishDiagnostics"] = vim.lsp.with(
+      vim.lsp.diagnostic.on_publish_diagnostics, {
+        underline = false,
+        virtual_text = false,
+        signs = false,
+        update_in_insert = false
+      }
+    )
+  }
+});
+lspconfig.tsserver.setup({
+  root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git")
+})
+lspconfig.pyls.setup{}
+lspconfig.jdtls.setup({
+  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle")
+})
+lspconfig.jsonls.setup{
+  cmd = {"vscode-json-languageserver", "--stdio"}
+}
+lspconfig.vimls.setup{}
+lspconfig.bashls.setup{}
+lspconfig.cmake.setup{}
+EOF
+" }}}
+" completion {{{
+autocmd BufEnter * lua require('completion').on_attach()
+imap <expr> <C-Space> "\<Plug>(completion_trigger)"
+let g:completion_confirm_key = "\<C-Y>"
+imap <expr> <CR> pumvisible() ? "\<C-N><C-Y>" : "\<Plug>delimitMateCR"
+let g:completion_matching_ignore_case = 1
+let g:completion_trigger_on_delete = 1
+let g:completion_enable_snippet = 'Neosnippet'
+" }}}
+" key mapping {{{
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gi    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> gt   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gs    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gw    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
+" }}}
+" }}}
 " file type settings {{{
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
@@ -256,7 +275,8 @@ set clipboard=unnamed,unnamedplus
 set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
-set completeopt=menu,menuone
+set completeopt=menu,menuone,noselect
+set shortmess+=c
 set mouse=""
 set autoread
 set hidden
@@ -266,7 +286,7 @@ set formatoptions+=t
 " }}}
 " search settings {{{
 set incsearch
-set ignorecase
+set smartcase
 " }}}
 " encoding settings {{{
 set encoding=utf-8
@@ -355,6 +375,11 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
+" ale settings {{{
+let g:ale_linters = {
+\  'python': ['flake8']
+\}
+" }}}
 " jsx-pretty settings {{{
 let g:vim_jsx_pretty_enable_jsx_highlight = 0
 highlight def link jsxTag Function
@@ -373,7 +398,7 @@ let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 let delimitMate_balance_matchpairs = 1
-imap <expr> <CR> pumvisible() ? "\<C-N><C-Y>": "<Plug>delimitMateCR"
+" imap <expr> <CR> pumvisible() ? "\<C-N>": "<Plug>delimitMateCR"
 " }}}
 " airline settings {{{
 let g:airline_detect_modified = 1
@@ -381,22 +406,42 @@ let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
 let g:airline_detect_iminsert = 1
 let g:airline_inactive_collapse = 1
-let g:airline_theme = 'tomorrow'
+let g:airline_theme = 'molokai'
 let g:airline_powerline_fonts = 1
+
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-let g:airline_left_sep = '⊳'
-let g:airline_right_sep = '⊲ '
-let g:airline_right_alt_sep = '⌘ '
-let g:airline_left_alt_sep = ''
-let g:airline_symbols.crypt = '☠'
-let g:airline_symbols.linenr = '⇵ '
-let g:airline_symbols.branch = '⎇ '
-let g:airline_symbols.paste = '℘  '
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.whitespace = '⇆ '
+let g:airline_left_sep = '⌨️ '
+let g:airline_right_sep = '💻'
+let g:airline_right_alt_sep = '💠'
+let g:airline_left_alt_sep = '🛸'
+let g:airline_symbols.crypt = '🔒'
+let g:airline_symbols.linenr = '🔭'
+let g:airline_symbols.maxlinenr = '🔬'
+let g:airline_symbols.branch = '🛠 '
+let g:airline_symbols.paste = '📑'
+let g:airline_symbols.readonly = '⛔️'
+let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.whitespace = '🕳 '
+let g:airline_symbols.notexists = '🛑'
+" airline-ale {{{
+let g:airline#extensions#ale#enabled = 1
+let airline#extensions#ale#error_symbol = '🚫'
+let airline#extensions#ale#warning_symbol = '⚠️ '
+" }}}
+" airline-branch {{{
+let g:airline#extensions#branch#enabled = 1
+" }}}
+" airline-tabline {{{
+let g:airline#extensions#tabline#enabled = 1
+" }}}
+" airline-nvimlsp {{{
+let g:airline#extensions#nvimlsp#enabled = 1
+let airline#extensions#nvimlsp#error_symbol = '🚫'
+let airline#extensions#nvimlsp#warning_symbol = '⚠️ '
+" }}}
 " }}}
 " NERDcommenter settings {{{
 let g:NERDSpaceDelims = 1
@@ -414,34 +459,34 @@ let g:NERDCustomDelimiters = {
 let g:gitgutter_enabled = 0
 " }}}
 " deoplete settings {{{
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option({
-\  'auto_complete_delay': 30,
-\  'auto_refresh_delay': 100,
-\  'camel_case': v:true,
-\  'check_stderr': v:false,
-\  'ignore_case': v:true,
-\  'ignore_sources': {
-\     '_': ['around'],
-\     'cpp': ['around', 'tmux-complete'],
-\  },
-\  'refresh_always': v:true,
-\  'skip_chars': [],
-\  'max_list': 600,
-\  'smart_case': v:true,
-\  'min_pattern_length': 1,
-\})
-call deoplete#custom#option('keyword_patterns', {
-\  '_': '(?<!^)[a-zA-Z_^{};]*',
-\})
-call deoplete#custom#source('buffer', 'min_pattern_length', 3)
+" let g:deoplete#enable_at_startup = 1
+" call deoplete#custom#option({
+" \  'auto_complete_delay': 0,
+" \  'auto_refresh_delay': 0,
+" \  'camel_case': v:true,
+" \  'check_stderr': v:false,
+" \  'ignore_case': v:true,
+" \  'ignore_sources': {
+" \     '_': ['around'],
+" \     'cpp': ['around', 'tmux-complete', 'neosnippet'],
+" \  },
+" \  'prev_completion_mode': 'mirror',
+" \  'refresh_always': v:false,
+" \  'skip_multibyte': v:true,
+" \  'max_list': 600,
+" \  'smart_case': v:true,
+" \  'min_pattern_length': 1,
+" \})
+" call deoplete#custom#option('keyword_patterns', {
+" \  '_': '(?<!^)[a-zA-Z_^{};]*',
+" \})
+" call deoplete#custom#source('buffer', 'min_pattern_length', 3)
 
-inoremap <expr> <C-Space> deoplete#manual_complete()
+" inoremap <expr> <C-Space> deoplete#manual_complete()
 " LSP {{{
 let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
 let g:lsp_settings_filetype_javascript = 'javascript-typescript-stdio'
 let g:lsp_diagnostics_enabled = 0
-autocmd FileType javascript,html let b:lsp_diagnostics_enabled = 1
 " }}}
 " deoplete-cpp {{{
 let g:deoplete#sources#cpp#include_paths = [
@@ -461,6 +506,7 @@ let g:deoplete#sources#cpp#include_paths = [
 " }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#enable_completed_snippet = 1
 " let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
 
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
