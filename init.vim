@@ -99,6 +99,7 @@ NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'groenewege/vim-less'
 NeoBundle '1995eaton/vim-better-css-completion'
+NeoBundle 'othree/csscomplete.vim'
 " }}}
 " Julia {{{
 NeoBundle 'JuliaEditorSupport/julia-vim'
@@ -130,6 +131,7 @@ lspconfig.clangd.setup({
   }
 });
 lspconfig.tsserver.setup({
+  filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
   root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git")
 })
 lspconfig.pyls.setup{}
@@ -142,7 +144,14 @@ lspconfig.jsonls.setup{
 lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 lspconfig.cmake.setup{}
+lspconfig.flow.setup{}
+lspconfig.cssls.setup{}
+lspconfig.angularls.setup{}
 EOF
+" }}}
+" sign {{{
+sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
+sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
 " }}}
 " completion {{{
 autocmd BufEnter * lua require('completion').on_attach()
@@ -382,14 +391,14 @@ let g:ale_linters = {
 " }}}
 " jsx-pretty settings {{{
 let g:vim_jsx_pretty_enable_jsx_highlight = 0
-highlight def link jsxTag Function
-highlight def link jsxTagName Function
-highlight def link jsxString String
-highlight def link jsxNameSpace Function
-highlight def link jsxComment Error
+highlight def link jsxTag Keyword
+highlight def link jsxTagName Keyword
 highlight def link jsxAttrib Type
-highlight def link jsxCloseTag Identifier
-highlight def link jsxCloseString Identifier
+highlight def link jsxString String
+highlight def link jsxNameSpace Identifier
+highlight def link jsxComment Comment
+highlight def link jsxCloseTag Text
+highlight def link jsxCloseString Text
 " }}}
 " delimitMate settings {{{
 autocmd FileType html setlocal matchpairs+=<:>
