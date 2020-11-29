@@ -144,9 +144,17 @@ lspconfig.jsonls.setup{
 lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 lspconfig.cmake.setup{}
-lspconfig.flow.setup{}
 lspconfig.cssls.setup{}
 lspconfig.angularls.setup{}
+lspconfig.flow.setup{}
+
+local util = require('lspconfig/util')
+local dart_sdk_bin = util.base_install_dir .. "/dart-sdk/bin/"
+local dart_bin = dart_sdk_bin .. "dart"
+local analysis_server = dart_sdk_bin .. "snapshots/analysis_server.dart.snapshot"
+lspconfig.dartls.setup{
+  cmd = {dart_bin, analysis_server, "--lsp"}
+}
 EOF
 " }}}
 " sign {{{
@@ -386,7 +394,11 @@ colorscheme malokai
 " plugin settings {{{
 " ale settings {{{
 let g:ale_linters = {
-\  'python': ['flake8']
+\  'python': ['flake8'],
+\  'javascript': ['eslint']
+\}
+let g:ale_linters_ignore = {
+\  'javascript': ['flow']
 \}
 " }}}
 " jsx-pretty settings {{{
