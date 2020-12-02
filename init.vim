@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2020/11/28
+""	Last Modified: 2020/12/03
 ""
 
 set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
@@ -45,6 +45,7 @@ NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'dyng/ctrlsf.vim'
 NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
+NeoBundle 'steelsojka/completion-buffers'
 NeoBundle 'Shougo/neosnippet.vim'
 " }}}
 " libs {{{
@@ -114,6 +115,7 @@ call neobundle#end()
 NeoBundleCheck
 
 " lsp settings {{{
+
 " setup {{{
 lua << EOF
 local lspconfig = require('lspconfig');
@@ -147,6 +149,7 @@ lspconfig.cmake.setup{}
 lspconfig.cssls.setup{}
 lspconfig.angularls.setup{}
 lspconfig.flow.setup{}
+lspconfig.html.setup{}
 
 local util = require('lspconfig/util')
 local dart_sdk_bin = util.base_install_dir .. "/dart-sdk/bin/"
@@ -155,6 +158,7 @@ local analysis_server = dart_sdk_bin .. "snapshots/analysis_server.dart.snapshot
 lspconfig.dartls.setup{
   cmd = {dart_bin, analysis_server, "--lsp"}
 }
+lspconfig.webmacrols.setup{}
 EOF
 " }}}
 " sign {{{
@@ -163,20 +167,28 @@ sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
 " }}}
 " completion {{{
 autocmd BufEnter * lua require('completion').on_attach()
+autocmd FileType cpp let b:completion_trigger_character = ['.', '::', '->']
 imap <expr> <C-Space> "\<Plug>(completion_trigger)"
-let g:completion_confirm_key = "\<C-Y>"
-imap <expr> <CR> pumvisible() ? "\<C-N><C-Y>" : "\<Plug>delimitMateCR"
+imap <expr> <CR> pumvisible() ? "\<C-N><C-U>" : "\<Plug>delimitMateCR"
+let g:completion_timer_cycle = 600
+let g:completion_trigger_keyword_length = 2
+let g:completion_confirm_key = "\<C-U>"
 let g:completion_matching_ignore_case = 1
 let g:completion_trigger_on_delete = 1
 let g:completion_enable_snippet = 'Neosnippet'
+let g:completion_chain_complete_list = [
+\  {'complete_items': ['lsp', 'snippet', 'buffer']},
+\  {'mode': '<c-p>'},
+\  {'mode': '<c-n>'}
+\]
 " }}}
 " key mapping {{{
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> gi    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> gt   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> gs    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gw    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gI    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> gT   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gR    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gS    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
@@ -204,6 +216,10 @@ set foldlevel=1
 " python {{{
 autocmd FileType python setlocal foldmethod=indent
 autocmd FileType python setlocal foldlevel=1
+" }}}
+" lua {{{
+autocmd FileType lua setlocal foldmethod=indent
+autocmd FileType lua setlocal foldlevel=1
 " }}}
 " ruby {{{
 autocmd FileType ruby setlocal foldmethod=indent
@@ -233,6 +249,7 @@ autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
 autocmd FileType csharp normal zR
 autocmd FileType python,javascript normal zR
 autocmd FileType html normal zR
+autocmd FileType typescript normal zR
 " }}}
 " }}}
 " indenting setting {{{
@@ -287,6 +304,7 @@ autocmd FileType bzl setlocal nosmartindent
 " }}}
 " editing settings {{{
 " set altkeymap
+set nowrap
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
 set linebreak
@@ -303,7 +321,8 @@ set formatoptions+=t
 " }}}
 " search settings {{{
 set incsearch
-set smartcase
+" set smartcase
+set ignorecase
 " }}}
 " encoding settings {{{
 set encoding=utf-8
