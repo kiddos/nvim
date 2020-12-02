@@ -46,6 +46,7 @@ NeoBundle 'dyng/ctrlsf.vim'
 NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'steelsojka/completion-buffers'
+NeoBundle 'albertoCaroM/completion-tmux'
 NeoBundle 'Shougo/neosnippet.vim'
 " }}}
 " libs {{{
@@ -177,7 +178,7 @@ let g:completion_matching_ignore_case = 1
 let g:completion_trigger_on_delete = 1
 let g:completion_enable_snippet = 'Neosnippet'
 let g:completion_chain_complete_list = [
-\  {'complete_items': ['lsp', 'snippet', 'buffer']},
+\  {'complete_items': ['lsp', 'snippet', 'buffer', 'tmux']},
 \  {'mode': '<c-p>'},
 \  {'mode': '<c-n>'}
 \]
@@ -364,34 +365,42 @@ let mapleader=","
 let localleader="\\"
 " }}}
 " typo {{{
-command!  WQ  wq
-command!  Wq  wq
-command!  W w
-command!  Q q
-command!  Qa  qa
-command!  QA  qa
-" }}}
-" large movement {{{
-nmap J  <C-D>
-nmap K  <C-U>
-nmap H  <C-E>
-nmap L  <C-Y>
+command! WQ  wq
+command! Wq  wq
+command! W   w
+command! Q   q
+command! Qa  qa
+command! QA  qa
 " }}}
 " tab switching {{{
-nmap  <leader>1	1gt
-nmap  <leader>2	2gt
-nmap  <leader>3	3gt
-nmap  <leader>4	4gt
-nmap  <leader>5	5gt
-nmap  <leader>6	6gt
-nmap  <leader>7	7gt
-nmap  <leader>8	8gt
-nmap  <leader>9	9gt
+nmap <leader>1 1gt
+nmap <leader>2 2gt
+nmap <leader>3 3gt
+nmap <leader>4 4gt
+nmap <leader>5 5gt
+nmap <leader>6 6gt
+nmap <leader>7 7gt
+nmap <leader>8 8gt
+nmap <leader>9 9gt
 " }}}
-" split tab {{{
-nmap <leader><leader>v :vsplit<CR>
-nmap <leader><leader>s :tabedit<CR>
-nmap <leader><leader>c :tabclose<CR>
+" buffer switching {{{
+nmap <leader><leader>1 :b1<CR>
+nmap <leader><leader>2 :b2<CR>
+nmap <leader><leader>3 :b3<CR>
+nmap <leader><leader>4 :b4<CR>
+nmap <leader><leader>5 :b5<CR>
+nmap <leader><leader>6 :b6<CR>
+nmap <leader><leader>7 :b7<CR>
+nmap <leader><leader>8 :b8<CR>
+nmap <leader><leader>9 :b9<CR>
+nmap <leader><leader>0 :b10<CR>
+nmap gn :bn<CR>
+nmap gp :bp<CR>
+nmap gd :bd<CR>
+nmap L :bn<CR>
+nmap H :bp<CR>
+nmap J :bn<CR>
+nmap K :bp<CR>
 " }}}
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
