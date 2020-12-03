@@ -116,7 +116,6 @@ call neobundle#end()
 NeoBundleCheck
 
 " lsp settings {{{
-
 " setup {{{
 lua << EOF
 local lspconfig = require('lspconfig');
@@ -137,7 +136,8 @@ lspconfig.tsserver.setup({
   filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
   root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git")
 })
-lspconfig.pyls.setup{}
+-- lspconfig.pyls.setup{}
+lspconfig.jedi_language_server.setup{}
 lspconfig.jdtls.setup({
   root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle")
 })
@@ -151,6 +151,7 @@ lspconfig.cssls.setup{}
 lspconfig.angularls.setup{}
 lspconfig.flow.setup{}
 lspconfig.html.setup{}
+lspconfig.rust_analyzer.setup{}
 
 local util = require('lspconfig/util')
 local dart_sdk_bin = util.base_install_dir .. "/dart-sdk/bin/"
