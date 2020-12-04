@@ -23,6 +23,14 @@ NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'benmills/vimux'
 " }}}
+" new features {{{
+NeoBundle 'nvim-lua/completion-nvim'
+NeoBundle 'steelsojka/completion-buffers'
+NeoBundle 'albertoCaroM/completion-tmux'
+NeoBundle 'nvim-lua/popup.nvim'
+NeoBundle 'nvim-lua/plenary.nvim'
+NeoBundle 'nvim-telescope/telescope.nvim'
+" }}}
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
@@ -44,9 +52,6 @@ NeoBundle 'kiddos/vim-ros'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'dyng/ctrlsf.vim'
 NeoBundle 'neovim/nvim-lspconfig'
-NeoBundle 'nvim-lua/completion-nvim'
-NeoBundle 'steelsojka/completion-buffers'
-NeoBundle 'albertoCaroM/completion-tmux'
 NeoBundle 'Shougo/neosnippet.vim'
 " }}}
 " libs {{{
@@ -320,6 +325,7 @@ set hidden
 set cscopepathcomp=2
 set nowritebackup
 set formatoptions+=t
+set wildignore=*.o,*.obj,*.out
 " }}}
 " search settings {{{
 set incsearch
@@ -421,6 +427,12 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
+" telescope {{{
+nnoremap <leader>ff <cmd>Telescope find_files<CR>
+nnoremap <leader>fg <cmd>Telescope live_grep<CR>
+nnoremap <leader>fb <cmd>Telescope buffers<CR>
+nnoremap <leader>fh <cmd>Telescope help_tags<CR>
+" }}}
 " ale settings {{{
 let g:ale_linters = {
 \  'python': ['flake8'],
