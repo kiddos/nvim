@@ -154,6 +154,7 @@ lspconfig.angularls.setup{}
 lspconfig.flow.setup{}
 lspconfig.html.setup{}
 lspconfig.rust_analyzer.setup{}
+lspconfig.sumneko_lua.setup{}
 
 local util = require('lspconfig/util')
 local dart_sdk_bin = util.base_install_dir .. "/dart-sdk/bin/"
