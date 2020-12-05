@@ -170,7 +170,17 @@ EOF
 sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
 sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
 " }}}
-" completion {{{
+" key mapping {{{
+nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gI <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> gT <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gR <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gS <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
+" }}}
+" }}}
+" completion settings {{{
 autocmd BufEnter * lua require('completion').on_attach()
 autocmd FileType cpp let b:completion_trigger_character = ['.', '::', '->']
 imap <expr> <C-Space> "\<Plug>(completion_trigger)"
@@ -186,16 +196,7 @@ let g:completion_chain_complete_list = [
 \  {'mode': '<c-p>'},
 \  {'mode': '<c-n>'}
 \]
-" }}}
-" key mapping {{{
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> gI    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> gT   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gR    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> gS    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
-" }}}
+let g:completion_word_ignored_ft = ['json', 'text']
 " }}}
 " file type settings {{{
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
