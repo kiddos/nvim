@@ -48,7 +48,6 @@ NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim'
 NeoBundle 'arecarn/selection.vim'
 NeoBundle 'kiddos/snippets.vim'
-NeoBundle 'kiddos/vim-ros'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'dyng/ctrlsf.vim'
 NeoBundle 'neovim/nvim-lspconfig'
@@ -65,7 +64,6 @@ NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'beyondmarc/hlsl.vim'
 NeoBundle 'kiddos/vim-protobuf'
-NeoBundle 'vim-scripts/SWIG-syntax'
 " " }}}
 " python {{{
 NeoBundle 'tell-k/vim-autopep8'
@@ -95,7 +93,6 @@ NeoBundle 'vim-ruby/vim-ruby'
 " }}}
 " php {{{
 NeoBundle 'stanangeloff/php.vim'
-NeoBundle 'shawncplus/phpcomplete.vim'
 " }}}
 " html {{{
 NeoBundle 'othree/html5.vim'
@@ -311,6 +308,7 @@ autocmd FileType bzl setlocal nosmartindent
 " }}}
 " editing settings {{{
 " set altkeymap
+set cursorline
 set nowrap
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
@@ -414,11 +412,15 @@ autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
 autocmd FileType csharp nnoremap ; $a;
 autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; $a;
 " }}}
+" compile {{{
+autocmd FileType c,cpp command! Compile execute ':!clang++ % -o %:r'
+autocmd FileType cuda command! Compile execute ':!nvcc % -o %:r'
+autocmd FileType java command! Compile execute ':!javac %'
+" }}}
 " }}}
 " color scheme settings {{{
 " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
 " set termguicolors
-set cursorline
 syntax enable
 syntax on
 let g:material_theme_style = 'darker'
