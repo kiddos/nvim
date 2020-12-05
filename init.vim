@@ -181,7 +181,7 @@ let g:completion_matching_ignore_case = 1
 let g:completion_trigger_on_delete = 1
 let g:completion_enable_snippet = 'Neosnippet'
 let g:completion_chain_complete_list = [
-\  {'complete_items': ['lsp', 'snippet', 'buffer', 'tmux']},
+\  {'complete_items': ['lsp', 'snippet', 'buffer', 'tmux', 'path']},
 \  {'mode': '<c-p>'},
 \  {'mode': '<c-n>'}
 \]
