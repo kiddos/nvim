@@ -416,8 +416,8 @@ autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; 
 " }}}
 " }}}
 " color scheme settings {{{
-let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-set termguicolors
+" let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+" set termguicolors
 set cursorline
 syntax enable
 syntax on
@@ -468,7 +468,7 @@ let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
 let g:airline_detect_iminsert = 1
 let g:airline_inactive_collapse = 1
-let g:airline_theme = 'molokai'
+let g:airline_theme = 'onedark'
 let g:airline_powerline_fonts = 1
 
 
@@ -520,52 +520,6 @@ let g:NERDCustomDelimiters = {
 " GitGutter settings {{{
 let g:gitgutter_enabled = 0
 " }}}
-" deoplete settings {{{
-" let g:deoplete#enable_at_startup = 1
-" call deoplete#custom#option({
-" \  'auto_complete_delay': 0,
-" \  'auto_refresh_delay': 0,
-" \  'camel_case': v:true,
-" \  'check_stderr': v:false,
-" \  'ignore_case': v:true,
-" \  'ignore_sources': {
-" \     '_': ['around'],
-" \     'cpp': ['around', 'tmux-complete', 'neosnippet'],
-" \  },
-" \  'prev_completion_mode': 'mirror',
-" \  'refresh_always': v:false,
-" \  'skip_multibyte': v:true,
-" \  'max_list': 600,
-" \  'smart_case': v:true,
-" \  'min_pattern_length': 1,
-" \})
-" call deoplete#custom#option('keyword_patterns', {
-" \  '_': '(?<!^)[a-zA-Z_^{};]*',
-" \})
-" call deoplete#custom#source('buffer', 'min_pattern_length', 3)
-
-" inoremap <expr> <C-Space> deoplete#manual_complete()
-" LSP {{{
-let g:lsp_settings_filetype_html = ['html-languageserver', 'angular-language-server']
-let g:lsp_settings_filetype_javascript = 'javascript-typescript-stdio'
-let g:lsp_diagnostics_enabled = 0
-" }}}
-" deoplete-cpp {{{
-let g:deoplete#sources#cpp#include_paths = [
-\ '/usr/include/eigen3',
-\ '/usr/include/pcl-1.8',
-\]
-" }}}
-" ternjs {{{
-" let g:deoplete#sources#ternjs#timeout = 3
-" let g:deoplete#sources#ternjs#types = 1
-" let g:deoplete#sources#ternjs#depths = 1
-" let g:deoplete#sources#ternjs#include_keywords = 1
-" let g:deoplete#sources#ternjs#in_literal = 0
-" let g:deoplete#sources#ternjs#filetypes = ['jsx', 'javascript.jsx', 'vue']
-" call deoplete#custom#source('tern', 'input_pattern', '\w+|[^.]\.\s*?\w*')
-" autocmd FileType javascript,typescript,html call deoplete#custom#option('auto_complete_delay', 200)
-" }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
@@ -575,7 +529,6 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" }}}
 " }}}
 " startify settings {{{
 let g:startify_list_order = [
@@ -633,22 +586,22 @@ endfunction
 call StartAPMServer()
 
 let g:tmuxline_preset = {
-\   'a'       : '#S',
-\   'b'       : '#W',
-\   'c'       : '',
-\   'win'     : '#I #W',
-\   'cwin'    : '#I #W',
-\   'y'       : 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
-\   'z'       : '#(whoami)@#H',
-\   'options' : {'status-justify' : 'left'}
-\   }
+\  'a'       : '#S',
+\  'b'       : '#W',
+\  'c'       : '',
+\  'win'     : '#I #W',
+\  'cwin'    : '#I #W',
+\  'y'       : 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
+\  'z'       : '#(whoami)@#H',
+\  'options' : {'status-justify' : 'left'}
+\}
 let g:tmuxline_separators = {
-\   'left' : '➤',
-\   'left_alt': '➡',
-\   'right' : '⏎ ',
-\   'right_alt' : '⇦ ',
-\   'space' : ' '
-\   }
+\  'left': '◗',
+\  'left_alt': '◗',
+\  'right' : '◖',
+\  'right_alt' : '◖',
+\  'space' : ' '
+\}
 " }}}
 " ctrlp setting {{{
 let g:ctrlp_show_hidden = 1
