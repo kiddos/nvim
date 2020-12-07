@@ -163,7 +163,7 @@ local analysis_server = dart_sdk_bin .. "snapshots/analysis_server.dart.snapshot
 lspconfig.dartls.setup{
   cmd = {dart_bin, analysis_server, "--lsp"}
 }
-lspconfig.webmacrols.setup{}
+-- lspconfig.webmacrols.setup{}
 EOF
 " }}}
 " sign {{{
@@ -288,6 +288,12 @@ autocmd FileType cs setlocal shiftwidth=4
 autocmd FileType python setlocal tabstop=4
 autocmd FileType python setlocal softtabstop=2
 autocmd FileType python setlocal shiftwidth=2
+let g:python_recommended_style = 0
+" }}}
+" java indenting {{{
+autocmd FileType java setlocal tabstop=4
+autocmd FileType java setlocal softtabstop=4
+autocmd FileType java setlocal shiftwidth=4
 " }}}
 " make indenting {{{
 autocmd FileType make setlocal noexpandtab
