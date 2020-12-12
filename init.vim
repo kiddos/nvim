@@ -149,10 +149,8 @@ lspconfig.jsonls.setup{
 lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 lspconfig.cmake.setup{}
-lspconfig.cssls.setup{}
 lspconfig.angularls.setup{}
 lspconfig.flow.setup{}
-lspconfig.html.setup{}
 lspconfig.rust_analyzer.setup{}
 lspconfig.sumneko_lua.setup{}
 
@@ -170,13 +168,13 @@ EOF
 sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
 sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
 " }}}
-" key mapping {{{
-nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> gI <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> gT <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gR <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> gS <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+" commands {{{
+command GotoDeclaration lua vim.lsp.buf.declaration()
+command GotoImplementation lua vim.lsp.buf.implementation()
+command GotoTypeDefinition lua vim.lsp.buf.type_definition()
+command GotoReferences lua vim.lsp.buf.references()
+command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()
+command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()
 command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
