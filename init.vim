@@ -10,7 +10,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'kiddos/malokai.vim'
 NeoBundle 'kaicataldo/material.vim'
 NeoBundle 'tomasr/molokai'
-NeoBundle 'morhetz/gruvbox'
 " }}}
 " git {{{
 NeoBundle 'tpope/vim-fugitive'
@@ -24,12 +23,12 @@ NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'benmills/vimux'
 " }}}
 " new features {{{
+NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'steelsojka/completion-buffers'
 NeoBundle 'albertoCaroM/completion-tmux'
-NeoBundle 'nvim-lua/popup.nvim'
-NeoBundle 'nvim-lua/plenary.nvim'
-NeoBundle 'nvim-telescope/telescope.nvim'
+NeoBundle 'nvim-telescope/telescope.nvim', {'depends': ['nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim']}
+NeoBundle 'kyazdani42/nvim-tree.lua', {'depends': 'kyazdani42/nvim-web-devicons'}
 " }}}
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
@@ -45,17 +44,15 @@ NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'kannokanno/previm'
-NeoBundle 'arecarn/crunch.vim'
-NeoBundle 'arecarn/selection.vim'
+NeoBundle 'arecarn/crunch.vim', { 'depends': 'arecarn/selection.vim' }
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'dyng/ctrlsf.vim'
-NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'Shougo/neosnippet.vim'
 " }}}
 " libs {{{
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
-NeoBundle 'tomtom/tlib_vim'
+" NeoBundle 'MarcWeber/vim-addon-mw-utils'
+" NeoBundle 'tomtom/tlib_vim'
 " }}}
 " C family {{{
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -405,13 +402,11 @@ nmap <leader><leader>7 :b7<CR>
 nmap <leader><leader>8 :b8<CR>
 nmap <leader><leader>9 :b9<CR>
 nmap <leader><leader>0 :b10<CR>
-nmap gn :bn<CR>
-nmap gp :bp<CR>
 nmap gd :bd<CR>
-nmap L :bn<CR>
-nmap H :bp<CR>
-nmap J :bn<CR>
-nmap K :bp<CR>
+nmap LL :bn<CR>
+nmap HH :bp<CR>
+nmap JJ :bn<CR>
+nmap KK :bp<CR>
 " }}}
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
@@ -426,7 +421,7 @@ autocmd FileType java command! Compile execute ':!javac %'
 " }}}
 " color scheme settings {{{
 " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-" set termguicolors
+set termguicolors
 syntax enable
 syntax on
 let g:material_theme_style = 'darker'
