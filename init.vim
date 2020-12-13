@@ -140,9 +140,6 @@ lspconfig.jedi_language_server.setup{}
 lspconfig.jdtls.setup({
   root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle")
 })
-lspconfig.jsonls.setup{
-  cmd = {"vscode-json-languageserver", "--stdio"}
-}
 lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 lspconfig.cmake.setup{}
@@ -411,12 +408,34 @@ nmap KK :bp<CR>
 " end line semicolon ; {{{
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
 autocmd FileType csharp nnoremap ; $a;
-autocmd FileType java,javascript,css,html,matlab,php,perl,typescript nnoremap ; $a;
+autocmd FileType java,matlab,php,perl nnoremap ; $a;
+autocmd FileType javascript,css,html,typescript  nnoremap ; $a;
+autocmd FileType javascriptreact,typescriptreact nnoremap ; $a;
 " }}}
 " compile {{{
 autocmd FileType c,cpp command! Compile execute ':!clang++ % -o %:r'
 autocmd FileType cuda command! Compile execute ':!nvcc % -o %:r'
 autocmd FileType java command! Compile execute ':!javac %'
+" }}}
+" remove trialing spaces {{{
+function! ShowSpaces(...)
+  let @/='\v(\s+$)|( +\ze\t)'
+  let oldhlsearch=&hlsearch
+  if !a:0
+    let &hlsearch=!&hlsearch
+  else
+    let &hlsearch=a:1
+  end
+  return oldhlsearch
+endfunction
+
+function! TrimSpaces() range
+  let oldhlsearch=ShowSpaces(1)
+  execute a:firstline.",".a:lastline."substitute ///gec"
+  let &hlsearch=oldhlsearch
+endfunction
+
+command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 " }}}
 " }}}
 " color scheme settings {{{
@@ -441,6 +460,7 @@ let g:ale_linters = {
 \  'python': ['flake8'],
 \  'javascript': ['eslint']
 \}
+let g:ale_python_flake8_options = '--ignore=E111,E121,E123,E126,E226,E24,E704,W503,W504'
 let g:ale_linters_ignore = {
 \  'javascript': ['flow']
 \}
@@ -617,36 +637,23 @@ let g:ctrlp_open_new_file = 't'
 let g:ctrlp_open_multiple_files = 't'
 
 " }}}
-" emmet {{{
+" emmet settings {{{
 let g:user_emmet_togglecomment_key = '<C-y>#'
 " }}}
-" useful functions and keybindings {{{
-function! ShowSpaces(...)
-  let @/='\v(\s+$)|( +\ze\t)'
-  let oldhlsearch=&hlsearch
-  if !a:0
-    let &hlsearch=!&hlsearch
-  else
-    let &hlsearch=a:1
-  end
-  return oldhlsearch
-endfunction
-
-function! TrimSpaces() range
-  let oldhlsearch=ShowSpaces(1)
-  execute a:firstline.",".a:lastline."substitute ///gec"
-  let &hlsearch=oldhlsearch
-endfunction
-
-" commands
-command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
-
-" function keys
+" a.vim settings {{{
+nmap <leader><leader>a :A<CR>
+" }}}
+" NERDTree settings {{{
 nmap <silent><F1> :NERDTreeToggle .<CR>
 imap <F1> <Esc>:NERDTreeToggle .<CR>
+" }}}
+" GitGutter settings {{{
 nmap <silent><F2> :GitGutterToggle<CR>
 imap <F2> <Esc>:GitGutterToggle<CR>
-" a.vim shortcut
-nmap <leader><leader>a :A<CR>
+" }}}
+" LuaTree settings {{{
+let g:lua_tree_tab_open = 1
+nmap <silent><F3> :LuaTreeToggle<CR>
+imap <F3> <Esc>:LuaTreeToggle<CR>
 " }}}
 " }}}
