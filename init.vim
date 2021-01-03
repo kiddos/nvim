@@ -473,6 +473,9 @@ let delimitMate_expand_cr = 2
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 let delimitMate_balance_matchpairs = 1
+let delimitMate_insert_eol_marker = 2
+let delimitMate_smart_matchpairs = ''
+let delimitMate_smart_quotes = '\w\%#'
 " imap <expr> <CR> pumvisible() ? "\<C-N>": "<Plug>delimitMateCR"
 " }}}
 " airline settings {{{
