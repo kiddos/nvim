@@ -174,7 +174,7 @@ command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " completion settings {{{
 autocmd BufEnter * lua require('completion').on_attach()
-autocmd FileType cpp let b:completion_trigger_character = ['.', '::', '->']
+autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
 imap <expr> <C-Space> "\<Plug>(completion_trigger)"
 imap <expr> <CR> pumvisible() ? "\<C-N><C-U>" : "\<Plug>delimitMateCR"
 let g:completion_timer_cycle = 600
@@ -183,6 +183,7 @@ let g:completion_confirm_key = "\<C-U>"
 let g:completion_matching_ignore_case = 1
 let g:completion_trigger_on_delete = 1
 let g:completion_enable_snippet = 'Neosnippet'
+let g:completion_enable_server_trigger = 0
 let g:completion_chain_complete_list = [
 \  {'complete_items': ['lsp', 'snippet', 'buffer', 'tmux', 'path']},
 \  {'mode': '<c-p>'},
