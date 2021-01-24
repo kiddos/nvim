@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2020/12/03
+""	Last Modified: 2021/01/24
 ""
 
 set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
@@ -27,7 +27,7 @@ NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'steelsojka/completion-buffers'
 NeoBundle 'albertoCaroM/completion-tmux'
-NeoBundle 'nvim-telescope/telescope.nvim', {'depends': ['nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim']}
+" NeoBundle 'nvim-telescope/telescope.nvim', {'depends': ['nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim']}
 NeoBundle 'kyazdani42/nvim-tree.lua', {'depends': 'kyazdani42/nvim-web-devicons'}
 " }}}
 " utility {{{
@@ -37,7 +37,7 @@ NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'dense-analysis/ale'
-NeoBundle 'ctrlpvim/ctrlp.vim'
+" NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'Raimondi/delimitMate'
@@ -47,8 +47,8 @@ NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim', { 'depends': 'arecarn/selection.vim' }
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'rhysd/vim-clang-format'
-NeoBundle 'dyng/ctrlsf.vim'
 NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'junegunn/fzf.vim'
 " }}}
 " libs {{{
 " NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -131,10 +131,7 @@ lspconfig.clangd.setup({
     )
   }
 });
-lspconfig.tsserver.setup({
-  filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
-  root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git")
-})
+lspconfig.tsserver.setup{}
 -- lspconfig.pyls.setup{}
 lspconfig.jedi_language_server.setup{}
 lspconfig.jdtls.setup({
@@ -144,16 +141,13 @@ lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 lspconfig.cmake.setup{}
 lspconfig.angularls.setup{}
-lspconfig.flow.setup{}
 lspconfig.rust_analyzer.setup{}
 lspconfig.sumneko_lua.setup{}
 
-local util = require('lspconfig/util')
-local dart_sdk_bin = util.base_install_dir .. "/dart-sdk/bin/"
-local dart_bin = dart_sdk_bin .. "dart"
-local analysis_server = dart_sdk_bin .. "snapshots/analysis_server.dart.snapshot"
+local home = vim.loop.os_homedir()
+local dart_sdk = home .. "/.local/share/dart-sdk/bin/"
 lspconfig.dartls.setup{
-  cmd = {dart_bin, analysis_server, "--lsp"}
+  cmd={dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"}
 }
 -- lspconfig.webmacrols.setup{}
 EOF
@@ -440,11 +434,9 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
-" telescope {{{
-nnoremap <leader>ff <cmd>Telescope find_files<CR>
-nnoremap <leader>fg <cmd>Telescope live_grep<CR>
-nnoremap <leader>fb <cmd>Telescope buffers<CR>
-nnoremap <leader>fh <cmd>Telescope help_tags<CR>
+" fzf.vim {{{
+set rtp+=~/.fzf
+nnoremap <C-P> :Files<CR>
 " }}}
 " ale settings {{{
 let g:ale_linters = {
