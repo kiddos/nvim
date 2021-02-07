@@ -27,8 +27,10 @@ NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'steelsojka/completion-buffers'
 NeoBundle 'albertoCaroM/completion-tmux'
-" NeoBundle 'nvim-telescope/telescope.nvim', {'depends': ['nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim']}
 NeoBundle 'kyazdani42/nvim-tree.lua', {'depends': 'kyazdani42/nvim-web-devicons'}
+NeoBundle 'nvim-treesitter/nvim-treesitter'
+NeoBundle 'nvim-treesitter/playground'
+NeoBundle 'nvim-treesitter/nvim-treesitter-refactor'
 " }}}
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
@@ -49,6 +51,7 @@ NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'junegunn/fzf.vim'
+NeoBundle 'prettier/vim-prettier', { 'build': 'yarn install' }
 " }}}
 " libs {{{
 " NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -166,13 +169,37 @@ command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()
 command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
+" treesitter settings {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  incremental_selection = {
+    enable = true,
+  },
+  refactor = {
+    smart_rename = {
+      enable = true,
+      keymaps = {
+        smart_rename = "grr",
+      },
+    },
+  },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false -- Whether the query persists across vim sessions
+  }
+}
+EOF
+" }}}
 " completion settings {{{
 autocmd BufEnter * lua require('completion').on_attach()
 autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
 imap <expr> <C-Space> "\<Plug>(completion_trigger)"
 imap <expr> <CR> pumvisible() ? "\<C-N><C-U>" : "\<Plug>delimitMateCR"
-let g:completion_timer_cycle = 600
-let g:completion_trigger_keyword_length = 2
+let g:completion_timer_cycle = 300
+let g:completion_trigger_keyword_length = 3
 let g:completion_confirm_key = "\<C-U>"
 let g:completion_matching_ignore_case = 1
 let g:completion_trigger_on_delete = 1
@@ -183,7 +210,8 @@ let g:completion_chain_complete_list = [
 \  {'mode': '<c-p>'},
 \  {'mode': '<c-n>'}
 \]
-let g:completion_word_ignored_ft = ['json', 'text']
+let g:completion_word_ignored_ft = ['json', 'text', '']
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
 " }}}
 " file type settings {{{
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
@@ -252,13 +280,13 @@ set softtabstop=2
 set shiftwidth=2
 set autoindent
 set expandtab
-set smartindent
-set cindent
+" set smartindent
 set copyindent
 set preserveindent
 " }}}
 " c/c++ indenting {{{
 " autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0
+autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cindent
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 " }}}
 " rust indenting {{{
@@ -510,7 +538,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_tab_nr = 0
 let g:airline#extensions#tabline#overflow_marker = '…'
-let airline#extensions#tabline#current_first = 1
+let airline#extensions#tabline#current_first = 0
 let g:airline#extensions#tabline#tabs_label = ''
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#fnamecollapse = 0
