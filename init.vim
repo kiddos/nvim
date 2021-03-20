@@ -27,7 +27,6 @@ NeoBundle 'neovim/nvim-lspconfig'
 NeoBundle 'nvim-lua/completion-nvim'
 NeoBundle 'steelsojka/completion-buffers'
 NeoBundle 'albertoCaroM/completion-tmux'
-NeoBundle 'kyazdani42/nvim-tree.lua', {'depends': 'kyazdani42/nvim-web-devicons'}
 " }}}
 " utility {{{
 NeoBundle 'scrooloose/nerdtree'
@@ -36,13 +35,11 @@ NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'dense-analysis/ale'
-" NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
-NeoBundle 'kannokanno/previm'
 NeoBundle 'arecarn/crunch.vim', { 'depends': 'arecarn/selection.vim' }
 NeoBundle 'kiddos/snippets.vim'
 NeoBundle 'rhysd/vim-clang-format'
@@ -51,13 +48,12 @@ NeoBundle 'junegunn/fzf.vim'
 NeoBundle 'prettier/vim-prettier', { 'build': 'yarn install' }
 " }}}
 " libs {{{
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
-NeoBundle 'tomtom/tlib_vim'
+" NeoBundle 'MarcWeber/vim-addon-mw-utils'
+" NeoBundle 'tomtom/tlib_vim'
 " }}}
 " C family {{{
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'kiddos/a.vim'
-NeoBundle 'beyondmarc/opengl.vim'
 NeoBundle 'tikhomirov/vim-glsl'
 NeoBundle 'beyondmarc/hlsl.vim'
 NeoBundle 'kiddos/vim-protobuf'
@@ -71,8 +67,6 @@ NeoBundle 'elzr/vim-json'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'pangloss/vim-javascript'
-" NeoBundle 'mxw/vim-jsx'
-" NeoBundle 'chemzqm/vim-jsx-improve'
 NeoBundle 'MaxMEllon/vim-jsx-pretty'
 NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
