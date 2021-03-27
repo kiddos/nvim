@@ -46,10 +46,7 @@ NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'junegunn/fzf.vim'
 NeoBundle 'prettier/vim-prettier', { 'build': 'yarn install' }
-" }}}
-" libs {{{
-" NeoBundle 'MarcWeber/vim-addon-mw-utils'
-" NeoBundle 'tomtom/tlib_vim'
+NeoBundle 'iamcco/markdown-preview.nvim', { 'build': 'cd app && yarn install' }
 " }}}
 " C family {{{
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
@@ -64,10 +61,8 @@ NeoBundle 'Vimjas/vim-python-pep8-indent'
 " }}}
 " javascript   {{{
 NeoBundle 'elzr/vim-json'
-NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'leafgarland/typescript-vim'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'MaxMEllon/vim-jsx-pretty'
+NeoBundle 'MaxMEllon/vim-jsx-pretty', { 'depends': 'pangloss/vim-javascript' }
 NeoBundle 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
@@ -428,7 +423,7 @@ command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 " }}}
 " color scheme settings {{{
 " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-set termguicolors
+" set termguicolors
 set background="dark"
 syntax enable
 syntax on
