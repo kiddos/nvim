@@ -4,3 +4,5 @@
 *.init.vim-rplugin~
 # ignore plugin
 bundle/*
+plugged/*
+autoload/plug.vim

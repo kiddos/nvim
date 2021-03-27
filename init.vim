@@ -1,107 +1,106 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/01/24
+""	Last Modified: 2021/03/28
 ""
 
-set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-call neobundle#begin(expand('~/.config/nvim/bundle'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+call plug#begin('~/.config/nvim/plugged')
 " color scheme {{{
-NeoBundle 'kiddos/malokai.vim'
-NeoBundle 'kaicataldo/material.vim'
-NeoBundle 'tomasr/molokai'
+Plug 'kiddos/malokai.vim'
+Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+Plug 'tomasr/molokai'
 " }}}
 " git {{{
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-NeoBundle 'gregsexton/gitv'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'gregsexton/gitv'
 " }}}
 " tmux {{{
-NeoBundle 'edkolev/tmuxline.vim'
-NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'benmills/vimux'
+Plug 'edkolev/tmuxline.vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'benmills/vimux'
 " }}}
 " new features {{{
-NeoBundle 'neovim/nvim-lspconfig'
-NeoBundle 'nvim-lua/completion-nvim'
-NeoBundle 'steelsojka/completion-buffers'
-NeoBundle 'albertoCaroM/completion-tmux'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'steelsojka/completion-buffers'
+Plug 'albertoCaroM/completion-tmux'
 " }}}
 " utility {{{
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'tpope/vim-eunuch'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'dense-analysis/ale'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'ryanoasis/vim-devicons'
-NeoBundle 'mhinz/vim-startify'
-NeoBundle 'arecarn/crunch.vim', { 'depends': 'arecarn/selection.vim' }
-NeoBundle 'kiddos/snippets.vim'
-NeoBundle 'rhysd/vim-clang-format'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'junegunn/fzf.vim'
-NeoBundle 'prettier/vim-prettier', { 'build': 'yarn install' }
-NeoBundle 'iamcco/markdown-preview.nvim', { 'build': 'cd app && yarn install' }
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-surround'
+Plug 'mattn/emmet-vim'
+Plug 'dense-analysis/ale'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'Raimondi/delimitMate'
+Plug 'ryanoasis/vim-devicons'
+Plug 'mhinz/vim-startify'
+Plug 'arecarn/selection.vim'
+Plug 'arecarn/crunch.vim'
+Plug 'kiddos/snippets.vim'
+Plug 'rhysd/vim-clang-format'
+Plug 'Shougo/neosnippet.vim'
+Plug 'junegunn/fzf.vim'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " }}}
 " C family {{{
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
-NeoBundle 'kiddos/a.vim'
-NeoBundle 'tikhomirov/vim-glsl'
-NeoBundle 'beyondmarc/hlsl.vim'
-NeoBundle 'kiddos/vim-protobuf'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'kiddos/a.vim'
+Plug 'tikhomirov/vim-glsl'
+Plug 'beyondmarc/hlsl.vim'
+Plug 'kiddos/vim-protobuf'
 " " }}}
 " python {{{
-NeoBundle 'tell-k/vim-autopep8'
-NeoBundle 'Vimjas/vim-python-pep8-indent'
+Plug 'tell-k/vim-autopep8'
+Plug 'Vimjas/vim-python-pep8-indent'
 " }}}
 " javascript   {{{
-NeoBundle 'elzr/vim-json'
-NeoBundle 'leafgarland/typescript-vim'
-NeoBundle 'MaxMEllon/vim-jsx-pretty', { 'depends': 'pangloss/vim-javascript' }
-NeoBundle 'peitalin/vim-jsx-typescript'
+Plug 'elzr/vim-json'
+Plug 'leafgarland/typescript-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'MaxMEllon/vim-jsx-pretty'
+Plug 'peitalin/vim-jsx-typescript'
 " }}}
 " go {{{
-NeoBundle 'fatih/vim-go'
+Plug 'fatih/vim-go'
 " }}}
 " perl {{{
-NeoBundle 'vim-perl/vim-perl'
+Plug 'vim-perl/vim-perl'
 " }}}
 " vhdl {{{
-NeoBundle 'kiddos/vim-vhdl'
+Plug 'kiddos/vim-vhdl'
 " }}}
 " ruby {{{
-NeoBundle 'vim-ruby/vim-ruby'
+Plug 'vim-ruby/vim-ruby'
 " }}}
 " php {{{
-NeoBundle 'stanangeloff/php.vim'
+Plug 'stanangeloff/php.vim'
 " }}}
 " html {{{
-NeoBundle 'othree/html5.vim'
-NeoBundle 'tpope/vim-markdown'
+Plug 'othree/html5.vim'
+Plug 'tpope/vim-markdown'
 " }}}
 " css {{{
-NeoBundle 'ap/vim-css-color'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'groenewege/vim-less'
-NeoBundle '1995eaton/vim-better-css-completion'
-NeoBundle 'othree/csscomplete.vim'
+Plug 'ap/vim-css-color'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'groenewege/vim-less'
+Plug '1995eaton/vim-better-css-completion'
+Plug 'othree/csscomplete.vim'
 " }}}
 " Julia {{{
-NeoBundle 'JuliaEditorSupport/julia-vim'
+Plug 'JuliaEditorSupport/julia-vim'
 " }}}
 " Rust {{{
-NeoBundle 'rust-lang/rust.vim'
+Plug 'rust-lang/rust.vim'
 " }}}
 " Dart {{{
-NeoBundle 'dart-lang/dart-vim-plugin'
+Plug 'dart-lang/dart-vim-plugin'
 " }}}
-call neobundle#end()
-NeoBundleCheck
+call plug#end()
 
 " lsp settings {{{
 " setup {{{
