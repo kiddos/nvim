@@ -22,9 +22,10 @@ Plug 'benmills/vimux'
 " }}}
 " new features {{{
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'steelsojka/completion-buffers'
-Plug 'albertoCaroM/completion-tmux'
+Plug 'hrsh7th/nvim-compe'
+" Plug 'nvim-lua/completion-nvim'
+" Plug 'steelsojka/completion-buffers'
+" Plug 'albertoCaroM/completion-tmux'
 " }}}
 " utility {{{
 Plug 'scrooloose/nerdtree'
@@ -119,11 +120,31 @@ lspconfig.clangd.setup({
     )
   }
 });
-lspconfig.tsserver.setup{}
+lspconfig.tsserver.setup{
+  handlers = {
+    ["textDocument/publishDiagnostics"] = vim.lsp.with(
+      vim.lsp.diagnostic.on_publish_diagnostics, {
+        underline = false,
+        virtual_text = false,
+        update_in_insert = false
+      }
+    )
+  }
+}
 -- lspconfig.pyls.setup{}
 lspconfig.jedi_language_server.setup{}
 lspconfig.jdtls.setup({
-  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle")
+  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle"),
+  handlers = {
+    ["textDocument/publishDiagnostics"] = vim.lsp.with(
+      vim.lsp.diagnostic.on_publish_diagnostics, {
+        underline = false,
+        virtual_text = false,
+        signs = false,
+        update_in_insert = false
+      }
+    )
+  }
 })
 lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
@@ -155,33 +176,57 @@ command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
 " completion settings {{{
-autocmd BufEnter * lua require('completion').on_attach()
-autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
-imap <expr> <C-Space> "\<Plug>(completion_trigger)"
-imap <expr> <CR> pumvisible() ? "\<C-U>" : "\<Plug>delimitMateCR"
-let g:completion_timer_cycle = 300
-let g:completion_trigger_keyword_length = 3
-let g:completion_confirm_key = "\<C-U>"
-let g:completion_matching_ignore_case = 1
-let g:completion_trigger_on_delete = 1
-let g:completion_enable_snippet = 'Neosnippet'
-let g:completion_enable_server_trigger = 0
-let g:completion_auto_change_source = 1
-let g:completion_chain_complete_list = {
-\ 'java': [
-\    {'mode': '<c-p>'},
-\    {'mode': '<c-n>'}
-\],
-\ 'default': [
-\    {'complete_items': ['lsp']},
-\    {'complete_items': ['snippet']},
-\    {'complete_items': ['buffer', 'tmux', 'path']},
-\    {'mode': '<c-p>'},
-\    {'mode': '<c-n>'}
-\]
-\}
-let g:completion_word_ignored_ft = ['json', 'text', '']
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
+let g:compe = {}
+let g:compe.enabled = v:true
+let g:compe.autocomplete = v:true
+let g:compe.debug = v:false
+let g:compe.min_length = 1
+let g:compe.preselect = 'always'
+let g:compe.throttle_time = 80
+let g:compe.source_timeout = 200
+let g:compe.incomplete_delay = 400
+let g:compe.max_abbr_width = 100
+let g:compe.max_kind_width = 100
+let g:compe.max_menu_width = 100
+let g:compe.documentation = v:true
+let g:compe.source = {}
+let g:compe.source.path = v:true
+let g:compe.source.buffer = v:true
+let g:compe.source.nvim_lsp = v:true
+let g:compe.source.nvim_lua = v:true
+let g:compe.source.vsnip = v:false
+let g:compe.source.omni = { 'filetypes': ['css'] }
+" let g:compe.source.emoji = v:true
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm({'keys': "\<Plug>delimitMateCR", 'mode': ''})
+
+" autocmd BufEnter * lua require('completion').on_attach()
+" autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
+" imap <expr> <C-Space> "\<Plug>(completion_trigger)"
+" imap <expr> <CR> pumvisible() ? "\<C-U>" : "\<Plug>delimitMateCR"
+" let g:completion_timer_cycle = 60
+" let g:completion_trigger_keyword_length = 3
+" let g:completion_confirm_key = "\<C-U>"
+" let g:completion_matching_ignore_case = 1
+" let g:completion_trigger_on_delete = 1
+" let g:completion_enable_snippet = 'Neosnippet'
+" let g:completion_enable_server_trigger = 0
+" let g:completion_auto_change_source = 1
+" let g:completion_chain_complete_list = {
+" \ 'java': [
+" \    {'mode': '<c-p>'},
+" \    {'mode': '<c-n>'}
+" \],
+" \ 'default': [
+" \    {'complete_items': ['lsp']},
+" \    {'complete_items': ['snippet']},
+" \    {'complete_items': ['buffer', 'tmux', 'path']},
+" \    {'mode': '<c-p>'},
+" \    {'mode': '<c-n>'}
+" \]
+" \}
+" let g:completion_word_ignored_ft = ['json', 'text', '']
+" let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
 " }}}
 " file type settings {{{
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
@@ -193,6 +238,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
+autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro
 " }}}
 " code display settings {{{
 set modeline
@@ -308,7 +354,7 @@ set clipboard=unnamed,unnamedplus
 set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
-set completeopt=menu,menuone,noinsert
+set completeopt=menuone,noinsert
 set shortmess+=c
 set mouse=nv
 set autoread
