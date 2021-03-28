@@ -22,5 +22,3 @@ hi def link cPreproc PreProc
 hi def link cInclude Include
 hi def link cBraces Delimiter
 hi def link cSymbol Symbol
-
-hi	Symbol		cterm=bold		ctermfg=255		gui=bold	guifg=#FFFFFF
