@@ -354,7 +354,7 @@ set clipboard=unnamed,unnamedplus
 set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
-set completeopt=menuone,noinsert
+set completeopt=menuone,noselect
 set shortmess+=c
 set mouse=nv
 set autoread
@@ -494,14 +494,6 @@ let g:ale_linters_ignore = {
 " }}}
 " jsx-pretty settings {{{
 let g:vim_jsx_pretty_enable_jsx_highlight = 0
-highlight def link jsxTag Keyword
-highlight def link jsxTagName Keyword
-highlight def link jsxAttrib Type
-highlight def link jsxString String
-highlight def link jsxNameSpace Identifier
-highlight def link jsxComment Comment
-highlight def link jsxCloseTag Text
-highlight def link jsxCloseString Text
 " }}}
 " delimitMate settings {{{
 autocmd FileType html setlocal matchpairs+=<:>
@@ -551,10 +543,12 @@ let g:airline#extensions#branch#enabled = 1
 " }}}
 " airline-tabline {{{
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_tab_nr = 0
 let g:airline#extensions#tabline#overflow_marker = '…'
-let airline#extensions#tabline#current_first = 0
+let g:airline#extensions#tabline#current_first = 0
 let g:airline#extensions#tabline#tabs_label = ''
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#fnamecollapse = 0
@@ -626,9 +620,6 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 " }}}
-" vim-ros setting {{{
-let g:ros_catkin_workspace = '~/catkin_kinetic'
-" }}}
 " clang-format settings {{{
 let g:clang_format#code_style = 'google'
 let g:clang_format#filetype_style_options = {
@@ -646,13 +637,6 @@ let g:autopep8_indent_size=2
 let g:autopep8_disable_show_diff=0
 let g:autopep8_max_line_length=80
 " let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
-" }}}
-" js-beautify settings {{{
-autocmd FileType javascript command! JSBeautify call JsBeautify()
-autocmd FileType json command! JSONBeautify call JsonBeautify()
-autocmd FileType jsx command! JSBeautify call JsxBeautify()
-autocmd FileType html,htmldjango command! HTMLBeautify call HtmlBeautify()
-autocmd FileType css command! CSSBeautify call CSSBeautify()
 " }}}
 " tmuxline {{{
 function StartAPMServer()
@@ -678,17 +662,6 @@ let g:tmuxline_separators = {
 \  'space' : ' '
 \}
 " }}}
-" ctrlp setting {{{
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_custom_ignore = {
-\ 'dir':  '\v[\/](.git|.hg|.svn|node_modules)$',
-\ 'file': '\v\.(exe|so|dll|o|class)$',
-\ }
-let g:ctrlp_max_files = 0
-let g:ctrlp_open_new_file = 't'
-let g:ctrlp_open_multiple_files = 't'
-
-" }}}
 " emmet settings {{{
 let g:user_emmet_togglecomment_key = '<C-y>#'
 " }}}
@@ -702,10 +675,5 @@ imap <F1> <Esc>:NERDTreeToggle .<CR>
 " GitGutter settings {{{
 nmap <silent><F2> :GitGutterToggle<CR>
 imap <F2> <Esc>:GitGutterToggle<CR>
-" }}}
-" LuaTree settings {{{
-let g:lua_tree_tab_open = 1
-nmap <silent><F3> :LuaTreeToggle<CR>
-imap <F3> <Esc>:LuaTreeToggle<CR>
 " }}}
 " }}}
