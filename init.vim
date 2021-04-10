@@ -106,7 +106,19 @@ call plug#end()
 " lsp settings {{{
 " setup {{{
 lua << EOF
+local configs = require('lspconfig/configs')
+local util = require('lspconfig/util')
 local lspconfig = require('lspconfig');
+configs.webmacrols = {
+  default_config = {
+    cmd = {"webmacro-language-server", "--stdio"},
+    filetypes = {"webmacro"},
+    root_dir = function(fname)
+      return util.root_pattern('build.xml', '.git', 'ivy.xml')(fname) or vim.loop.os_homedir()
+    end
+  }
+}
+
 local on_publish_diagnostics = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = false,
@@ -182,7 +194,9 @@ lspconfig.dartls.setup{
     ["textDocument/publishDiagnostics"] = on_publish_diagnostics;
   }
 }
--- lspconfig.webmacrols.setup{}
+
+-- webmacro
+lspconfig.webmacrols.setup{}
 EOF
 " }}}
 " sign {{{
