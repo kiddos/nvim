@@ -107,56 +107,80 @@ call plug#end()
 " setup {{{
 lua << EOF
 local lspconfig = require('lspconfig');
-lspconfig.clangd.setup({
-  cmd={"clangd-10", "--background-index", "--header-insertion=never"},
-  handlers = {
-    ["textDocument/publishDiagnostics"] = vim.lsp.with(
-      vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = false,
-        virtual_text = false,
-        signs = false,
-        update_in_insert = false
-      }
-    )
+local on_publish_diagnostics = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = false,
+    virtual_text = false,
+    signs = false,
+    update_in_insert = false
   }
-});
+);
+
+-- c++
+lspconfig.clangd.setup{
+  cmd = {"clangd-10", "--background-index", "--header-insertion=never"};
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  }
+};
+
+-- javascript/typescript
 lspconfig.tsserver.setup{
   handlers = {
-    ["textDocument/publishDiagnostics"] = vim.lsp.with(
-      vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = false,
-        virtual_text = false,
-        update_in_insert = false
-      }
-    )
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
   }
 }
--- lspconfig.pyls.setup{}
-lspconfig.jedi_language_server.setup{}
-lspconfig.jdtls.setup({
-  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle"),
-  handlers = {
-    ["textDocument/publishDiagnostics"] = vim.lsp.with(
-      vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = false,
-        virtual_text = false,
-        signs = false,
-        update_in_insert = false
-      }
-    )
-  }
-})
-lspconfig.vimls.setup{}
-lspconfig.bashls.setup{}
-lspconfig.cmake.setup{}
-lspconfig.angularls.setup{}
-lspconfig.rust_analyzer.setup{}
-lspconfig.sumneko_lua.setup{}
 
+-- css
+lspconfig.cssls.setup{
+  cmd = {"css-language-server", "--stdio"};
+}
+
+-- python
+lspconfig.jedi_language_server.setup{
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  }
+}
+
+-- java
+lspconfig.jdtls.setup{
+  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle");
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  }
+}
+
+-- vim
+lspconfig.vimls.setup{}
+
+-- bash
+lspconfig.bashls.setup{}
+
+-- angular
+lspconfig.angularls.setup{}
+
+-- rust
+lspconfig.rust_analyzer.setup{}
+
+-- lua
+local sumneko_root_path = vim.loop.os_homedir() .. "/.local/share/lsp/lua-language-server"
+local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
+lspconfig.sumneko_lua.setup{
+  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  }
+}
+
+-- dart
 local home = vim.loop.os_homedir()
 local dart_sdk = home .. "/.local/share/dart-sdk/bin/"
 lspconfig.dartls.setup{
-  cmd={dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"}
+  cmd = {dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"},
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics;
+  }
 }
 -- lspconfig.webmacrols.setup{}
 EOF
@@ -191,11 +215,11 @@ let g:compe.max_menu_width = 100
 let g:compe.documentation = v:true
 let g:compe.source = {}
 let g:compe.source.path = v:true
-let g:compe.source.buffer = v:true
+let g:compe.source.buffer = { 'ignored_filetypes': ['json', 'text', ''] }
 let g:compe.source.nvim_lsp = v:true
 let g:compe.source.nvim_lua = v:true
 let g:compe.source.vsnip = v:false
-let g:compe.source.omni = { 'filetypes': ['css'] }
+" let g:compe.source.omni = { 'filetypes': ['css'] }
 " let g:compe.source.emoji = v:true
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm({'keys': "\<Plug>delimitMateCR", 'mode': ''})
