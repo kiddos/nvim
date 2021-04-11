@@ -170,13 +170,17 @@ lspconfig.vimls.setup{}
 lspconfig.bashls.setup{}
 
 -- angular
-lspconfig.angularls.setup{}
+lspconfig.angularls.setup{
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  }
+}
 
 -- rust
 lspconfig.rust_analyzer.setup{}
 
 -- lua
-local sumneko_root_path = vim.loop.os_homedir() .. "/.local/share/lsp/lua-language-server"
+local sumneko_root_path = vim.loop.os_homedir() .. "/.local/lsp/lua-language-server"
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
 lspconfig.sumneko_lua.setup{
   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
@@ -187,7 +191,7 @@ lspconfig.sumneko_lua.setup{
 
 -- dart
 local home = vim.loop.os_homedir()
-local dart_sdk = home .. "/.local/share/dart-sdk/bin/"
+local dart_sdk = home .. "/.local/flutter/bin/cache/dart-sdk/bin/"
 lspconfig.dartls.setup{
   cmd = {dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"},
   handlers = {
