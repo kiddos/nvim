@@ -224,9 +224,9 @@ let g:compe.autocomplete = v:true
 let g:compe.debug = v:false
 let g:compe.min_length = 1
 let g:compe.preselect = 'always'
-let g:compe.throttle_time = 80
+let g:compe.throttle_time = 60
 let g:compe.source_timeout = 200
-let g:compe.incomplete_delay = 400
+let g:compe.incomplete_delay = 600
 let g:compe.max_abbr_width = 100
 let g:compe.max_kind_width = 100
 let g:compe.max_menu_width = 100
@@ -241,6 +241,7 @@ let g:compe.source.vsnip = v:false
 " let g:compe.source.emoji = v:true
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm({'keys': "\<Plug>delimitMateCR", 'mode': ''})
+
 
 " autocmd BufEnter * lua require('completion').on_attach()
 " autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
@@ -285,6 +286,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro
 " code display settings {{{
 set modeline
 set textwidth=120
+set lazyredraw
 " }}}
 " code folding settings {{{
 " default {{{
@@ -570,7 +572,8 @@ let g:airline_left_alt_sep = '🛸'
 let g:airline_symbols.crypt = '🔒'
 let g:airline_symbols.linenr = '🔭'
 let g:airline_symbols.maxlinenr = '🔬'
-let g:airline_symbols.branch = '🛠 '
+" let g:airline_symbols.branch = '🛠 '
+let g:airline_symbols.branch = '🔀'
 let g:airline_symbols.paste = '📑'
 let g:airline_symbols.readonly = '⛔️'
 let g:airline_symbols.spell = 'Ꞩ'
