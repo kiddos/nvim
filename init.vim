@@ -47,6 +47,8 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
 " }}}
 " C family {{{
 Plug 'octol/vim-cpp-enhanced-highlight'
@@ -588,31 +590,31 @@ let airline#extensions#ale#warning_symbol = '⚠️ '
 let g:airline#extensions#branch#enabled = 1
 " }}}
 " airline-tabline {{{
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tab_count = 0
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_tab_nr = 0
-let g:airline#extensions#tabline#overflow_marker = '…'
-let g:airline#extensions#tabline#current_first = 0
-let g:airline#extensions#tabline#tabs_label = ''
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#fnamecollapse = 0
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#exclude_preview = 0
-let g:airline#extensions#tabline#buffer_nr_show = 0
-let g:airline#extensions#tabline#show_tab_type = 0
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-nmap <leader>- <Plug>AirlineSelectPrevTab
-nmap <leader>+ <Plug>AirlineSelectNextTab
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#show_splits = 0
+" let g:airline#extensions#tabline#show_tab_count = 0
+" let g:airline#extensions#tabline#show_buffers = 0
+" let g:airline#extensions#tabline#show_tab_nr = 0
+" let g:airline#extensions#tabline#overflow_marker = '…'
+" let g:airline#extensions#tabline#current_first = 0
+" let g:airline#extensions#tabline#tabs_label = ''
+" let g:airline#extensions#tabline#fnamemod = ':t'
+" let g:airline#extensions#tabline#fnamecollapse = 0
+" let g:airline#extensions#tabline#show_close_button = 0
+" let g:airline#extensions#tabline#exclude_preview = 0
+" let g:airline#extensions#tabline#buffer_nr_show = 0
+" let g:airline#extensions#tabline#show_tab_type = 0
+" nmap <leader>1 <Plug>AirlineSelectTab1
+" nmap <leader>2 <Plug>AirlineSelectTab2
+" nmap <leader>3 <Plug>AirlineSelectTab3
+" nmap <leader>4 <Plug>AirlineSelectTab4
+" nmap <leader>5 <Plug>AirlineSelectTab5
+" nmap <leader>6 <Plug>AirlineSelectTab6
+" nmap <leader>7 <Plug>AirlineSelectTab7
+" nmap <leader>8 <Plug>AirlineSelectTab8
+" nmap <leader>9 <Plug>AirlineSelectTab9
+" nmap <leader>- <Plug>AirlineSelectPrevTab
+" nmap <leader>+ <Plug>AirlineSelectNextTab
 " }}}
 " airline-nvimlsp {{{
 let g:airline#extensions#nvimlsp#enabled = 1
@@ -721,5 +723,39 @@ imap <F1> <Esc>:NERDTreeToggle .<CR>
 " GitGutter settings {{{
 nmap <silent><F2> :GitGutterToggle<CR>
 imap <F2> <Esc>:GitGutterToggle<CR>
+" }}}
+" barbar setting {{{
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.icon_custom_colors = v:true
+let bufferline.maximum_padding = 2
+" nnoremap <silent>    <A-,> :BufferPrevious<CR>
+" nnoremap <silent>    <A-.> :BufferNext<CR>
+" Re-order to previous/next
+" nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
+" nnoremap <silent>    <A->> :BufferMoveNext<CR>
+" Goto buffer in position...
+nnoremap <silent>    <leader>1 :BufferGoto 1<CR>
+nnoremap <silent>    <leader>2 :BufferGoto 2<CR>
+nnoremap <silent>    <leader>3 :BufferGoto 3<CR>
+nnoremap <silent>    <leader>4 :BufferGoto 4<CR>
+nnoremap <silent>    <leader>5 :BufferGoto 5<CR>
+nnoremap <silent>    <leader>6 :BufferGoto 6<CR>
+nnoremap <silent>    <leader>7 :BufferGoto 7<CR>
+nnoremap <silent>    <leader>8 :BufferGoto 8<CR>
+nnoremap <silent>    <leader>9 :BufferGoto 9<CR>
+nnoremap <silent>    <leader>0 :BufferLast<CR>
+" Close buffer
+" nnoremap <silent>    <A-c> :BufferClose<CR>
+" Wipeout buffer
+"                          :BufferWipeout<CR>
+" Close commands
+"                          :BufferCloseAllButCurrent<CR>
+"                          :BufferCloseBuffersLeft<CR>
+"                          :BufferCloseBuffersRight<CR>
+" Magic buffer-picking mode
+" nnoremap <silent> <C-s>    :BufferPick<CR>
+" Sort automatically by...
+" nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
+" nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
 " }}}
 " }}}
