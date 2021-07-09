@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/03/28
+""	Last Modified: 2021/07/10
 ""
 
 call plug#begin('~/.config/nvim/plugged')
@@ -23,6 +23,8 @@ Plug 'benmills/vimux'
 " new features {{{
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
 " Plug 'nvim-lua/completion-nvim'
 " Plug 'steelsojka/completion-buffers'
 " Plug 'albertoCaroM/completion-tmux'
@@ -49,10 +51,9 @@ Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
+Plug 'kiddos/a.vim'
 " }}}
 " C family {{{
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'kiddos/a.vim'
 Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'kiddos/vim-protobuf'
@@ -219,6 +220,21 @@ command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()
 command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
+" treesitter {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  indent = {
+    enable = false
+  },
+  highlight = {
+    enable = true,
+    disable = {'html', 'javascript', 'vim'},
+    additional_vim_regex_highlighting = false
+  },
+}
+EOF
+" }}}
 " completion settings {{{
 let g:compe = {}
 let g:compe.enabled = v:true
@@ -340,11 +356,10 @@ autocmd FileType typescript normal zR
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
-set autoindent
 set expandtab
+set autoindent
 " set smartindent
 set copyindent
-set preserveindent
 " }}}
 " c/c++ indenting {{{
 " autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0
@@ -352,7 +367,7 @@ autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cindent
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
 " }}}
 " rust indenting {{{
-autocmd FileType rust setlocal tabstop=4
+autocmd FileType rust setlocal tabstop=2
 autocmd FileType rust setlocal softtabstop=2
 autocmd FileType rust setlocal shiftwidth=2
 " }}}
@@ -362,9 +377,6 @@ autocmd FileType cs setlocal softtabstop=4
 autocmd FileType cs setlocal shiftwidth=4
 " }}}
 " python indenting {{{
-autocmd FileType python setlocal tabstop=4
-autocmd FileType python setlocal softtabstop=2
-autocmd FileType python setlocal shiftwidth=2
 let g:python_recommended_style = 0
 " }}}
 " java indenting {{{
@@ -397,7 +409,7 @@ set cursorline
 set nowrap
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
-set linebreak
+" set linebreak
 set shiftround
 set complete=.,w,b,u,U,t,k
 set completeopt=menuone,noselect
@@ -443,7 +455,7 @@ set warn
 set wildmode=longest,full
 set wildmenu
 " }}}
-" omni completeion settings {{{
+" omni completion settings {{{
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -545,7 +557,7 @@ let g:vim_jsx_pretty_enable_jsx_highlight = 0
 " delimitMate settings {{{
 autocmd FileType html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-let delimitMate_expand_cr = 2
+let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 let delimitMate_balance_matchpairs = 1
