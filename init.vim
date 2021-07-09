@@ -25,6 +25,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
+Plug 'hoob3rt/lualine.nvim'
 " Plug 'nvim-lua/completion-nvim'
 " Plug 'steelsojka/completion-buffers'
 " Plug 'albertoCaroM/completion-tmux'
@@ -231,6 +232,17 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {'html', 'javascript', 'vim'},
     additional_vim_regex_highlighting = false
+  },
+}
+EOF
+" }}}
+" lualine {{{
+lua <<EOF
+require('lualine').setup{
+  options = {
+    theme = 'onedark',
+    section_separators = {'◗', '◖'},
+    component_separators = {'►', '◄'}
   },
 }
 EOF
@@ -567,6 +579,7 @@ let delimitMate_smart_quotes = '\w\%#'
 " imap <expr> <CR> pumvisible() ? "\<C-N>": "<Plug>delimitMateCR"
 " }}}
 " airline settings {{{
+let g:airline_disable_statusline = 1
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
 let g:airline_detect_crypt = 1
