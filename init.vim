@@ -230,7 +230,7 @@ require'nvim-treesitter.configs'.setup {
   },
   highlight = {
     enable = true,
-    disable = {'html', 'javascript', 'vim'},
+    disable = {'html', 'javascript', 'css', 'vim'},
     additional_vim_regex_highlighting = false
   },
 }
