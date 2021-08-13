@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/07/10
+""	Last Modified: 2021/08/14
 ""
 
 call plug#begin('~/.config/nvim/plugged')
@@ -20,16 +20,6 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'benmills/vimux'
 " }}}
-" new features {{{
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
-Plug 'hoob3rt/lualine.nvim'
-" Plug 'nvim-lua/completion-nvim'
-" Plug 'steelsojka/completion-buffers'
-" Plug 'albertoCaroM/completion-tmux'
-" }}}
 " utility {{{
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
@@ -48,10 +38,6 @@ Plug 'kiddos/snippets.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'Shougo/neosnippet.vim'
 Plug 'junegunn/fzf.vim'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'romgrk/barbar.nvim'
 Plug 'kiddos/a.vim'
 " }}}
 " C family {{{
@@ -107,109 +93,15 @@ Plug 'dart-lang/dart-vim-plugin'
 " }}}
 call plug#end()
 
+" lua scripts
+lua require('plugins')
+lua require('lsp')
+lua require('plugin-settings')
+
 " lsp settings {{{
-" setup {{{
-lua << EOF
-local configs = require('lspconfig/configs')
-local util = require('lspconfig/util')
-local lspconfig = require('lspconfig');
-configs.webmacrols = {
-  default_config = {
-    cmd = {"webmacro-language-server", "--stdio"},
-    filetypes = {"webmacro"},
-    root_dir = function(fname)
-      return util.root_pattern('build.xml', '.git', 'ivy.xml')(fname) or vim.loop.os_homedir()
-    end
-  }
-}
-
-local on_publish_diagnostics = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = false,
-    virtual_text = false,
-    signs = false,
-    update_in_insert = false
-  }
-);
-
--- c++
-lspconfig.clangd.setup{
-  cmd = {"clangd-10", "--background-index", "--header-insertion=never"};
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-};
-
--- javascript/typescript
-lspconfig.tsserver.setup{
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
-
--- css
-lspconfig.cssls.setup{
-  cmd = {"css-language-server", "--stdio"};
-}
-
--- python
-lspconfig.jedi_language_server.setup{
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
-
--- java
-lspconfig.jdtls.setup{
-  root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "build.gradle");
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
-
--- vim
-lspconfig.vimls.setup{}
-
--- bash
-lspconfig.bashls.setup{}
-
--- angular
-lspconfig.angularls.setup{
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
-
--- rust
-lspconfig.rust_analyzer.setup{}
-
--- lua
-local sumneko_root_path = vim.loop.os_homedir() .. "/.local/lsp/lua-language-server"
-local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
-lspconfig.sumneko_lua.setup{
-  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
-
--- dart
-local home = vim.loop.os_homedir()
-local dart_sdk = home .. "/.local/flutter/bin/cache/dart-sdk/bin/"
-lspconfig.dartls.setup{
-  cmd = {dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"},
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics;
-  }
-}
-
--- webmacro
-lspconfig.webmacrols.setup{}
-EOF
-" }}}
 " sign {{{
-sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
-sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
+" sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
+" sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
 " }}}
 " commands {{{
 command GotoDeclaration lua vim.lsp.buf.declaration()
@@ -220,86 +112,6 @@ command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()
 command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()
 command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
-" }}}
-" treesitter {{{
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained",
-  indent = {
-    enable = false
-  },
-  highlight = {
-    enable = true,
-    disable = {'html', 'javascript', 'css', 'vim'},
-    additional_vim_regex_highlighting = false
-  },
-}
-EOF
-" }}}
-" lualine {{{
-lua <<EOF
-require('lualine').setup{
-  options = {
-    theme = 'onedark',
-    section_separators = {'◗', '◖'},
-    component_separators = {'►', '◄'}
-  },
-}
-EOF
-" }}}
-" completion settings {{{
-let g:compe = {}
-let g:compe.enabled = v:true
-let g:compe.autocomplete = v:true
-let g:compe.debug = v:false
-let g:compe.min_length = 1
-let g:compe.preselect = 'always'
-let g:compe.throttle_time = 60
-let g:compe.source_timeout = 200
-let g:compe.incomplete_delay = 600
-let g:compe.max_abbr_width = 100
-let g:compe.max_kind_width = 100
-let g:compe.max_menu_width = 100
-let g:compe.documentation = v:true
-let g:compe.source = {}
-let g:compe.source.path = v:true
-let g:compe.source.buffer = { 'ignored_filetypes': ['json', 'text', ''] }
-let g:compe.source.nvim_lsp = v:true
-let g:compe.source.nvim_lua = v:true
-let g:compe.source.vsnip = v:false
-" let g:compe.source.omni = { 'filetypes': ['css'] }
-" let g:compe.source.emoji = v:true
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm({'keys': "\<Plug>delimitMateCR", 'mode': ''})
-
-
-" autocmd BufEnter * lua require('completion').on_attach()
-" autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
-" imap <expr> <C-Space> "\<Plug>(completion_trigger)"
-" imap <expr> <CR> pumvisible() ? "\<C-U>" : "\<Plug>delimitMateCR"
-" let g:completion_timer_cycle = 60
-" let g:completion_trigger_keyword_length = 3
-" let g:completion_confirm_key = "\<C-U>"
-" let g:completion_matching_ignore_case = 1
-" let g:completion_trigger_on_delete = 1
-" let g:completion_enable_snippet = 'Neosnippet'
-" let g:completion_enable_server_trigger = 0
-" let g:completion_auto_change_source = 1
-" let g:completion_chain_complete_list = {
-" \ 'java': [
-" \    {'mode': '<c-p>'},
-" \    {'mode': '<c-n>'}
-" \],
-" \ 'default': [
-" \    {'complete_items': ['lsp']},
-" \    {'complete_items': ['snippet']},
-" \    {'complete_items': ['buffer', 'tmux', 'path']},
-" \    {'mode': '<c-p>'},
-" \    {'mode': '<c-n>'}
-" \]
-" \}
-" let g:completion_word_ignored_ft = ['json', 'text', '']
-" let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
 " }}}
 " file type settings {{{
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
@@ -357,9 +169,11 @@ autocmd FileType snippets setlocal foldlevel=0
 " }}}
 " unfold at start {{{
 autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
+autocmd FileType lua normal zR
 autocmd FileType csharp normal zR
 autocmd FileType python,javascript normal zR
 autocmd FileType html normal zR
+autocmd FileType xml normal zR
 autocmd FileType typescript normal zR
 " }}}
 " }}}
