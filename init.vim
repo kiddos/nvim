@@ -175,6 +175,7 @@ autocmd FileType python,javascript normal zR
 autocmd FileType html normal zR
 autocmd FileType xml normal zR
 autocmd FileType typescript normal zR
+autocmd FileType dart normal zR
 " }}}
 " }}}
 " indenting setting {{{
@@ -190,7 +191,11 @@ set copyindent
 " c/c++ indenting {{{
 " autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cindent
-autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=(0,>1s,:2,g1,m1,+4
+autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=w1,>1s,:1s,g1,m1,+2s,N-s
+" }}}
+" dart {{{
+autocmd Filetype dart setlocal cindent
+autocmd Filetype dart setlocal cinoptions=(1s,>1s,:1s,g1,m1,+2s
 " }}}
 " rust indenting {{{
 autocmd FileType rust setlocal tabstop=2
@@ -384,7 +389,7 @@ let g:vim_jsx_pretty_enable_jsx_highlight = 0
 autocmd FileType html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 let delimitMate_expand_cr = 1
-let delimitMate_expand_space = 1
+autocmd FileType javascript let b:delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
 let delimitMate_balance_matchpairs = 1
 let delimitMate_insert_eol_marker = 2
