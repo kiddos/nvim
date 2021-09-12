@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/08/14
+""	Last Modified: 2021/09/13
 ""
 
 call plug#begin('~/.config/nvim/plugged')
@@ -15,11 +15,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'gregsexton/gitv'
 " }}}
-" tmux {{{
-Plug 'edkolev/tmuxline.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'benmills/vimux'
-" }}}
 " utility {{{
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
@@ -27,69 +22,15 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'mattn/emmet-vim'
 Plug 'dense-analysis/ale'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'Raimondi/delimitMate'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mhinz/vim-startify'
 Plug 'arecarn/selection.vim'
 Plug 'arecarn/crunch.vim'
 Plug 'kiddos/snippets.vim'
-Plug 'rhysd/vim-clang-format'
 Plug 'Shougo/neosnippet.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'kiddos/a.vim'
-" }}}
-" C family {{{
-Plug 'tikhomirov/vim-glsl'
-Plug 'beyondmarc/hlsl.vim'
-Plug 'kiddos/vim-protobuf'
-" " }}}
-" python {{{
-Plug 'tell-k/vim-autopep8'
-Plug 'Vimjas/vim-python-pep8-indent'
-" }}}
-" javascript   {{{
-Plug 'elzr/vim-json'
-Plug 'leafgarland/typescript-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'peitalin/vim-jsx-typescript'
-" }}}
-" go {{{
-Plug 'fatih/vim-go'
-" }}}
-" perl {{{
-Plug 'vim-perl/vim-perl'
-" }}}
-" vhdl {{{
-Plug 'kiddos/vim-vhdl'
-" }}}
-" ruby {{{
-Plug 'vim-ruby/vim-ruby'
-" }}}
-" php {{{
-Plug 'stanangeloff/php.vim'
-" }}}
-" html {{{
-Plug 'othree/html5.vim'
-Plug 'tpope/vim-markdown'
-" }}}
-" css {{{
-Plug 'ap/vim-css-color'
-Plug 'hail2u/vim-css3-syntax'
-Plug 'groenewege/vim-less'
-Plug '1995eaton/vim-better-css-completion'
-Plug 'othree/csscomplete.vim'
-" }}}
-" Julia {{{
-Plug 'JuliaEditorSupport/julia-vim'
-" }}}
-" Rust {{{
-Plug 'rust-lang/rust.vim'
-" }}}
-" Dart {{{
-Plug 'dart-lang/dart-vim-plugin'
 " }}}
 call plug#end()
 
@@ -382,9 +323,6 @@ let g:ale_linters_ignore = {
 \  'javascript': ['flow']
 \}
 " }}}
-" jsx-pretty settings {{{
-let g:vim_jsx_pretty_enable_jsx_highlight = 0
-" }}}
 " delimitMate settings {{{
 autocmd FileType html setlocal matchpairs+=<:>
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
@@ -512,47 +450,11 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 1
 let g:startify_enable_special = 0
 " }}}
-" clang-format settings {{{
-let g:clang_format#code_style = 'google'
-let g:clang_format#filetype_style_options = {
-\   'cpp' : {
-\     'Standard': 'C++11',
-\     'ColumnLimit': 80,
-\   },
-\   'javascript' : {
-\     'ColumnLimit': 80,
-\   },
-\ }
-" }}}
-" autopep8 settings {{{
-let g:autopep8_indent_size=2
-let g:autopep8_disable_show_diff=0
-let g:autopep8_max_line_length=80
-" let g:autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
-" }}}
-" tmuxline {{{
+" apm server {{{
 function StartAPMServer()
   silent exec ':!python3 ~/.config/nvim/apm_server.py --debug=False &'
 endfunction
 call StartAPMServer()
-
-let g:tmuxline_preset = {
-\  'a'       : '#S',
-\  'b'       : '#W',
-\  'c'       : '',
-\  'win'     : '#I #W',
-\  'cwin'    : '#I #W',
-\  'y'       : 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
-\  'z'       : '#(whoami)@#H',
-\  'options' : {'status-justify' : 'left'}
-\}
-let g:tmuxline_separators = {
-\  'left': '◗',
-\  'left_alt': '◗',
-\  'right' : '◖',
-\  'right_alt' : '◖',
-\  'space' : ' '
-\}
 " }}}
 " emmet settings {{{
 let g:user_emmet_togglecomment_key = '<C-y>#'
