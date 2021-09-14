@@ -91,3 +91,6 @@ vim.g.autopep8_max_line_length = 80
 
 -- jsx-pretty setting
 vim.g.vim_jsx_pretty_enable_jsx_highlight = 0
+
+-- airline + tmuxline
+vim.g.airline_theme = 'onedark'

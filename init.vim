@@ -70,6 +70,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro
 set modeline
 set textwidth=120
 set lazyredraw
+set redrawtime=10000
 " }}}
 " code folding settings {{{
 " default {{{

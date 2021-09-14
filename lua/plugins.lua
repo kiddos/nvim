@@ -21,6 +21,8 @@ return require('packer').startup(function()
   use 'edkolev/tmuxline.vim'
   use 'christoomey/vim-tmux-navigator'
   use 'benmills/vimux'
+  use 'vim-airline/vim-airline'
+  use 'vim-airline/vim-airline-themes'
 
   -- opengl
   use 'tikhomirov/vim-glsl'
