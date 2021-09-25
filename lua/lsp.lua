@@ -36,8 +36,17 @@ lspconfig.tsserver.setup{
 }
 
 -- css
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 lspconfig.cssls.setup{
-  cmd = {"css-language-server", "--stdio"};
+  capabilities = capabilities,
+  cmd = {"vscode-css-language-server", "--stdio"};
+}
+
+-- html
+lapconfig.html.setup {
+  capabilities = capabilities,
+  cmd = {"vscode-html-language-server", "--stdio"};
 }
 
 -- python
