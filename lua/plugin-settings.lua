@@ -7,8 +7,7 @@ require'compe'.setup {
   preselect = 'always';
   throttle_time = 60;
   source_timeout = 300;
-  resolve_timeout = 600;
-  incomplete_delay = 600;
+  resolve_timeout = 600; incomplete_delay = 600;
   max_abbr_width = 100;
   max_kind_width = 100;
   max_menu_width = 100;
@@ -26,7 +25,7 @@ require'compe'.setup {
   };
 }
 
-vim.api.nvim_set_keymap('i', '<C-Space>', 'compe#complete()', {expr = true, noremap = true})
+vim.api.nvim_set_keymap('i', '<C-Space>', 'compe#complete()', {expr=true, noremap=true, silent=true})
 vim.api.nvim_set_keymap('i', '<CR>', 'compe#confirm({"keys": "\\<Plug>delimitMateCR", "mode": ""})', {expr = true, noremap = true})
 
 -- status line setting
@@ -60,8 +59,7 @@ vim.g.tmuxline_preset = {
   cwin = '#I #W',
   y = 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
   z = '#(whoami)@#H',
-  options = {
-    ['status-justify'] = 'left'
+  options = { ['status-justify'] = 'left'
   }
 }
 vim.g.tmuxline_separators = {
@@ -72,6 +70,7 @@ vim.g.tmuxline_separators = {
   space = ' '
 }
 
+-- clang format
 vim.g['clang_format#code_style'] = 'google'
 vim.g['clang_format#filetype_style_options'] = {
   cpp = {
@@ -92,5 +91,51 @@ vim.g.autopep8_max_line_length = 80
 -- jsx-pretty setting
 vim.g.vim_jsx_pretty_enable_jsx_highlight = 0
 
--- airline + tmuxline
-vim.g.airline_theme = 'onedark'
+-- NERDTree settings
+vim.api.nvim_set_keymap('n', '<F1>', ':NERDTreeToggle .<CR>', {noremap=true, silent=true})
+vim.api.nvim_set_keymap('i', '<F1>', '<Esc>:NERDTreeToggle .<CR>', {noremap=true, silent=true})
+
+-- GitGutter settings
+vim.g.gitgutter_enabled = 0
+vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})
+vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', {noremap=true, silent=true})
+
+-- git-blame settings
+vim.g.gitblame_enabled = 0
+vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', {noremap=true, silent=true})
+vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', {noremap=true, silent=true})
+
+-- emmet settings
+vim.g.user_emmet_togglecomment_key = '<C-y>#'
+
+-- a.vim settings
+vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', {silent=true})
+
+-- barbar setting
+vim.g.bufferline = {
+  icon_custom_colors = true,
+  maximum_padding = 2,
+}
+-- vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
+-- vim.api.nvim_set_keymap('n', '<A-.>', ':BufferNext<CR>', {silent=true, noremap=true})
+-- Re-order to previous/next
+vim.api.nvim_set_keymap('n', '<A-Left>', ':BufferMovePrevious<CR>', {silent=true, noremap=true})
+vim.api.nvim_set_keymap('n', '<A-Right>', ':BufferMoveNext<CR>', {silent=true, noremap=true})
+-- Goto buffer in position...
+for i = 1,9,1 do
+  vim.api.nvim_set_keymap('n', string.format('<Leader>%d', i), string.format(':BufferGoto %d<CR>', i), {silent=true, noremap=true})
+end
+vim.api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', {silent=true, noremap=true})
+-- Close buffer
+vim.api.nvim_set_keymap('n', '<A-C>', ':BufferClose<CR>', {silent=true, noremap=true})
+-- Wipeout buffer
+-- :BufferWipeout<CR>
+-- Close commands
+-- :BufferCloseAllButCurrent<CR>
+-- :BufferCloseBuffersLeft<CR>
+-- :BufferCloseBuffersRight<CR>
+-- Magic buffer-picking mode
+-- nnoremap <silent> <C-s>    :BufferPick<CR>
+-- Sort automatically by...
+-- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
+-- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>

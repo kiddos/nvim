@@ -4,33 +4,15 @@
 ""
 
 call plug#begin('~/.config/nvim/plugged')
-" color scheme {{{
-Plug 'kiddos/malokai.vim'
-Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-Plug 'tomasr/molokai'
-" }}}
-" git {{{
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'gregsexton/gitv'
-" }}}
 " utility {{{
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-surround'
-Plug 'mattn/emmet-vim'
 Plug 'dense-analysis/ale'
 Plug 'Raimondi/delimitMate'
-Plug 'ryanoasis/vim-devicons'
 Plug 'mhinz/vim-startify'
-Plug 'arecarn/selection.vim'
-Plug 'arecarn/crunch.vim'
 Plug 'kiddos/snippets.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'junegunn/fzf.vim'
-Plug 'kiddos/a.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 " }}}
 call plug#end()
 
@@ -417,9 +399,6 @@ let g:NERDCustomDelimiters = {
 \   'prototxt': { 'left': '#' }
 \}
 " }}}
-" GitGutter settings {{{
-let g:gitgutter_enabled = 0
-" }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
@@ -456,53 +435,5 @@ function StartAPMServer()
   silent exec ':!python3 ~/.config/nvim/apm_server.py --debug=False &'
 endfunction
 call StartAPMServer()
-" }}}
-" emmet settings {{{
-let g:user_emmet_togglecomment_key = '<C-y>#'
-" }}}
-" a.vim settings {{{
-nmap <leader><leader>a :A<CR>
-" }}}
-" NERDTree settings {{{
-nmap <silent><F1> :NERDTreeToggle .<CR>
-imap <F1> <Esc>:NERDTreeToggle .<CR>
-" }}}
-" GitGutter settings {{{
-nmap <silent><F2> :GitGutterToggle<CR>
-imap <F2> <Esc>:GitGutterToggle<CR>
-" }}}
-" barbar setting {{{
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.icon_custom_colors = v:true
-let bufferline.maximum_padding = 2
-" nnoremap <silent>    <A-,> :BufferPrevious<CR>
-" nnoremap <silent>    <A-.> :BufferNext<CR>
-" Re-order to previous/next
-" nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
-" nnoremap <silent>    <A->> :BufferMoveNext<CR>
-" Goto buffer in position...
-nnoremap <silent>    <leader>1 :BufferGoto 1<CR>
-nnoremap <silent>    <leader>2 :BufferGoto 2<CR>
-nnoremap <silent>    <leader>3 :BufferGoto 3<CR>
-nnoremap <silent>    <leader>4 :BufferGoto 4<CR>
-nnoremap <silent>    <leader>5 :BufferGoto 5<CR>
-nnoremap <silent>    <leader>6 :BufferGoto 6<CR>
-nnoremap <silent>    <leader>7 :BufferGoto 7<CR>
-nnoremap <silent>    <leader>8 :BufferGoto 8<CR>
-nnoremap <silent>    <leader>9 :BufferGoto 9<CR>
-nnoremap <silent>    <leader>0 :BufferLast<CR>
-" Close buffer
-" nnoremap <silent>    <A-c> :BufferClose<CR>
-" Wipeout buffer
-"                          :BufferWipeout<CR>
-" Close commands
-"                          :BufferCloseAllButCurrent<CR>
-"                          :BufferCloseBuffersLeft<CR>
-"                          :BufferCloseBuffersRight<CR>
-" Magic buffer-picking mode
-" nnoremap <silent> <C-s>    :BufferPick<CR>
-" Sort automatically by...
-" nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-" nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
 " }}}
 " }}}
