@@ -44,7 +44,7 @@ lspconfig.cssls.setup{
 }
 
 -- html
-lapconfig.html.setup {
+lspconfig.html.setup {
   capabilities = capabilities,
   cmd = {"vscode-html-language-server", "--stdio"};
 }

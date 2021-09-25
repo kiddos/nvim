@@ -14,7 +14,7 @@ return require('packer').startup(function()
         autocomplete = true,
         debug = false,
         min_length = 1,
-        preselect = 'always',
+        preselect = 'enabled',
         throttle_time = 60,
         source_timeout = 300,
         resolve_timeout = 600,
