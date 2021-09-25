@@ -5,12 +5,8 @@
 
 call plug#begin('~/.config/nvim/plugged')
 " utility {{{
-Plug 'dense-analysis/ale'
-Plug 'Raimondi/delimitMate'
-Plug 'mhinz/vim-startify'
 Plug 'kiddos/snippets.vim'
 Plug 'Shougo/neosnippet.vim'
-Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " }}}
@@ -19,7 +15,6 @@ call plug#end()
 " lua scripts
 lua require('plugins')
 lua require('lsp')
-lua require('plugin-settings')
 
 " lsp settings {{{
 " sign {{{
@@ -48,9 +43,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro
 " }}}
-" code display settings {{{
-set modeline
-set textwidth=120
+" rendering settings {{{
 set lazyredraw
 set redrawtime=10000
 " }}}
@@ -161,6 +154,7 @@ autocmd FileType bzl setlocal nosmartindent
 " editing settings {{{
 set noautochdir
 set cursorline
+" set textwidth=120
 set nowrap
 set backspace=indent,eol,start
 set clipboard=unnamed,unnamedplus
@@ -291,33 +285,6 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
-" fzf.vim {{{
-set rtp+=~/.fzf
-nnoremap <C-P> :Files<CR>
-" }}}
-" ale settings {{{
-let g:ale_linters = {
-\  'python': ['flake8'],
-\  'javascript': ['eslint'],
-\  'javascriptreact': ['eslint']
-\}
-let g:ale_python_flake8_options = '--ignore=E111,E121,E123,E126,E226,E24,E704,W503,W504'
-let g:ale_linters_ignore = {
-\  'javascript': ['flow']
-\}
-" }}}
-" delimitMate settings {{{
-autocmd FileType html setlocal matchpairs+=<:>
-autocmd FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-let delimitMate_expand_cr = 1
-autocmd FileType javascript let b:delimitMate_expand_space = 1
-let delimitMate_jump_expansion = 1
-let delimitMate_balance_matchpairs = 1
-let delimitMate_insert_eol_marker = 2
-let delimitMate_smart_matchpairs = ''
-let delimitMate_smart_quotes = '\w\%#'
-" imap <expr> <CR> pumvisible() ? "\<C-N>": "<Plug>delimitMateCR"
-" }}}
 " airline settings {{{
 let g:airline_disable_statusline = 1
 let g:airline_detect_modified = 1
@@ -387,18 +354,6 @@ let airline#extensions#nvimlsp#error_symbol = '🚫'
 let airline#extensions#nvimlsp#warning_symbol = '⚠️ '
 " }}}
 " }}}
-" NERDcommenter settings {{{
-let g:NERDSpaceDelims = 1
-let g:NERDCompactSexyComs = 1
-let g:NERDDefaultAlign = 'left'
-let g:NERDCustomDelimiters = {
-\   'c': { 'left': '//' },
-\   'arduino': { 'left': '//' },
-\   'vim': { 'left': '"' },
-\   'conf': { 'left': '#' },
-\   'prototxt': { 'left': '#' }
-\}
-" }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
@@ -408,27 +363,6 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" }}}
-" startify settings {{{
-let g:startify_list_order = [
-\   ['   My most recently used files in the current directory:'],
-\   'dir',
-\   ['   My most recently used files:'],
-\   'files',
-\   ['   Bookmarks:'],
-\   'bookmarks',
-\   ['   Sessions:'],
-\   'sessions',
-\ ]
-let g:startify_files_number = 3
-let g:startify_bookmarks = [
-\   {'vimrc': '~/.vim/vimrc'},
-\   {'nvimrc': '~/.config/nvim/init.vim'}]
-let g:startify_custom_header =
-\   map(split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']
-let g:startify_change_to_dir = 1
-let g:startify_change_to_vcs_root = 1
-let g:startify_enable_special = 0
 " }}}
 " apm server {{{
 function StartAPMServer()
