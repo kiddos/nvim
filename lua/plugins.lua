@@ -148,29 +148,6 @@ return require('packer').startup(function()
 
 
   -- tmux
-  use {
-    'edkolev/tmuxline.vim',
-    config = function()
-      vim.g.tmuxline_preset = {
-        a = '#S',
-        b = '#W',
-        c = '',
-        win = '#I #W',
-        cwin = '#I #W',
-        y = 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
-        z = '#(whoami)@#H',
-        options = { ['status-justify'] = 'left'
-        }
-      }
-      vim.g.tmuxline_separators = {
-        left = '◗',
-        left_alt = '◗',
-        right = '◖',
-        right_alt = '◖',
-        space = ' '
-      }
-    end
-  }
   use 'christoomey/vim-tmux-navigator'
   use 'benmills/vimux'
 
@@ -269,12 +246,117 @@ return require('packer').startup(function()
     end
   }
   use {
+    'junegunn/fzf',
+    run = ':call fzf#install()',
+  }
+  use {
     'junegunn/fzf.vim',
     config = function()
-      vim.api.nvim_command('set rtp+=~/.fzf')
       vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
     end
   }
+  use {
+    'vim-airline/vim-airline-themes',
+    after = {'vim-airline'},
+    config = function()
+      vim.g.airline_theme = 'onedark'
+    end
+  }
+  use {
+    'vim-airline/vim-airline',
+    config = function()
+      vim.g.airline_disable_statusline = 1
+      vim.g.airline_detect_modified = 1
+      vim.g.airline_detect_paste = 1
+      vim.g.airline_detect_crypt = 1
+      vim.g.airline_detect_iminsert = 1
+      vim.g.airline_inactive_collapse = 1
+      vim.g.airline_powerline_fonts = 1
+
+      vim.g.airline_symbols = {
+        crypt = '🔒',
+        linenr = '🔭',
+        maxlinenr = '🔬',
+        -- branch = '🛠 ',
+        branch = '🔀',
+        paste = '📑',
+        readonly = '⛔️',
+        spell = 'Ꞩ',
+        whitespace = '🕳 ',
+        notexists = '🛑',
+      }
+
+      -- vim.g.airline_left_sep = '⌨️ '
+      -- vim.g.airline_right_sep = '💻'
+      -- vim.g.airline_right_alt_sep = '💠'
+      -- vim.g.airline_left_alt_sep = '🛸'
+
+      -- airline-branch
+      -- vim.g['airline#extensions#branch#enabled'] = 1
+
+      -- airline-ale
+      -- vim.g['airline#extensions#ale#enabled'] = 1
+      -- vim.g['airline#extensions#ale#error_symbol'] = '🚫'
+      -- vim.g['airline#extensions#ale#warning_symbol'] = '⚠️ '
+
+      -- airline-tabline
+      -- vim.g['airline#extensions#tabline#enabled'] = 1
+      -- vim.g['airline#extensions#tabline#show_splits'] = 0
+      -- vim.g['airline#extensions#tabline#show_tab_count'] = 0
+      -- vim.g['airline#extensions#tabline#show_buffers'] = 0
+      -- vim.g['airline#extensions#tabline#show_tab_nr'] = 0
+      -- vim.g['airline#extensions#tabline#overflow_marker ='] '…'
+      -- vim.g['airline#extensions#tabline#current_first'] = 0
+      -- vim.g['airline#extensions#tabline#tabs_label'] = ''
+      -- vim.g['airline#extensions#tabline#fnamemod'] = ':t'
+      -- vim.g['airline#extensions#tabline#fnamecollapse'] = 0
+      -- vim.g['airline#extensions#tabline#show_close_button'] = 0
+      -- vim.g['airline#extensions#tabline#exclude_preview'] = 0
+      -- vim.g['airline#extensions#tabline#buffer_nr_show'] = 0
+      -- vim.g['airline#extensions#tabline#show_tab_type'] = 0
+      -- vim.api.nvim_set_keymap('n', '<Leader>1', '<Plug>AirlineSelectTab1', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>2', '<Plug>AirlineSelectTab2', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>3', '<Plug>AirlineSelectTab3', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>4', '<Plug>AirlineSelectTab4', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>5', '<Plug>AirlineSelectTab5', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>6', '<Plug>AirlineSelectTab6', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>7', '<Plug>AirlineSelectTab7', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>8', '<Plug>AirlineSelectTab8', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>9', '<Plug>AirlineSelectTab9', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>-', '<Plug>AirlineSelectPrevTab', {silent=true})
+      -- vim.api.nvim_set_keymap('n', '<Leader>+', '<Plug>AirlineSelectNextTab', {silent=true})
+
+      -- airline-nvimlsp
+      vim.g['airline#extensions#nvimlsp#enabled'] = 1
+      vim.g['airline#extensions#nvimlsp#error_symbol'] = '🚫'
+      vim.g['airline#extensions#nvimlsp#warning_symbol'] = '⚠️ '
+    end
+  }
+  use {
+    'edkolev/tmuxline.vim',
+    after = 'vim-airline',
+    config = function()
+      vim.g.tmuxline_preset = {
+        a = '#S',
+        b = '#W',
+        c = '',
+        win = '#I #W',
+        cwin = '#I #W',
+        y = 'APM: #(python3 ~/.config/nvim/apm_client.py) #(uptime  | cut -d " " -f 1,2)',
+        z = '#(whoami)@#H',
+        options = { ['status-justify'] = 'left'
+        }
+      }
+      vim.g.tmuxline_separators = {
+        left = '◗',
+        left_alt = '◗',
+        right = '◖',
+        right_alt = '◖',
+        space = ' '
+      }
+    end
+  }
+
 
   -- language specific
   -- opengl
@@ -330,12 +412,8 @@ return require('packer').startup(function()
     ft = {'json'}
   }
   use {
-    'leafgarland/typescript-vim',
-    ft = {'typescript', 'javascript', 'javascriptreact', 'typescriptreact'}
-  }
-  use {
     'pangloss/vim-javascript',
-    ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'}
+    after = {'vim-jsx-pretty'},
   }
   use {
     'MaxMEllon/vim-jsx-pretty',
@@ -343,6 +421,11 @@ return require('packer').startup(function()
     config = function()
       vim.g.vim_jsx_pretty_enable_jsx_highlight = 0
     end
+  }
+  use {
+    'leafgarland/typescript-vim',
+    after = {'vim-jsx-typescript'},
+    ft = {'typescript', 'javascript', 'javascriptreact', 'typescriptreact'}
   }
   use {
     'peitalin/vim-jsx-typescript',
@@ -395,14 +478,6 @@ return require('packer').startup(function()
   }
   use {
     'groenewege/vim-less',
-    ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
-  }
-  use {
-    '1995eaton/vim-better-css-completion',
-    ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
-  }
-  use {
-    'othree/csscomplete.vim',
     ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
   }
   -- julia

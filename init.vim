@@ -7,8 +7,6 @@ call plug#begin('~/.config/nvim/plugged')
 " utility {{{
 Plug 'kiddos/snippets.vim'
 Plug 'Shougo/neosnippet.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 " }}}
 call plug#end()
 
@@ -285,75 +283,6 @@ colorscheme malokai
 " colorscheme molokai
 " }}}
 " plugin settings {{{
-" airline settings {{{
-let g:airline_disable_statusline = 1
-let g:airline_detect_modified = 1
-let g:airline_detect_paste = 1
-let g:airline_detect_crypt = 1
-let g:airline_detect_iminsert = 1
-let g:airline_inactive_collapse = 1
-let g:airline_theme = 'onedark'
-let g:airline_powerline_fonts = 1
-
-
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_left_sep = '⌨️ '
-let g:airline_right_sep = '💻'
-let g:airline_right_alt_sep = '💠'
-let g:airline_left_alt_sep = '🛸'
-let g:airline_symbols.crypt = '🔒'
-let g:airline_symbols.linenr = '🔭'
-let g:airline_symbols.maxlinenr = '🔬'
-" let g:airline_symbols.branch = '🛠 '
-let g:airline_symbols.branch = '🔀'
-let g:airline_symbols.paste = '📑'
-let g:airline_symbols.readonly = '⛔️'
-let g:airline_symbols.spell = 'Ꞩ'
-let g:airline_symbols.whitespace = '🕳 '
-let g:airline_symbols.notexists = '🛑'
-" airline-ale {{{
-let g:airline#extensions#ale#enabled = 1
-let airline#extensions#ale#error_symbol = '🚫'
-let airline#extensions#ale#warning_symbol = '⚠️ '
-" }}}
-" airline-branch {{{
-let g:airline#extensions#branch#enabled = 1
-" }}}
-" airline-tabline {{{
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#show_splits = 0
-" let g:airline#extensions#tabline#show_tab_count = 0
-" let g:airline#extensions#tabline#show_buffers = 0
-" let g:airline#extensions#tabline#show_tab_nr = 0
-" let g:airline#extensions#tabline#overflow_marker = '…'
-" let g:airline#extensions#tabline#current_first = 0
-" let g:airline#extensions#tabline#tabs_label = ''
-" let g:airline#extensions#tabline#fnamemod = ':t'
-" let g:airline#extensions#tabline#fnamecollapse = 0
-" let g:airline#extensions#tabline#show_close_button = 0
-" let g:airline#extensions#tabline#exclude_preview = 0
-" let g:airline#extensions#tabline#buffer_nr_show = 0
-" let g:airline#extensions#tabline#show_tab_type = 0
-" nmap <leader>1 <Plug>AirlineSelectTab1
-" nmap <leader>2 <Plug>AirlineSelectTab2
-" nmap <leader>3 <Plug>AirlineSelectTab3
-" nmap <leader>4 <Plug>AirlineSelectTab4
-" nmap <leader>5 <Plug>AirlineSelectTab5
-" nmap <leader>6 <Plug>AirlineSelectTab6
-" nmap <leader>7 <Plug>AirlineSelectTab7
-" nmap <leader>8 <Plug>AirlineSelectTab8
-" nmap <leader>9 <Plug>AirlineSelectTab9
-" nmap <leader>- <Plug>AirlineSelectPrevTab
-" nmap <leader>+ <Plug>AirlineSelectNextTab
-" }}}
-" airline-nvimlsp {{{
-let g:airline#extensions#nvimlsp#enabled = 1
-let airline#extensions#nvimlsp#error_symbol = '🚫'
-let airline#extensions#nvimlsp#warning_symbol = '⚠️ '
-" }}}
-" }}}
 " neosnippet settings {{{
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#enable_completed_snippet = 1
@@ -364,6 +293,7 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 " }}}
+"
 " apm server {{{
 function StartAPMServer()
   silent exec ':!python3 ~/.config/nvim/apm_server.py --debug=False &'
