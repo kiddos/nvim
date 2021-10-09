@@ -30,8 +30,7 @@ return require('packer').startup(function()
           calc = false,
           nvim_lsp = true,
           nvim_lua = true,
-          vsnip = false,
-          ultisnips = false,
+          vsnip = false, ultisnips = false,
           luasnip = false,
         },
       }
@@ -413,53 +412,42 @@ return require('packer').startup(function()
   }
   use {
     'pangloss/vim-javascript',
-    after = {'vim-jsx-pretty'},
   }
   use {
     'MaxMEllon/vim-jsx-pretty',
-    -- ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
     config = function()
       vim.g.vim_jsx_pretty_enable_jsx_highlight = 0
     end
   }
   use {
     'leafgarland/typescript-vim',
-    after = {'vim-jsx-typescript'},
-    ft = {'typescript', 'javascript', 'javascriptreact', 'typescriptreact'}
   }
   use {
     'peitalin/vim-jsx-typescript',
-    ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
   }
   -- go
   use {
     'fatih/vim-go',
-    ft = {'go'}
   }
   -- vhdl
   use {
     'kiddos/vim-vhdl',
-    ft = {'vhdl'}
   }
   -- ruby
   use {
     'vim-ruby/vim-ruby',
-    ft = {'ruby'}
   }
   -- php
   use {
     'stanangeloff/php.vim',
-    ft = {'php'}
   }
   -- html
   use {
     'othree/html5.vim',
-    ft = {'html'}
   }
   -- markdown
   use {
     'tpope/vim-markdown',
-    ft = {'markdown'}
   }
   use {
     'iamcco/markdown-preview.nvim',
@@ -470,15 +458,12 @@ return require('packer').startup(function()
   -- css
   use {
     'ap/vim-css-color',
-    ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
   }
   use {
     'hail2u/vim-css3-syntax',
-    ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
   }
   use {
     'groenewege/vim-less',
-    ft = {'javascript', 'typescript', 'css', 'sass', 'scss', 'less'}
   }
   -- julia
   use {
@@ -489,12 +474,10 @@ return require('packer').startup(function()
   -- rust
   use {
     'rust-lang/rust.vim',
-    ft = {'rust'},
   }
   -- dart
   use {
     'dart-lang/dart-vim-plugin',
-    ft = {'dart'}
   }
 
   -- games
