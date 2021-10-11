@@ -1,18 +1,12 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/09/13
+""	Last Modified: 2021/10/11
 ""
-
-call plug#begin('~/.config/nvim/plugged')
-" utility {{{
-Plug 'kiddos/snippets.vim'
-Plug 'Shougo/neosnippet.vim'
-" }}}
-call plug#end()
 
 " lua scripts
 lua require('plugins')
 lua require('lsp')
+lua require('apm_server')
 
 " lsp settings {{{
 " sign {{{
@@ -202,12 +196,6 @@ set warn
 set wildmode=longest,full
 set wildmenu
 " }}}
-" omni completion settings {{{
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType html,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-" }}}
 " key maps settings {{{
 " leader {{{
 let mapleader=","
@@ -246,7 +234,7 @@ autocmd FileType javascript,css,html,typescript  nnoremap ; $a;
 autocmd FileType javascriptreact,typescriptreact nnoremap ; $a;
 " }}}
 " compile {{{
-autocmd FileType c,cpp command! Compile execute ':!clang++ % -o %:r'
+autocmd FileType c,cpp command! Compile execute ':!clang++ % -Wall -std=c++17 -fsanitize=address -O1 -g -o %:r'
 autocmd FileType cuda command! Compile execute ':!nvcc % -o %:r'
 autocmd FileType java command! Compile execute ':!javac %'
 " }}}
@@ -281,23 +269,4 @@ let g:material_theme_style = 'darker'
 colorscheme malokai
 " colorscheme material
 " colorscheme molokai
-" }}}
-" plugin settings {{{
-" neosnippet settings {{{
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#enable_completed_snippet = 1
-" let g:neosnippet#snippets_directory = '~/.config/nvim/bundle/snippets.vim/snippets'
-
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" }}}
-"
-" apm server {{{
-function StartAPMServer()
-  silent exec ':!python3 ~/.config/nvim/apm_server.py --debug=False &'
-endfunction
-call StartAPMServer()
-" }}}
 " }}}

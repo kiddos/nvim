@@ -30,7 +30,8 @@ return require('packer').startup(function()
           calc = false,
           nvim_lsp = true,
           nvim_lua = true,
-          vsnip = false, ultisnips = false,
+          vsnip = false,
+          ultisnips = false,
           luasnip = false,
         },
       }
@@ -205,6 +206,7 @@ return require('packer').startup(function()
   use {
     'dense-analysis/ale',
     config = function()
+      vim.g.ale_cpp_cc_options = '-std=c++17 -Wall'
       vim.g.ale_linters = {
         python = {'flake8'},
         javascript = {'eslint'},
@@ -353,6 +355,17 @@ return require('packer').startup(function()
         right_alt = '◖',
         space = ' '
       }
+    end
+  }
+  use 'kiddos/snippets.vim'
+  use {
+    'Shougo/neosnippet.vim',
+    config = function()
+      vim.g['neosnippet#enable_snipmate_compatibility'] = 1
+      vim.g['neosnippet#enable_completed_snippet'] = 1
+      
+      vim.api.nvim_set_keymap('i', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
+      vim.api.nvim_set_keymap('s', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
     end
   }
 
