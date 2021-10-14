@@ -5,7 +5,6 @@
 
 " lua scripts
 lua require('plugins')
-lua require('lsp')
 lua require('apm_server')
 
 " lsp settings {{{

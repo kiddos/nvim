@@ -3,10 +3,16 @@ return require('packer').startup(function()
 
   -- new features
   -- lsp
-  use 'neovim/nvim-lspconfig'
+  use {
+    'neovim/nvim-lspconfig',
+    config = function()
+      require('lsp')
+    end
+  }
   -- completion
   use {
     'hrsh7th/nvim-compe',
+    after = 'nvim-lspconfig',
     config = function()
       local compe = require('compe')
       compe.setup {
