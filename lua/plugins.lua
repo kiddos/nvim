@@ -5,8 +5,16 @@ return require('packer').startup(function()
   -- lsp
   use {
     'neovim/nvim-lspconfig',
+    requires = {'nvim-lua/lsp-status.nvim'},
     config = function()
       require('lsp')
+    end
+  }
+  use {
+    'kiddos/lspsaga.nvim',
+    after = 'nvim-lspconfig',
+    config = function()
+      require('saga-setting')
     end
   }
   -- completion
@@ -14,49 +22,15 @@ return require('packer').startup(function()
     'hrsh7th/nvim-compe',
     after = 'nvim-lspconfig',
     config = function()
-      local compe = require('compe')
-      compe.setup {
-        enabled = true,
-        autocomplete = true,
-        debug = false,
-        min_length = 1,
-        preselect = 'enabled',
-        throttle_time = 60,
-        source_timeout = 300,
-        resolve_timeout = 600,
-        incomplete_delay = 600,
-        max_abbr_width = 100,
-        max_kind_width = 100,
-        max_menu_width = 100,
-        source = {
-          path = true,
-          buffer = {
-            ignored_filetypes = {'json', 'text', ''}
-          },
-          calc = false,
-          nvim_lsp = true,
-          nvim_lua = true,
-          vsnip = false,
-          ultisnips = false,
-          luasnip = false,
-        },
-      }
-
-      vim.api.nvim_set_keymap('i', '<C-Space>', 'compe#complete()', {expr=true, noremap=true, silent=true})
-      vim.api.nvim_set_keymap('i', '<CR>', 'compe#confirm("<CR>")', {expr=true, noremap=true})
+      require('completion')
     end
   }
   -- status line
   use {
     'hoob3rt/lualine.nvim',
+    after = 'nvim-lspconfig',
     config = function()
-      require('lualine').setup{
-        options = {
-          theme = 'onedark',
-          section_separators = {'◗', '◖'},
-          component_separators = {'►', '◄'}
-        },
-      }
+      require('lualine-setting')
     end
   }
   -- treesitter
@@ -64,17 +38,7 @@ return require('packer').startup(function()
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup {
-        ensure_installed = "maintained",
-        indent = {
-          enable = false
-        },
-        highlight = {
-          enable = true,
-          disable = {'javascript', 'html', 'css', 'vim'},
-          additional_vim_regex_highlighting = false
-        },
-      }
+      require('treesitter')
     end
   }
   -- tabline

@@ -1,6 +1,6 @@
 ""
 ""	Author: Joseph Yu
-""	Last Modified: 2021/10/11
+""	Last Modified: 2021/10/24
 ""
 
 " lua scripts
@@ -23,6 +23,7 @@ command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
 " }}}
 " }}}
 " file type settings {{{
+augroup set_filetypes
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl
@@ -33,6 +34,7 @@ autocmd VimEnter,BufRead,BufNewFile,BufEnter *.ejs setlocal filetype=html
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.fcl setlocal filetype=fcl
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro
+augroup END
 " }}}
 " rendering settings {{{
 set lazyredraw
@@ -76,6 +78,7 @@ autocmd FileType snippets setlocal foldmarker={,}
 autocmd FileType snippets setlocal foldlevel=0
 " }}}
 " unfold at start {{{
+augroup unfold_setting
 autocmd FileType c,cpp,objc,objcpp,cuda,arduino normal zR
 autocmd FileType lua normal zR
 autocmd FileType csharp normal zR
@@ -84,6 +87,7 @@ autocmd FileType html normal zR
 autocmd FileType xml normal zR
 autocmd FileType typescript normal zR
 autocmd FileType dart normal zR
+augroup END
 " }}}
 " }}}
 " indenting setting {{{
@@ -226,11 +230,13 @@ nmap JJ :bn<CR>
 nmap KK :bp<CR>
 " }}}
 " end line semicolon ; {{{
+augroup semicolon_ending
 autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;
 autocmd FileType csharp nnoremap ; $a;
 autocmd FileType java,matlab,php,perl nnoremap ; $a;
 autocmd FileType javascript,css,html,typescript  nnoremap ; $a;
 autocmd FileType javascriptreact,typescriptreact nnoremap ; $a;
+augroup END
 " }}}
 " compile {{{
 autocmd FileType c,cpp command! Compile execute ':!clang++ % -Wall -std=c++17 -fsanitize=address -O1 -g -o %:r'
