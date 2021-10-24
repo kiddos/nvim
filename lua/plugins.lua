@@ -29,6 +29,7 @@ return require('packer').startup(function()
   use {
     'hoob3rt/lualine.nvim',
     after = 'nvim-lspconfig',
+    requires = {'kyazdani42/nvim-web-devicons'},
     config = function()
       require('lualine-setting')
     end
@@ -191,8 +192,18 @@ return require('packer').startup(function()
   }
   use {
     'windwp/nvim-autopairs',
+    after = 'nvim-compe',
     config = function()
       require('nvim-autopairs').setup{}
+      require("nvim-autopairs.completion.compe").setup({
+        map_cr = true, --  map <CR> on insert mode
+        map_complete = true, -- it will auto insert `(` (map_char) after select function or method item
+        auto_select = false,  -- auto select first item
+        map_char = { -- modifies the function or method delimiter by filetypes
+          all = '{',
+          dart = '(',
+        }
+      })
     end
   }
   use {
@@ -460,7 +471,11 @@ return require('packer').startup(function()
   }
   -- dart
   use {
-    'dart-lang/dart-vim-plugin',
+    'akinsho/flutter-tools.nvim',
+    requires = 'plenary.nvim',
+    config = function()
+      require("flutter-tools").setup{}
+    end
   }
 
   -- games

@@ -236,6 +236,7 @@ autocmd FileType csharp nnoremap ; $a;
 autocmd FileType java,matlab,php,perl nnoremap ; $a;
 autocmd FileType javascript,css,html,typescript  nnoremap ; $a;
 autocmd FileType javascriptreact,typescriptreact nnoremap ; $a;
+autocmd FileType dart nnoremap ; $a;
 augroup END
 " }}}
 " compile {{{
