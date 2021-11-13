@@ -165,7 +165,7 @@ return require('packer').startup(function()
   vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', {silent=true})
   use {
     'tpope/vim-eunuch',
-    cmd = {'Delete', 'Unlink', 'Move', 'Rename', 'Chmod', 'Mkdir'}
+    cmd = {'Delete', 'Unlink', 'Remove', 'Move', 'Rename', 'Chmod', 'Mkdir'}
   }
   use 'tpope/vim-surround'
   use {
@@ -475,10 +475,6 @@ return require('packer').startup(function()
   }
 
   -- games
-  use {
-    'ThePrimeagen/vim-be-good',
-    cmd = {'VimBeGood'}
-  }
   use {
     'alec-gibson/nvim-tetris',
     cmd = {'Tetris'}
