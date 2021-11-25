@@ -17,6 +17,15 @@ return require('packer').startup(function()
       require('saga-setting')
     end
   }
+  use {
+    'folke/trouble.nvim',
+    after = 'nvim-lspconfig',
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require('trouble').setup{}
+      vim.api.nvim_set_keymap('n', '<F4>', ':TroubleToggle<CR>', {noremap=true, silent=true})
+    end
+  }
   -- completion
   use {
     'hrsh7th/nvim-compe',
@@ -79,12 +88,37 @@ return require('packer').startup(function()
 
 
   -- color scheme
-  use 'kiddos/malokai.vim'
   use {
-    'kaicataldo/material.vim',
-    branch = 'main'
+    'kiddos/malokai.vim',
+    config = function()
+      vim.api.nvim_command('set background="dark"')
+      vim.api.nvim_command('syntax enable')
+      vim.api.nvim_command('syntax on')
+      vim.api.nvim_command('colorscheme malokai')
+    end
   }
-  use 'tomasr/molokai'
+  -- use {
+  --   'kaicataldo/material.vim',
+  --   branch = 'main',
+  --   config = function()
+  --     vim.api.nvim_command('set termguicolors')
+  --     vim.api.nvim_command('let $NVIM_TUI_ENABLE_TRUE_COLOR = 1')
+      
+  --     vim.api.nvim_command('syntax enable')
+  --     vim.api.nvim_command('syntax on')
+  --     vim.api.nvim_command('let g:material_theme_style = "darker"')
+  --     vim.api.nvim_command('colorscheme material')
+  --   end
+  -- }
+  -- use {
+  --   'tomasr/molokai',
+  --   config = function()
+  --     vim.api.nvim_command('set termguicolors')
+  --     vim.api.nvim_command('syntax enable')
+  --     vim.api.nvim_command('syntax on')
+  --     vim.api.nvim_command('colorscheme molokai')
+  --   end
+  -- }
 
 
   -- git
@@ -345,6 +379,14 @@ return require('packer').startup(function()
       vim.api.nvim_set_keymap('s', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
     end
   }
+  use {
+    'folke/todo-comments.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('todo-comments').setup {}
+      vim.api.nvim_set_keymap('n', '<F5>', ':TodoLocList<CR>', {noremap=true, silent=true})
+    end
+  }
 
 
   -- language specific
@@ -396,10 +438,6 @@ return require('packer').startup(function()
     ft = {'python'}
   }
   -- javascript
-  use {
-    'elzr/vim-json',
-    ft = {'json'}
-  }
   use {
     'pangloss/vim-javascript',
   }

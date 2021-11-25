@@ -265,14 +265,3 @@ endfunction
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 " }}}
 " }}}
-" color scheme settings {{{
-" let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-" set termguicolors
-set background="dark"
-syntax enable
-syntax on
-let g:material_theme_style = 'darker'
-colorscheme malokai
-" colorscheme material
-" colorscheme molokai
-" }}}
