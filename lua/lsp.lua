@@ -5,22 +5,13 @@ local lsp_status = require('lsp-status')
 
 lsp_status.register_progress()
 
-configs.webmacrols = {
-  default_config = {
-    cmd = {"webmacro-language-server", "--stdio"},
-    filetypes = {"webmacro"},
-    root_dir = function(fname)
-      return util.root_pattern('build.xml', '.git', 'ivy.xml')(fname) or vim.loop.os_homedir()
-    end
-  }
-}
-
 local on_publish_diagnostics = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = false,
     virtual_text = false,
     signs = false,
-    update_in_insert = false
+    update_in_insert = false,
+    severity_sort = false,
   }
 );
 
