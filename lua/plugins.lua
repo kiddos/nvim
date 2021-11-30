@@ -56,33 +56,7 @@ return require('packer').startup(function()
     'romgrk/barbar.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
     config = function()
-      vim.g.bufferline = {
-        icon_custom_colors = true,
-        maximum_padding = 2,
-      }
-      -- vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
-      -- vim.api.nvim_set_keymap('n', '<A-.>', ':BufferNext<CR>', {silent=true, noremap=true})
-      -- Re-order to previous/next
-      vim.api.nvim_set_keymap('n', '<A-Left>', ':BufferMovePrevious<CR>', {silent=true, noremap=true})
-      vim.api.nvim_set_keymap('n', '<A-Right>', ':BufferMoveNext<CR>', {silent=true, noremap=true})
-      -- Goto buffer in position...
-      for i = 1,9,1 do
-        vim.api.nvim_set_keymap('n', string.format('<Leader>%d', i), string.format(':BufferGoto %d<CR>', i), {silent=true, noremap=true})
-      end
-      vim.api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', {silent=true, noremap=true})
-      -- Close buffer
-      vim.api.nvim_set_keymap('n', '<A-C>', ':BufferClose<CR>', {silent=true, noremap=true})
-      -- Wipeout buffer
-      -- :BufferWipeout<CR>
-      -- Close commands
-      -- :BufferCloseAllButCurrent<CR>
-      -- :BufferCloseBuffersLeft<CR>
-      -- :BufferCloseBuffersRight<CR>
-      -- Magic buffer-picking mode
-      -- nnoremap <silent> <C-s>    :BufferPick<CR>
-      -- Sort automatically by...
-      -- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-      -- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
+      require('barbar-setting').setup()
     end
   }
 
@@ -211,17 +185,7 @@ return require('packer').startup(function()
   use {
     'dense-analysis/ale',
     config = function()
-      vim.g.ale_cpp_cc_options = '-std=c++17 -Wall'
-      vim.g.ale_linters = {
-        python = {'flake8'},
-        javascript = {'eslint'},
-        javascriptreact = {'eslint'}
-      }
-      vim.g.ale_python_flake8_options = '--ignore=E111,E121,E123,E126,E226,E24,E704,W503,W504'
-      vim.g.ale_linters_ignore = {
-        java = {'javac', 'checkstyle', 'eclipselsp', 'pmd'},
-        javascript = {'flow'}
-      }
+      require('ale-setting')
     end
   }
   use {
