@@ -347,7 +347,12 @@ return require('packer').startup(function()
     'folke/todo-comments.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
-      require('todo-comments').setup {}
+      require('todo-comments').setup {
+        highlight = {
+          max_line_len = 10000,
+          exclude = {'', 'conf', 'json', 'xml', 'markdown'},
+        },
+      }
       vim.api.nvim_set_keymap('n', '<F5>', ':TodoLocList<CR>', {noremap=true, silent=true})
     end
   }
