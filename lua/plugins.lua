@@ -5,33 +5,16 @@ return require('packer').startup(function()
   -- lsp
   use {
     'neovim/nvim-lspconfig',
-    requires = {'nvim-lua/lsp-status.nvim'},
+    requires = {
+      'nvim-lua/lsp-status.nvim',
+      'onsails/lspkind-nvim',
+      'tami5/lspsaga.nvim',
+      'hrsh7th/nvim-compe',
+      'kyazdani42/nvim-web-devicons',
+      'folke/trouble.nvim',
+    },
     config = function()
       require('lsp')
-    end
-  }
-  use {
-    'kiddos/lspsaga.nvim',
-    after = 'nvim-lspconfig',
-    config = function()
-      require('saga-setting')
-    end
-  }
-  use {
-    'folke/trouble.nvim',
-    after = 'nvim-lspconfig',
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require('trouble').setup{}
-      vim.api.nvim_set_keymap('n', '<F4>', ':TroubleToggle<CR>', {noremap=true, silent=true})
-    end
-  }
-  -- completion
-  use {
-    'hrsh7th/nvim-compe',
-    after = 'nvim-lspconfig',
-    config = function()
-      require('completion')
     end
   }
   -- status line
