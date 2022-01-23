@@ -4,24 +4,10 @@
 ""
 
 " lua scripts
+lua require('diagnostic')
 lua require('plugins')
 lua require('apm_server')
 
-" lsp settings {{{
-" sign {{{
-" sign define LspDiagnosticsSignError text=🛑 texthl=Text linehl= numhl=
-" sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=
-" }}}
-" commands {{{
-command GotoDeclaration lua vim.lsp.buf.declaration()
-command GotoImplementation lua vim.lsp.buf.implementation()
-command GotoTypeDefinition lua vim.lsp.buf.type_definition()
-command GotoReferences lua vim.lsp.buf.references()
-command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()
-command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()
-command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))
-" }}}
-" }}}
 " file type settings {{{
 augroup set_filetypes
 autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig
@@ -106,8 +92,8 @@ autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cindent
 autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=w1,>1s,:1s,g1,m1,+2s,N-s
 " }}}
 " dart {{{
-autocmd Filetype dart setlocal cindent
-autocmd Filetype dart setlocal cinoptions=(1s,>1s,:1s,g1,m1,+2s
+" autocmd Filetype dart setlocal cindent
+" autocmd Filetype dart setlocal cinoptions=(1s,>1s,:1s,g1,m1,+2s
 " }}}
 " rust indenting {{{
 autocmd FileType rust setlocal tabstop=2
@@ -211,23 +197,6 @@ command! W   w
 command! Q   q
 command! Qa  qa
 command! QA  qa
-" }}}
-" buffer switching {{{
-nmap <leader><leader>1 :b1<CR>
-nmap <leader><leader>2 :b2<CR>
-nmap <leader><leader>3 :b3<CR>
-nmap <leader><leader>4 :b4<CR>
-nmap <leader><leader>5 :b5<CR>
-nmap <leader><leader>6 :b6<CR>
-nmap <leader><leader>7 :b7<CR>
-nmap <leader><leader>8 :b8<CR>
-nmap <leader><leader>9 :b9<CR>
-nmap <leader><leader>0 :b10<CR>
-nmap gd :bd<CR>
-nmap LL :bn<CR>
-nmap HH :bp<CR>
-nmap JJ :bn<CR>
-nmap KK :bp<CR>
 " }}}
 " end line semicolon ; {{{
 augroup semicolon_ending

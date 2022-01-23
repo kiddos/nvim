@@ -6,19 +6,20 @@ local lsp_status = require('lsp-status')
 -- setting lsp
 lsp_status.register_progress()
 
+-- enable lsp diagnostic
 local on_publish_diagnostics = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = false,
-    virtual_text = false,
-    signs = false,
+    underline = true,
+    virtual_text = true,
+    signs = true,
     update_in_insert = false,
-    severity_sort = false,
+    severity_sort = true,
   }
 );
 
+
 -- c++
 local clangd_handler = lsp_status.extensions.clangd.setup()
-clangd_handler['textDocument/publishDiagnostics'] = on_publish_diagnostics
 lspconfig.clangd.setup{
   cmd = {"clangd-10", "--background-index", "--header-insertion=never"};
   handlers = clangd_handler,
@@ -38,20 +39,20 @@ lspconfig.tsserver.setup{
   capabilities = lsp_status.capabilities,
 }
 
+lspconfig.eslint.setup{}
+
 -- css
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 lspconfig.cssls.setup{
   capabilities = capabilities,
   on_attach = lsp_status.on_attach,
-  cmd = {"vscode-css-language-server", "--stdio"};
 }
 
 -- html
 lspconfig.html.setup {
   capabilities = capabilities,
   on_attach = lsp_status.on_attach,
-  cmd = {"vscode-html-language-server", "--stdio"};
 }
 
 -- python
@@ -74,11 +75,7 @@ lspconfig.bashls.setup{
 }
 
 -- angular
-lspconfig.angularls.setup{
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  }
-}
+lspconfig.angularls.setup{}
 
 -- rust
 lspconfig.rust_analyzer.setup{
@@ -91,9 +88,6 @@ local sumneko_root_path = vim.loop.os_homedir() .. "/.local/lsp/lua-language-ser
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
 lspconfig.sumneko_lua.setup{
   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  },
   on_attach = lsp_status.on_attach,
   capabilities = lsp_status.capabilities,
 }
@@ -143,7 +137,7 @@ vim.api.nvim_set_keymap('n', '<Leader>sig', [[<Cmd>lua require'lspsaga.signature
 vim.api.nvim_set_keymap('n', '<Leader>rename', [[<Cmd>lua require'lspsaga.rename'.rename()<CR>]], {noremap=true, silent=true})
 vim.api.nvim_set_keymap('n', '<Leader>def', [[<Cmd>lua require'lspsaga.provider'.preview_definition()<CR>]], {noremap=true, silent=true})
 -- vim.api.nvim_set_keymap('n', '<Leader>impl', [[<Cmd>lua require'lspsaga.implement'.lspsaga_implementation()<CR>]], {noremap=true, silent=true})
--- vim.api.nvim_set_keymap('n', '<Leader>diag', [[<Cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>]], {noremap=true, silent=true})
+vim.api.nvim_set_keymap('n', '<Leader>diag', [[<Cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>]], {noremap=true, silent=true})
 -- vim.api.nvim_set_keymap('n', '[e', [[<Cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>]], {noremap=true, silent=true})
 -- vim.api.nvim_set_keymap('n', ']e', [[<Cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>]], {noremap=true, silent=true})
 
@@ -184,7 +178,28 @@ vim.api.nvim_command('augroup END')
 vim.api.nvim_set_keymap('i', '<C-Space>', 'compe#complete()', {expr=true, noremap=true, silent=true})
 vim.api.nvim_set_keymap('i', '<CR>', 'compe#confirm("<CR>")', {expr=true, noremap=true})
 
--- trouble
-local trouble = require('trouble')
-trouble.setup{}
-vim.api.nvim_set_keymap('n', '<F4>', ':TroubleToggle<CR>', {noremap=true, silent=true})
+
+local npairs = require('nvim-autopairs')
+npairs.setup()
+require('nvim-autopairs.completion.compe').setup({
+  map_cr = true, --  map <CR> on insert mode
+  map_complete = false, -- it will auto insert `(` (map_char) after select function or method item
+  auto_select = false,  -- auto select first item
+})
+
+-- sign
+vim.api.nvim_command('sign define DiagnosticSignError text=✖ texthl=DiagnosticSignError linehl= numhl=')
+vim.api.nvim_command('sign define DiagnosticSignWarn text=⚠ texthl=DiagnosticSignWarn linehl= numhl=')
+vim.api.nvim_command('sign define DiagnosticSignInfo text=ⓘ texthl=DiagnosticSignInfo linehl= numhl=')
+vim.api.nvim_command('sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=')
+-- vim.api.nvim_command('sign define LspDiagnosticsSignError text= texthl=Text linehl= numhl=')
+-- vim.api.nvim_command('sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=')
+
+-- commands
+vim.api.nvim_command('command GotoDeclaration lua vim.lsp.buf.declaration()')
+vim.api.nvim_command('command GotoImplementation lua vim.lsp.buf.implementation()')
+vim.api.nvim_command('command GotoTypeDefinition lua vim.lsp.buf.type_definition()')
+vim.api.nvim_command('command GotoReferences lua vim.lsp.buf.references()')
+vim.api.nvim_command('command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()')
+vim.api.nvim_command('command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()')
+vim.api.nvim_command('command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))')
