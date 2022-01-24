@@ -32,14 +32,15 @@ lspconfig.clangd.setup{
 
 -- javascript/typescript
 lspconfig.tsserver.setup{
-  handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-  },
   on_attach = lsp_status.on_attach,
   capabilities = lsp_status.capabilities,
 }
 
-lspconfig.eslint.setup{}
+lspconfig.eslint.setup{
+  handlers = {
+    ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
+  },
+}
 
 -- css
 local capabilities = vim.lsp.protocol.make_client_capabilities()
