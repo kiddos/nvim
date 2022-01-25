@@ -1,7 +1,6 @@
 return require('packer').startup(function()
   use 'wbthomason/packer.nvim'
 
-  -- new features
   -- lsp
   use {
     'neovim/nvim-lspconfig',
@@ -9,39 +8,22 @@ return require('packer').startup(function()
       'nvim-lua/lsp-status.nvim',
       'onsails/lspkind-nvim',
       'tami5/lspsaga.nvim',
-      'hrsh7th/nvim-compe',
+      'hrsh7th/nvim-compe', -- completion
       'kyazdani42/nvim-web-devicons',
       'folke/trouble.nvim',
-      'windwp/nvim-autopairs',
+      'windwp/nvim-autopairs', -- auto pairs
+      'hoob3rt/lualine.nvim', -- status line
     },
-    config = function()
-      require('lsp')
-    end
-  }
-  -- status line
-  use {
-    'hoob3rt/lualine.nvim',
-    after = 'nvim-lspconfig',
-    requires = {'kyazdani42/nvim-web-devicons'},
-    config = function()
-      require('lualine-setting')
-    end
   }
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
-    config = function()
-      require('treesitter')
-    end
   }
   -- tabline
   use {
     'romgrk/barbar.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
-    config = function()
-      require('barbar-setting').setup()
-    end
   }
 
 
@@ -88,16 +70,10 @@ return require('packer').startup(function()
     'airblade/vim-gitgutter',
     cmd = {'GitGutterToggle'}
   }
-  vim.g.gitgutter_enabled = 0
-  vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', {noremap=true, silent=true})
   use {
     'f-person/git-blame.nvim',
     cmd = {'GitBlameToggle'}
   }
-  vim.g.gitblame_enabled = 0
-  vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', {noremap=true, silent=true})
   use {
     'sindrets/diffview.nvim',
     cmd = {'DiffviewOpen', 'DiffviewClose', 'DiffviewToggleFiles', 'DiffviewFocusFiles', 'DiffviewRefresh', 'DiffviewFileHistory'}
@@ -121,23 +97,7 @@ return require('packer').startup(function()
     cmd = {'NERDTreeToggle'},
     requires = {'Xuyuanp/nerdtree-git-plugin'},
   }
-  vim.api.nvim_set_keymap('n', '<F1>', ':NERDTreeToggle .<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F1>', '<Esc>:NERDTreeToggle .<CR>', {noremap=true, silent=true})
-  use {
-    'scrooloose/nerdcommenter',
-    config = function()
-      vim.g.NERDSpaceDelims = 1
-      vim.g.NERDCompactSexyComs = 1
-      vim.g.NERDDefaultAlign = 'left'
-      vim.g.NERDCustomDelimiters = {
-        c = {left='//'},
-        arduino = {left='//'},
-        vim = {left='"'},
-        conf = {left='#'},
-        prototxt = {left='#'}
-      }
-    end
-  }
+  use 'scrooloose/nerdcommenter'
   use 'ryanoasis/vim-devicons'
   use {
     'arecarn/crunch.vim',
@@ -154,24 +114,13 @@ return require('packer').startup(function()
     'kiddos/a.vim',
     cmd = {'A'}
   }
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', {silent=true})
   use {
     'tpope/vim-eunuch',
     cmd = {'Delete', 'Unlink', 'Remove', 'Move', 'Rename', 'Chmod', 'Mkdir'}
   }
   use 'tpope/vim-surround'
-  use {
-    'mattn/emmet-vim',
-    config = function()
-      vim.g.user_emmet_togglecomment_key = '<C-y>#'
-    end
-  }
-  use {
-    'dense-analysis/ale',
-    config = function()
-      require('ale-setting')
-    end
-  }
+  use 'mattn/emmet-vim'
+  use 'dense-analysis/ale'
   use {
     'mhinz/vim-startify',
     config = function()
@@ -194,11 +143,9 @@ return require('packer').startup(function()
     end
   }
   use {
-    'junegunn/fzf',
-    run = ':call fzf#install()',
-  }
-  use {
     'junegunn/fzf.vim',
+    requires = {'junegunn/fzf'},
+    run = ':call fzf#install()',
     config = function()
       vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
     end
@@ -319,13 +266,6 @@ return require('packer').startup(function()
     'folke/todo-comments.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
-      require('todo-comments').setup {
-        highlight = {
-          max_line_len = 10000,
-          exclude = {'', 'conf', 'json', 'xml', 'markdown'},
-        },
-      }
-      vim.api.nvim_set_keymap('n', '<F5>', ':TodoLocList<CR>', {noremap=true, silent=true})
     end
   }
 
@@ -379,78 +319,45 @@ return require('packer').startup(function()
     ft = {'python'}
   }
   -- javascript
-  use {
-    'pangloss/vim-javascript',
-  }
+  use 'pangloss/vim-javascript'
   use {
     'MaxMEllon/vim-jsx-pretty',
     config = function()
-      vim.g.vim_jsx_pretty_enable_jsx_highlight = 0
+      vim.api.nvim_set_var('vim_jsx_pretty_enable_jsx_highlight', false)
     end
   }
-  use {
-    'leafgarland/typescript-vim',
-  }
-  use {
-    'peitalin/vim-jsx-typescript',
-  }
+  use 'leafgarland/typescript-vim'
+  use 'peitalin/vim-jsx-typescript'
   -- go
-  use {
-    'fatih/vim-go',
-  }
+  use 'fatih/vim-go'
   -- vhdl
-  use {
-    'kiddos/vim-vhdl',
-  }
+  use 'kiddos/vim-vhdl'
   -- ruby
-  use {
-    'vim-ruby/vim-ruby',
-  }
+  use 'vim-ruby/vim-ruby'
   -- php
-  use {
-    'stanangeloff/php.vim',
-  }
+  use 'stanangeloff/php.vim'
   -- html
-  use {
-    'othree/html5.vim',
-  }
+  use 'othree/html5.vim'
   -- markdown
-  use {
-    'tpope/vim-markdown',
-  }
+  use 'tpope/vim-markdown'
   use {
     'iamcco/markdown-preview.nvim',
     run = 'cd app && yarn install',
     ft = {'markdown'},
-    cmd = 'MarkdownPreview'
+    cmd = 'MarkdownPreview',
   }
   -- css
-  use {
-    'ap/vim-css-color',
-  }
-  use {
-    'hail2u/vim-css3-syntax',
-  }
-  use {
-    'groenewege/vim-less',
-  }
+  use 'ap/vim-css-color'
+  use 'hail2u/vim-css3-syntax'
+  use 'groenewege/vim-less'
   -- julia
-  use {
-    'JuliaEditorSupport/julia-vim',
-    -- ft = {'julia'}
-    -- https://github.com/JuliaEditorSupport/julia-vim/issues/35
-  }
+  use 'JuliaEditorSupport/julia-vim'
   -- rust
-  use {
-    'rust-lang/rust.vim',
-  }
+  use 'rust-lang/rust.vim'
   -- dart
   use {
     'akinsho/flutter-tools.nvim',
     requires = 'plenary.nvim',
-    config = function()
-      require("flutter-tools").setup{}
-    end
   }
 
   -- games

@@ -204,3 +204,17 @@ vim.api.nvim_command('command GotoReferences lua vim.lsp.buf.references()')
 vim.api.nvim_command('command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()')
 vim.api.nvim_command('command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()')
 vim.api.nvim_command('command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))')
+
+
+-- lualine
+require('lualine').setup{
+  options = {
+    theme = 'onedark',
+    section_separators = {'◗', '◖'},
+    component_separators = {'►', '◄'}
+  },
+  sections = {
+    lualine_c = {'filename', "require'lsp-status'.status()"},
+    --[[ lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'}, ]]
+  },
+}

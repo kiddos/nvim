@@ -3,10 +3,15 @@
 ""	Last Modified: 2021/10/24
 ""
 
-lua require('diagnostic')
 lua require('plugins')
-lua require('apm_server')
+lua require('treesitter')
+lua require('diagnostic')
+lua require('lsp')
+
+lua require('plugin-settings')
+
 lua require('settings')
+lua require('apm_server')
 
 " key maps settings {{{
 " leader {{{
