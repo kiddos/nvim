@@ -76,7 +76,9 @@ lspconfig.bashls.setup{
 }
 
 -- angular
-lspconfig.angularls.setup{}
+lspconfig.angularls.setup{
+  on_attach = lsp_status.on_attach,
+}
 
 -- rust
 lspconfig.rust_analyzer.setup{
@@ -85,27 +87,43 @@ lspconfig.rust_analyzer.setup{
 }
 
 -- lua
-local sumneko_root_path = vim.loop.os_homedir() .. "/.local/lsp/lua-language-server"
-local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
+local sumneko_root_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
+local sumneko_binary = sumneko_root_path .. '/bin/Linux/lua-language-server'
 lspconfig.sumneko_lua.setup{
-  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+  cmd = { sumneko_binary },
   on_attach = lsp_status.on_attach,
   capabilities = lsp_status.capabilities,
 }
 
 -- dart
 local home = vim.loop.os_homedir()
-local dart_sdk = home .. "/.local/flutter/bin/cache/dart-sdk/bin/"
+local dart_sdk = home .. '/.local/flutter/bin/cache/dart-sdk/bin/'
 lspconfig.dartls.setup{
-  cmd = {dart_sdk .. "dart", dart_sdk .. "snapshots/analysis_server.dart.snapshot", "--lsp"},
+  cmd = {dart_sdk .. 'dart', dart_sdk .. 'snapshots/analysis_server.dart.snapshot', '--lsp'},
   on_attach = lsp_status.on_attach,
   handlers = {
-    ["textDocument/publishDiagnostics"] = on_publish_diagnostics;
+    ['textDocument/publishDiagnostics'] = on_publish_diagnostics;
   }
 }
 
 -- webmacro
 lspconfig.webmacrols.setup{}
+
+-- java language server
+local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
+lspconfig.java_language_server.setup{
+  cmd = {java_lsp_bin,  '--quiet'},
+  on_attach = lsp_status.on_attach,
+}
+
+-- yaml
+lspconfig.yamlls.setup{}
+
+-- latex
+lspconfig.texlab.setup{
+  on_attach = lsp_status.on_attach,
+}
+
 
 -- lspkind plugin
 local lspkind = require('lspkind')
