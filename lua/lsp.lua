@@ -124,6 +124,11 @@ lspconfig.texlab.setup{
   on_attach = lsp_status.on_attach,
 }
 
+-- R
+lspconfig.r_language_server.setup{
+  on_attach = lsp_status.on_attach,
+}
+
 
 -- lspkind plugin
 local lspkind = require('lspkind')
@@ -148,6 +153,7 @@ saga.init_lsp_saga {
   use_saga_diagnostic_sign = false
 }
 
+vim.api.nvim_set_var('mapleader', ',')
 vim.api.nvim_set_keymap('n', '<Leader>find', [[<Cmd>lua require'lspsaga.provider'.lsp_finder()<CR>]], {noremap=true, silent=true})
 -- vim.api.nvim_set_keymap('n', '<Leader>code', [[<Cmd>lua require'lspsaga.codeaction'.code_action()<CR>]], {noremap=true, silent=true})
 -- vim.api.nvim_set_keymap('v', '<Leader>code', [[<Cmd>lua require'lspsaga.codeaction'.rannge_code_action()<CR>]], {noremap=true, silent=true})

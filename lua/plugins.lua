@@ -135,6 +135,8 @@ return require('packer').startup(function()
     'folke/todo-comments.nvim',
     requires = 'nvim-lua/plenary.nvim',
   }
+  use 'github/copilot.vim'
+  
 
   -- language specific
   -- opengl
