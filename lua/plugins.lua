@@ -10,7 +10,6 @@ return require('packer').startup(function()
       'tami5/lspsaga.nvim',
       'hrsh7th/nvim-compe', -- completion
       'kyazdani42/nvim-web-devicons',
-      'folke/trouble.nvim',
       'windwp/nvim-autopairs', -- auto pairs
       'hoob3rt/lualine.nvim', -- status line
     },
@@ -86,6 +85,10 @@ return require('packer').startup(function()
   -- tmux
   use 'christoomey/vim-tmux-navigator'
   use 'benmills/vimux'
+  use {
+    'edkolev/tmuxline.vim',
+    requires = {'vim-airline/vim-airline', 'vim-airline/vim-airline-themes'}
+  }
 
   -- utility
   use {
@@ -116,16 +119,11 @@ return require('packer').startup(function()
   }
   use 'tpope/vim-surround'
   use 'mattn/emmet-vim'
-  use 'dense-analysis/ale'
   use 'mhinz/vim-startify'
   use {
     'junegunn/fzf.vim',
     requires = {'junegunn/fzf'},
     run = ':call fzf#install()',
-  }
-  use {
-    'edkolev/tmuxline.vim',
-    requires = {'vim-airline/vim-airline', 'vim-airline/vim-airline-themes'}
   }
   use {
     'Shougo/neosnippet.vim',
@@ -139,15 +137,6 @@ return require('packer').startup(function()
   
 
   -- language specific
-  -- opengl
-  use {
-    'tikhomirov/vim-glsl',
-    ft = {'glsl'}
-  }
-  use {
-    'beyondmarc/hlsl.vim',
-    ft = {'glsl'}
-  }
   -- protobuf
   use {
     'kiddos/vim-protobuf',
@@ -156,7 +145,7 @@ return require('packer').startup(function()
   -- clang-format
   use {
     'rhysd/vim-clang-format',
-    ft = {'c', 'cpp', 'javascript'},
+    ft = {'c', 'cpp'},
     cmd = {'ClangFormat'},
   }
   -- python
