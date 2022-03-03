@@ -85,6 +85,16 @@ vim.o.report = 6
 -- splitting a window will put the new window right of the current one.
 vim.o.splitright = true
 
+-- undo setting
+vim.o.undolevels = 300
+vim.o.undoreload = 0
+
+-- swap file
+-- save swap after this time passed
+vim.o.updatetime = 60000
+-- save swap after this many character typed
+vim.o.updatecount = 360
+
 
 -- WildMenu setting
 --
