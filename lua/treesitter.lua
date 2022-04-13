@@ -1,8 +1,9 @@
 require('nvim-treesitter.configs').setup {
-  ensure_installed = "maintained",
+  ensure_installed = { 'c', 'lua', 'cpp', 'rust', 'python', 'java' },
   indent = {
     enable = false,
   },
+  ignore_install = { 'javascript', 'html', 'css', 'vim' },
   highlight = {
     enable = true,
     disable = {'javascript', 'html', 'css', 'vim'},
