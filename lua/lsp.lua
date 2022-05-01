@@ -17,24 +17,28 @@ local on_publish_diagnostics = vim.lsp.with(
   }
 );
 
+local function file_exists(filename)
+  local stat = vim.loop.fs_stat(filename)
+  return stat and stat.type or false
+end
 
 -- c++
 local clangd_handler = lsp_status.extensions.clangd.setup()
+local clangd = 'clangd-12'
+if file_exists('/usr/bin/clangd-13') then
+  clangd = 'clangd-13'
+end
+
 lspconfig.clangd.setup{
-  cmd = {"clangd-10", "--background-index", "--header-insertion=never"};
+  cmd = {clangd, "--background-index", "--header-insertion=never"};
   handlers = clangd_handler,
   init_options = {
     clangdFileStatus = true
   },
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
 };
 
 -- javascript/typescript
-lspconfig.tsserver.setup{
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
-}
+lspconfig.tsserver.setup{}
 
 lspconfig.eslint.setup{
   handlers = {
@@ -47,13 +51,11 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 lspconfig.cssls.setup{
   capabilities = capabilities,
-  on_attach = lsp_status.on_attach,
 }
 
 -- html
 lspconfig.html.setup {
   capabilities = capabilities,
-  on_attach = lsp_status.on_attach,
 }
 
 -- python
@@ -61,38 +63,25 @@ lspconfig.jedi_language_server.setup{
   handlers = {
     ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
   },
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
 }
 
 -- vim
-lspconfig.vimls.setup{
-  on_attach = lsp_status.on_attach,
-}
+lspconfig.vimls.setup{}
 
 -- bash
-lspconfig.bashls.setup{
-  on_attach = lsp_status.on_attach,
-}
+lspconfig.bashls.setup{}
 
 -- angular
-lspconfig.angularls.setup{
-  on_attach = lsp_status.on_attach,
-}
+lspconfig.angularls.setup{}
 
 -- rust
-lspconfig.rust_analyzer.setup{
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
-}
+lspconfig.rust_analyzer.setup{}
 
 -- lua
 local sumneko_root_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
 local sumneko_binary = sumneko_root_path .. '/bin/Linux/lua-language-server'
 lspconfig.sumneko_lua.setup{
   cmd = { sumneko_binary },
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities,
 }
 
 -- dart
@@ -100,7 +89,6 @@ local home = vim.loop.os_homedir()
 local dart_sdk = home .. '/.local/flutter/bin/cache/dart-sdk/bin/'
 lspconfig.dartls.setup{
   cmd = {dart_sdk .. 'dart', dart_sdk .. 'snapshots/analysis_server.dart.snapshot', '--lsp'},
-  on_attach = lsp_status.on_attach,
   handlers = {
     ['textDocument/publishDiagnostics'] = on_publish_diagnostics;
   }
@@ -113,21 +101,16 @@ lspconfig.webmacrols.setup{}
 local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
 lspconfig.java_language_server.setup{
   cmd = {java_lsp_bin,  '--quiet'},
-  on_attach = lsp_status.on_attach,
 }
 
 -- yaml
 lspconfig.yamlls.setup{}
 
 -- latex
-lspconfig.texlab.setup{
-  on_attach = lsp_status.on_attach,
-}
+lspconfig.texlab.setup{}
 
 -- R
-lspconfig.r_language_server.setup{
-  on_attach = lsp_status.on_attach,
-}
+lspconfig.r_language_server.setup{}
 
 
 -- lspkind plugin

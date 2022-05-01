@@ -68,7 +68,7 @@ return require('packer').startup(function()
     cmd = {'GitGutterToggle'}
   }
   use {
-    'f-person/git-blame.nvim',
+    'kiddos/git-blame.nvim',
     cmd = {'GitBlameToggle'}
   }
   use {
@@ -167,6 +167,7 @@ return require('packer').startup(function()
   }
   use 'leafgarland/typescript-vim'
   use 'peitalin/vim-jsx-typescript'
+  use 'leafOfTree/vim-vue-plugin'
   -- go
   use 'fatih/vim-go'
   -- vhdl
