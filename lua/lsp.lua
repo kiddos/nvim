@@ -25,8 +25,8 @@ end
 -- c++
 local clangd_handler = lsp_status.extensions.clangd.setup()
 local clangd = 'clangd-12'
-if file_exists('/usr/bin/clangd-13') then
-  clangd = 'clangd-13'
+if file_exists('/usr/bin/clangd-14') then
+  clangd = 'clangd-14'
 end
 
 lspconfig.clangd.setup{
@@ -79,7 +79,7 @@ lspconfig.rust_analyzer.setup{}
 
 -- lua
 local sumneko_root_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
-local sumneko_binary = sumneko_root_path .. '/bin/Linux/lua-language-server'
+local sumneko_binary = sumneko_root_path .. '/bin/lua-language-server'
 lspconfig.sumneko_lua.setup{
   cmd = { sumneko_binary },
 }
@@ -99,9 +99,12 @@ lspconfig.webmacrols.setup{}
 
 -- java language server
 local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
-lspconfig.java_language_server.setup{
-  cmd = {java_lsp_bin,  '--quiet'},
-}
+
+if file_exists(java_lsp_bin) then
+  lspconfig.java_language_server.setup{
+    cmd = {java_lsp_bin,  '--quiet'},
+  }
+end
 
 -- yaml
 lspconfig.yamlls.setup{}
