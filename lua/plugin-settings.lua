@@ -111,6 +111,18 @@ end)();
 
 -- fzf
 (function()
+  local rg_options = {
+    '--column',
+    '--line-number',
+    '--with-filename',
+    '--color=always',
+    '--smart-case ',
+    '--no-search-zip',
+    '-g \'!{**/node_modules,**/.git}\'',
+  }
+  local rg_command = 'rg ' .. table.concat(rg_options, ' ') .. ' -- '
+  vim.api.nvim_create_user_command('Rg', 'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
+
   vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
 end)();
 
