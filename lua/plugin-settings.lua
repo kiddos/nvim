@@ -93,17 +93,6 @@ end)();
   -- })
 end)();
 
--- todo-comments
-(function()
-  require('todo-comments').setup {
-    highlight = {
-      max_line_len = 10000,
-      exclude = {'', 'conf', 'json', 'xml', 'markdown'},
-    },
-  }
-  vim.api.nvim_set_keymap('n', '<F5>', ':TodoLocList<CR>', {noremap=true, silent=true})
-end)();
-
 -- flutter
 (function()
   require('flutter-tools').setup{}

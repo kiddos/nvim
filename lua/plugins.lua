@@ -129,12 +129,7 @@ return require('packer').startup(function()
     'Shougo/neosnippet.vim',
     requires = {'kiddos/snippets.vim'}
   }
-  use {
-    'folke/todo-comments.nvim',
-    requires = 'nvim-lua/plenary.nvim',
-  }
-  use 'github/copilot.vim'
-  
+
 
   -- language specific
   -- protobuf
