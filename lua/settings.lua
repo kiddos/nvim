@@ -4,16 +4,54 @@ vim.o.langmenu = 'en_US.UTF-8'
 
 
 -- File type setting
-vim.api.nvim_command('augroup set_filetypes')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.i setlocal filetype=swig')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.swg setlocal filetype=swig')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.BUILD setlocal filetype=bzl')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.m setlocal filetype=objc')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.mm setlocal filetype=objcpp')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.h setlocal filetype=cpp')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.pro setlocal filetype=make')
-vim.api.nvim_command('autocmd VimEnter,BufRead,BufNewFile,BufEnter *.wmm setlocal filetype=webmacro')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.i', '*.swg'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'swig')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.BUILD'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'bzl')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.m'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'objc')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.mm'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'objcpp')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.h'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'cpp')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.pro'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'make')
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
+  pattern = {'*.wmm'},
+  callback = function()
+    vim.api.nvim_buf_set_option(0, 'filetype', 'webmacro')
+  end
+})
 
 
 -- Icon Setting
@@ -124,37 +162,54 @@ vim.o.autoindent = true
 vim.o.copyindent = true
 
 -- cpp
-vim.api.nvim_command('augroup cpp_indent')
-vim.api.nvim_command('autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cindent')
-vim.api.nvim_command('autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=w1,>1s,:1s,g1,m1,+2s,N-s')
--- vim.api.nvim_command('autocmd Filetype c,cpp,objc,objcpp,cuda,arduino setlocal cinoptions=>s,^0,:2,W4,m1,g1,)10,(0')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'c',
+    'cpp',
+    'objc',
+    'objcpp',
+    'cuda',
+    'arduino'
+  },
+  callback = function() 
+    vim.api.nvim_buf_set_option(0, 'cindent', true)
+    vim.api.nvim_buf_set_option(0, 'cinoptions', 'w1,>1s,:1s,g1,m1,+2s,N-s')
+    -- vim.api.nvim_buf_set_option(0, 'cinoptions', '>s,^0,:2,W4,m1,g1,)10,(0')
+  end
+})
 
 -- python
 vim.api.nvim_set_var('python_recommended_style', 0)
 
 -- java
-vim.api.nvim_command('augroup java_indent')
-vim.api.nvim_command('autocmd FileType java setlocal tabstop=4')
-vim.api.nvim_command('autocmd FileType java setlocal softtabstop=4')
-vim.api.nvim_command('autocmd FileType java setlocal shiftwidth=4')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'java'},
+  callback = function() 
+    vim.api.nvim_buf_set_option(0, 'tabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'shiftwidth', 4)
+  end
+})
 
 -- make
-vim.api.nvim_command('augroup make_indent')
-vim.api.nvim_command('autocmd FileType make setlocal noexpandtab')
-vim.api.nvim_command('autocmd FileType make setlocal tabstop=4')
-vim.api.nvim_command('autocmd FileType make setlocal softtabstop=2')
-vim.api.nvim_command('autocmd FileType make setlocal shiftwidth=2')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'make'},
+  callback = function() 
+    vim.api.nvim_buf_set_option(0, 'tabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'softtabstop', 2)
+    vim.api.nvim_buf_set_option(0, 'shiftwidth', 2)
+  end
+})
 
 -- snippet
-vim.api.nvim_command('augroup snippet_indent')
-vim.api.nvim_command('autocmd FileType snippets setlocal noexpandtab')
-vim.api.nvim_command('autocmd FileType snippets setlocal tabstop=4')
-vim.api.nvim_command('autocmd FileType snippets setlocal softtabstop=4')
-vim.api.nvim_command('autocmd FileType snippets setlocal shiftwidth=4')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'snippets'},
+  callback = function() 
+    vim.api.nvim_buf_set_option(0, 'tabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'shiftwidth', 4)
+  end
+})
 
 -- dart
 -- vim.api.nvim_command('augroup dart_indent')
@@ -163,8 +218,11 @@ vim.api.nvim_command('augroup END')
 -- vim.api.nvim_command('augroup END')
 
 -- c#
-vim.api.nvim_command('augroup csharp_indent')
-vim.api.nvim_command('autocmd FileType cs setlocal tabstop=4')
-vim.api.nvim_command('autocmd FileType cs setlocal softtabstop=4')
-vim.api.nvim_command('autocmd FileType cs setlocal shiftwidth=4')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'csharp'},
+  callback = function() 
+    vim.api.nvim_buf_set_option(0, 'tabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
+    vim.api.nvim_buf_set_option(0, 'shiftwidth', 4)
+  end
+})

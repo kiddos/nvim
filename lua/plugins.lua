@@ -153,15 +153,15 @@ return require('packer').startup(function()
     ft = {'python'}
   }
   -- javascript
-  use 'pangloss/vim-javascript'
-  use {
-    'MaxMEllon/vim-jsx-pretty',
-    config = function()
-      vim.api.nvim_set_var('vim_jsx_pretty_enable_jsx_highlight', false)
-    end
-  }
-  use 'leafgarland/typescript-vim'
-  use 'peitalin/vim-jsx-typescript'
+  -- use 'pangloss/vim-javascript'
+  -- use {
+  --   'MaxMEllon/vim-jsx-pretty',
+  --   config = function()
+  --     vim.api.nvim_set_var('vim_jsx_pretty_enable_jsx_highlight', false)
+  --   end
+  -- }
+  -- use 'leafgarland/typescript-vim'
+  -- use 'peitalin/vim-jsx-typescript'
   use 'leafOfTree/vim-vue-plugin'
   -- go
   use 'fatih/vim-go'

@@ -1,27 +1,52 @@
 -- typo
-vim.api.nvim_command('command! WQ  wq')
-vim.api.nvim_command('command! Wq  wq')
-vim.api.nvim_command('command! W   w')
-vim.api.nvim_command('command! Q   q')
-vim.api.nvim_command('command! Qa  qa')
-vim.api.nvim_command('command! QA  qa')
+vim.api.nvim_create_user_command('WQ', 'wq', {})
+vim.api.nvim_create_user_command('Wq', 'wq', {})
+vim.api.nvim_create_user_command('W', 'w', {})
+vim.api.nvim_create_user_command('Q', 'q', {})
+vim.api.nvim_create_user_command('Qa', 'qa', {})
+vim.api.nvim_create_user_command('QA', 'qa', {})
 
 -- semicolon line endings
-vim.api.nvim_command('augroup semicolon_ending')
-vim.api.nvim_command('autocmd FileType c,cpp,cuda,arduino,objc,objcpp nnoremap ; $a;')
-vim.api.nvim_command('autocmd FileType csharp nnoremap ; $a;')
-vim.api.nvim_command('autocmd FileType java,matlab,php,perl nnoremap ; $a;')
-vim.api.nvim_command('autocmd FileType javascript,css,html,typescript  nnoremap ; $a;')
-vim.api.nvim_command('autocmd FileType javascriptreact,typescriptreact nnoremap ; $a;')
-vim.api.nvim_command('autocmd FileType dart nnoremap ; $a;')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'c',
+    'cpp',
+    'cuda',
+    'arduino',
+    'java',
+    'javascript',
+    'typescript',
+    'javascriptreact',
+    'typescriptreact',
+    'html',
+    'css',
+    'dart',
+
+    'matlab',
+    'php',
+    'perl',
+    'objc',
+    'objcpp',
+    'csharp',
+  },
+  command = 'nnoremap ; $a;',
+})
 
 -- compile commands
-vim.api.nvim_command('augroup compile_command')
-vim.api.nvim_command('autocmd FileType c,cpp command! Compile execute ":!clang++ % -Wall -std=c++17 -fsanitize=address -O1 -g -o %:r"')
-vim.api.nvim_command('autocmd FileType cuda command! Compile execute ":!nvcc % -o %:r"')
-vim.api.nvim_command('autocmd FileType java command! Compile execute ":!javac %"')
-vim.api.nvim_command('augroup END')
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'c', 'cpp'},
+  command = 'command! Compile execute ":!clang++ % -Wall -std=c++17 -fsanitize=address -O1 -g -o %:r"',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'cuda'},
+  command = 'Compile execute ":!nvcc % -o %:r"',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {'java'},
+  command = 'Compile execute ":!javac %"',
+})
 
 vim.api.nvim_command([[
 function! ShowSpaces(...)
