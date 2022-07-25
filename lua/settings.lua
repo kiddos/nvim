@@ -137,9 +137,9 @@ vim.o.updatecount = 360
 -- WildMenu setting
 --
 -- use last used when completion
-vim.o.wildmode = 'lastused,full'
+-- vim.o.wildmode = 'lastused,full'
 -- ignore these files for wildmenu
-vim.o.wildignore = '*.o,*.obj,*.out,*.exe'
+-- vim.o.wildignore = '*.o,*.obj,*.out,*.exe'
 
 
 -- Searching setting

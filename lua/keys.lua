@@ -40,12 +40,12 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {'cuda'},
-  command = 'Compile execute ":!nvcc % -o %:r"',
+  command = 'command! Compile execute ":!nvcc % -o %:r"',
 })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {'java'},
-  command = 'Compile execute ":!javac %"',
+  command = 'command! Compile execute ":!javac %"',
 })
 
 vim.api.nvim_command([[

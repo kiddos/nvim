@@ -244,3 +244,15 @@ end)();
   vim.api.nvim_set_var('autopep8_max_line_length', 80)
   -- vim.g.autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
 end)();
+
+-- wilder.nvim
+(function()
+  local wilder = require('wilder')
+  wilder.setup({modes = {':', '/', '?'}})
+
+  wilder.set_option('renderer', wilder.popupmenu_renderer({
+    highlighter = wilder.basic_highlighter(),
+    left = {' ', wilder.popupmenu_devicons()},
+    right = {' ', wilder.popupmenu_scrollbar()},
+  }))
+end)();

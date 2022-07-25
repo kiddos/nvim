@@ -12,12 +12,13 @@ require('nvim-treesitter.configs').setup {
     'vim'
   },
   indent = {
-    enable = false,
+    enable = true,
+    disable = {'vim'}
   },
   -- ignore_install = { 'javascript', 'html', 'css', 'vim' },
   highlight = {
     enable = true,
-    -- disable = {'javascript', 'html', 'css', 'vim'},
+    disable = {'webmacro'},
     additional_vim_regex_highlighting = false,
   },
 }

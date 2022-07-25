@@ -2,23 +2,22 @@ return require('packer').startup(function()
   use 'wbthomason/packer.nvim'
 
   -- lsp
+  use 'neovim/nvim-lspconfig'
+  use 'nvim-lua/lsp-status.nvim'
+  use 'onsails/lspkind-nvim'
+  use 'tami5/lspsaga.nvim'
+  use 'hrsh7th/nvim-compe' -- completion
   use {
-    'neovim/nvim-lspconfig',
-    requires = {
-      'nvim-lua/lsp-status.nvim',
-      'onsails/lspkind-nvim',
-      'tami5/lspsaga.nvim',
-      'hrsh7th/nvim-compe', -- completion
-      'kyazdani42/nvim-web-devicons',
-      'windwp/nvim-autopairs', -- auto pairs
-      'hoob3rt/lualine.nvim', -- status line
-    },
+    'gfanto/fzf-lsp.nvim',
+    requires = { 'nvim-lua/plenary.nvim' }
   }
+
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
   }
+
   -- tabline
   use {
     'romgrk/barbar.nvim',
@@ -91,13 +90,20 @@ return require('packer').startup(function()
   }
 
   -- utility
+  use 'windwp/nvim-autopairs' -- auto pairs
+  use 'hoob3rt/lualine.nvim' -- status line
+  use 'kyazdani42/nvim-web-devicons' -- icons
+  use 'gelguy/wilder.nvim' -- wild menu
+  use 'chentoast/marks.nvim' -- use marks
+  -- file browser
   use {
     'scrooloose/nerdtree',
     cmd = {'NERDTreeToggle'},
     requires = {'Xuyuanp/nerdtree-git-plugin'},
   }
-  use 'scrooloose/nerdcommenter'
-  use 'ryanoasis/vim-devicons'
+  use 'scrooloose/nerdcommenter' -- comments
+  use 'ryanoasis/vim-devicons' -- icons
+  -- commands
   use {
     'arecarn/crunch.vim',
     requires = {'arecarn/selection.vim'},
@@ -153,26 +159,11 @@ return require('packer').startup(function()
     ft = {'python'}
   }
   -- javascript
-  -- use 'pangloss/vim-javascript'
-  -- use {
-  --   'MaxMEllon/vim-jsx-pretty',
-  --   config = function()
-  --     vim.api.nvim_set_var('vim_jsx_pretty_enable_jsx_highlight', false)
-  --   end
-  -- }
-  -- use 'leafgarland/typescript-vim'
-  -- use 'peitalin/vim-jsx-typescript'
   use 'leafOfTree/vim-vue-plugin'
   -- go
   use 'fatih/vim-go'
   -- vhdl
   use 'kiddos/vim-vhdl'
-  -- ruby
-  use 'vim-ruby/vim-ruby'
-  -- php
-  use 'stanangeloff/php.vim'
-  -- html
-  use 'othree/html5.vim'
   -- markdown
   use 'tpope/vim-markdown'
   use {
@@ -181,10 +172,11 @@ return require('packer').startup(function()
     ft = {'markdown'},
     cmd = 'MarkdownPreview',
   }
-  -- css
-  use 'ap/vim-css-color'
-  use 'hail2u/vim-css3-syntax'
-  use 'groenewege/vim-less'
+  -- json
+  use {
+    'gennaro-tedesco/nvim-jqx',
+    cmd = {'JqxList', 'JqxQuery'},
+  }
   -- julia
   use 'JuliaEditorSupport/julia-vim'
   -- rust
