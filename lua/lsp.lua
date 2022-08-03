@@ -170,7 +170,7 @@ compe.setup {
   source = {
     path = true,
     buffer = {
-      ignored_filetypes = {'json', 'text', ''}
+      ignored_filetypes = {'json', 'text', '', 'log', 'txt'}
     },
     calc = false,
     nvim_lsp = true,
