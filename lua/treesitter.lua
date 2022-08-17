@@ -7,6 +7,8 @@ require('nvim-treesitter.configs').setup {
     'python',
     'java',
     'javascript',
+    'typescript',
+    'tsx',
     'html',
     'css',
     'vim'
