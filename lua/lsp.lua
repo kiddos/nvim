@@ -29,13 +29,15 @@ if file_exists('/usr/bin/clangd-14') then
   clangd = 'clangd-14'
 end
 
-lspconfig.clangd.setup{
-  cmd = {clangd, "--background-index", "--header-insertion=never"};
-  handlers = clangd_handler,
-  init_options = {
-    clangdFileStatus = true
-  },
-};
+if file_exists('/usr/bin/' .. clangd) then
+  lspconfig.clangd.setup{
+    cmd = {clangd, "--background-index", "--header-insertion=never"};
+    handlers = clangd_handler,
+    init_options = {
+      clangdFileStatus = true
+    },
+  }
+end
 
 -- javascript/typescript
 lspconfig.tsserver.setup{}
@@ -80,26 +82,43 @@ lspconfig.rust_analyzer.setup{}
 -- lua
 local sumneko_root_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
 local sumneko_binary = sumneko_root_path .. '/bin/lua-language-server'
-lspconfig.sumneko_lua.setup{
-  cmd = { sumneko_binary },
-}
+if file_exists(sumneko_binary) then
+  lspconfig.sumneko_lua.setup{
+    cmd = { sumneko_binary },
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = {'vim'}
+        },
+        workspace = {
+          library = {
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
+          }
+        }
+      }
+    }
+  }
+end
 
 -- dart
 local home = vim.loop.os_homedir()
 local dart_sdk = home .. '/.local/flutter/bin/cache/dart-sdk/bin/'
-lspconfig.dartls.setup{
-  cmd = {dart_sdk .. 'dart', dart_sdk .. 'snapshots/analysis_server.dart.snapshot', '--lsp'},
-  handlers = {
-    ['textDocument/publishDiagnostics'] = on_publish_diagnostics;
+local executable = dart_sdk .. 'dart'
+if file_exists(executable) then
+  lspconfig.dartls.setup{
+    cmd = {dart_sdk .. 'dart', dart_sdk .. 'snapshots/analysis_server.dart.snapshot', '--lsp'},
+    handlers = {
+      ['textDocument/publishDiagnostics'] = on_publish_diagnostics;
+    }
   }
-}
+end
 
 -- webmacro
 lspconfig.webmacrols.setup{}
 
 -- java language server
 local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
-
 if file_exists(java_lsp_bin) then
   lspconfig.java_language_server.setup{
     cmd = {java_lsp_bin,  '--quiet'},
@@ -153,49 +172,12 @@ vim.api.nvim_set_keymap('n', '<Leader>diag', [[<Cmd>lua require'lspsaga.diagnost
 -- vim.api.nvim_set_keymap('n', ']e', [[<Cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>]], {noremap=true, silent=true})
 
 -- completion
-local compe = require('compe')
-compe.setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 1,
-  preselect = 'always',
-  throttle_time = 60,
-  source_timeout = 300,
-  resolve_timeout = 600,
-  incomplete_delay = 600,
-  max_abbr_width = 100,
-  max_kind_width = 100,
-  max_menu_width = 100,
-  source = {
-    path = true,
-    buffer = {
-      ignored_filetypes = {'json', 'text', '', 'log', 'txt'}
-    },
-    calc = false,
-    nvim_lsp = true,
-    nvim_lua = true,
-    vsnip = false,
-    ultisnips = false,
-    luasnip = false,
-  },
-}
-
-vim.api.nvim_command('augroup completion')
-vim.api.nvim_command("autocmd FileType dart let g:compe={}")
-vim.api.nvim_command("autocmd FileType dart let g:compe.preselect = 'enable'")
-vim.api.nvim_command('augroup END')
-
-vim.api.nvim_set_keymap('i', '<C-Space>', 'compe#complete()', {expr=true, noremap=true, silent=true})
-vim.api.nvim_set_keymap('i', '<CR>', 'compe#confirm("<CR>")', {expr=true, noremap=true})
-
+local completion = require('completion')
+completion.setup()
 
 local npairs = require('nvim-autopairs')
-npairs.setup()
-require('nvim-autopairs.completion.compe').setup({
-  map_cr = true, --  map <CR> on insert mode
-  map_complete = false, -- it will auto insert `(` (map_char) after select function or method item
-  auto_select = false,  -- auto select first item
+npairs.setup({
+  map_cr = false,
 })
 
 -- sign
@@ -207,13 +189,23 @@ vim.api.nvim_command('sign define DiagnosticSignHint text= texthl=DiagnosticS
 -- vim.api.nvim_command('sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=')
 
 -- commands
-vim.api.nvim_command('command GotoDeclaration lua vim.lsp.buf.declaration()')
-vim.api.nvim_command('command GotoImplementation lua vim.lsp.buf.implementation()')
-vim.api.nvim_command('command GotoTypeDefinition lua vim.lsp.buf.type_definition()')
-vim.api.nvim_command('command GotoReferences lua vim.lsp.buf.references()')
-vim.api.nvim_command('command GotoDocumentSymbol lua vim.lsp.buf.document_symbol()')
-vim.api.nvim_command('command GotoWorkspaceSymbol lua vim.lsp.buf.workspace_symbol()')
-vim.api.nvim_command('command LspClients lua print(vim.inspect(vim.lsp.buf_get_clients()))')
+vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
+vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
+vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
+vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+vim.api.nvim_create_user_command('GotoDocumentSymbol', vim.lsp.buf.document_symbol, {})
+vim.api.nvim_create_user_command('GotoWorkspaceSymbol', vim.lsp.buf.workspace_symbol, {})
+vim.api.nvim_create_user_command('DisplayInfo', vim.lsp.buf.hover, {})
+vim.api.nvim_create_user_command('LspListDocumentSymbol', vim.lsp.buf.document_symbol, {})
+vim.api.nvim_create_user_command('LspFormat', function()
+  vim.lsp.buf.format({})
+end, {})
+vim.api.nvim_create_user_command('LspClients', function()
+  print(vim.inspect(vim.lsp.buf_get_clients()))
+end, {})
+vim.api.nvim_create_user_command('LspIncomingCalls', vim.lsp.buf.incoming_calls, {})
+vim.api.nvim_create_user_command('LspOutgoingCalls', vim.lsp.buf.outgoing_calls, {})
+vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
 
 -- lualine
