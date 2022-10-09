@@ -6,11 +6,10 @@
 require('commands').setup()
 
 require('plugins')
+require('plugin-settings').setup()
 require('treesitter')
 require('diagnostic')
 require('lsp')
-
-require('plugin-settings')
 
 require('settings')
 require('apm_server')

@@ -39,7 +39,7 @@ return require('packer').startup(function()
   --   config = function()
   --     vim.api.nvim_command('set termguicolors')
   --     vim.api.nvim_command('let $NVIM_TUI_ENABLE_TRUE_COLOR = 1')
-      
+
   --     vim.api.nvim_command('syntax enable')
   --     vim.api.nvim_command('syntax on')
   --     vim.api.nvim_command('let g:material_theme_style = "darker"')
@@ -79,6 +79,7 @@ return require('packer').startup(function()
       'nvim-lua/plenary.nvim'
     }
   }
+  use 'akinsho/git-conflict.nvim'
 
   -- tmux
   use 'christoomey/vim-tmux-navigator'
@@ -94,14 +95,20 @@ return require('packer').startup(function()
   use 'kyazdani42/nvim-web-devicons' -- icons
   use 'gelguy/wilder.nvim' -- wild menu
   use 'chentoast/marks.nvim' -- use marks
+  use 'gennaro-tedesco/nvim-peekup' -- peek register
   -- file browser
   use {
     'scrooloose/nerdtree',
     cmd = {'NERDTreeToggle'},
-    requires = {'Xuyuanp/nerdtree-git-plugin'},
+    requires = {'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons'},
   }
   use 'scrooloose/nerdcommenter' -- comments
-  use 'ryanoasis/vim-devicons' -- icons
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+  }
   -- commands
   use {
     'arecarn/crunch.vim',

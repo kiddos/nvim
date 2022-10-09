@@ -1,5 +1,10 @@
--- barbar
-(function()
+local settings = {}
+
+settings.setup = function()
+  require('bufferline').setup({
+    animation = true,
+  })
+  -- barbar
   vim.api.nvim_set_var('bufferline', {
     icon_custom_colors = true,
     maximum_padding = 2,
@@ -34,10 +39,10 @@
   -- Sort automatically by...
   -- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
   -- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-end)();
+  --
 
--- git
-(function()
+
+  -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
   vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})
   vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', {noremap=true, silent=true})
@@ -45,10 +50,11 @@ end)();
   vim.api.nvim_set_var('gitblame_enabled', false)
   vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', {noremap=true, silent=true})
   vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', {noremap=true, silent=true})
-end)();
 
--- NerdTree
-(function()
+  require('git-conflict').setup()
+
+
+  -- NerdTree
   vim.api.nvim_set_var('NERDSpaceDelims', true)
   vim.api.nvim_set_var('NERDCompactSexyComs', true)
   vim.api.nvim_set_var('NERDDefaultAlign', 'left')
@@ -59,47 +65,28 @@ end)();
     conf = {left='#'},
     prototxt = {left='#'}
   })
-
   vim.api.nvim_set_keymap('n', '<F1>', ':NERDTreeToggle .<CR>', {noremap=true, silent=true})
   vim.api.nvim_set_keymap('i', '<F1>', '<Esc>:NERDTreeToggle .<CR>', {noremap=true, silent=true})
-end)();
 
--- A
-(function()
+  -- nvim-tree
+  require("nvim-tree").setup()
+  vim.api.nvim_set_keymap('n', '<F5>', ':NvimTreeToggle<CR>', {noremap=true, silent=true})
+  vim.api.nvim_set_keymap('i', '<F5>', '<Esc>:NvimTreeToggle<CR>', {noremap=true, silent=true})
+
+  -- A
   vim.api.nvim_set_var('mapleader', ',')
   vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', {silent=true})
-end)();
 
--- emmet
-(function()
+
+  -- emmet
   vim.api.nvim_set_var('user_emmet_togglecomment_key', '<C-y>#')
-end)();
 
--- ale
-(function()
-  -- vim.api.nvim_set_var('ale_disable_lsp', true)
-  -- vim.api.nvim_set_var('ale_cpp_cc_options', '-std=c++17 -Wall')
-  -- vim.api.nvim_set_var('ale_linters', {
-  --   python = {},
-  --   javascript = {},
-  --   javascriptreact = {},
-  -- })
-  -- vim.api.nvim_set_var('ale_python_flake8_options',  '--ignore=E111,E121,E123,E126,E226,E24,E704,W503,W504')
-  -- vim.api.nvim_set_var('ale_linters_ignore', {
-  --   java = {'javac', 'checkstyle', 'eclipselsp', 'pmd'},
-  --   javascript = {'flow'},
-  --   json = {'eslint'},
-  --   dart = {'analysis_server', 'analyze', 'format', 'dartfmt'},
-  -- })
-end)();
 
--- flutter
-(function()
+  -- flutter
   require('flutter-tools').setup{}
-end)();
 
--- fzf
-(function()
+
+  -- fzf
   local rg_options = {
     '--column',
     '--line-number',
@@ -113,10 +100,9 @@ end)();
   vim.api.nvim_create_user_command('Rg', 'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
 
   vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
-end)();
 
--- vim-startify
-(function()
+
+  -- vim-startify
   vim.api.nvim_set_var('startify_list_order', {
     {'    Recently used files in current directory:'}, 'dir',
     {'    Recently used files:'}, 'files',
@@ -133,10 +119,9 @@ end)();
   vim.g.startify_change_to_dir = 1
   vim.g.startify_change_to_vcs_root = 1
   vim.g.startify_enable_special = 0
-end)();
 
--- tmuxline with vim-airline
-(function()
+
+  -- tmuxline with vim-airline
   vim.api.nvim_set_var('airline_theme', 'onedark')
   vim.api.nvim_set_var('airline_disable_statusline', 1)
   vim.api.nvim_set_var('airline_detect_modified', 1)
@@ -212,19 +197,16 @@ end)();
     right_alt = '◖',
     space = ' '
   })
-end)();
 
--- neosnippets
-(function()
+  -- neosnippets
   vim.api.nvim_set_var('neosnippet#enable_snipmate_compatibility', 1)
   vim.api.nvim_set_var('neosnippet#enable_completed_snippet', 1)
   
   vim.api.nvim_set_keymap('i', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
   vim.api.nvim_set_keymap('s', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
-end)();
 
--- clang-format
-(function()
+
+  -- clang-format
   vim.api.nvim_set_var('clang_format#code_style', 'google')
   vim.api.nvim_set_var('clang_format#filetype_style_options', {
     cpp = {
@@ -235,18 +217,16 @@ end)();
       ['ColumnLimit'] = 80,
     },
   })
-end)();
 
--- vim-autopep8
-(function()
+
+  -- vim-autopep8
   vim.api.nvim_set_var('autopep8_indent_size', 2)
   vim.api.nvim_set_var('autopep8_disable_show_diff', 0)
   vim.api.nvim_set_var('autopep8_max_line_length', 80)
   -- vim.g.autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
-end)();
 
--- wilder.nvim
-(function()
+
+  -- wilder.nvim
   local wilder = require('wilder')
   wilder.setup({modes = {':', '/', '?'}})
 
@@ -255,11 +235,21 @@ end)();
     left = {' ', wilder.popupmenu_devicons()},
     right = {' ', wilder.popupmenu_scrollbar()},
   }))
-end)();
 
--- marks
-(function()
+
+  -- marks
   local marks = require('marks')
   marks.setup()
   vim.api.nvim_set_keymap('n', '<Leader>dm', ':delmarks a-zA-Z0-9<CR>', {silent=true, noremap=true})
-end)();
+
+
+  -- nvim-peekup
+  local peekup = require('nvim-peekup')
+  vim.api.nvim_set_keymap('n', '<F4>', '', {
+    noremap = true,
+    silent = true,
+    callback = peekup.peekup_open,
+  })
+end
+
+return settings
