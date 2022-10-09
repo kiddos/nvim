@@ -3,7 +3,7 @@
 --  Last Modified: 2022/01/27
 --
 
-require('keys')
+require('commands').setup()
 
 require('plugins')
 require('treesitter')
