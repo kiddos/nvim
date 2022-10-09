@@ -107,6 +107,7 @@ context.scan_paths = function()
 end
 
 context.trigger_completion = vim.schedule_wrap(function()
+  context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
