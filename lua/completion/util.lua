@@ -357,4 +357,26 @@ util.scan_directory = function(dirname)
   return items
 end
 
+util.debounce = function(callback, timer, timeout)
+  local state = 0
+  local f = function(params)
+    local handler = vim.schedule_wrap(function()
+      if state ~= 0 then
+        state = 0
+        callback(params)
+      end
+    end)
+
+    if state == 0 then
+      state = 1
+      timer:start(timeout, 0, handler)
+    elseif state == 1 then
+      timer:stop()
+      timer:start(timeout, 0, handler)
+    end
+  end
+
+  return f
+end
+
 return util

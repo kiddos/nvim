@@ -1,6 +1,5 @@
 local M = {}
 local context = {}
-local Constants = {}
 
 local util = require('completion.util')
 local config = require('completion.config')
@@ -17,10 +16,6 @@ function dump(o)
     return tostring(o)
   end
 end
-
-Constants.keys = {
-  completefunc = vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true),
-}
 
 context.completion = {
   timer = vim.loop.new_timer(),
@@ -106,6 +101,15 @@ context.scan_paths = function()
   context.completion.file.result = items
 end
 
+context.trigger_other_completion = vim.schedule_wrap(function()
+  context.index_buffer()
+  context.scan_paths()
+
+  if vim.fn.mode() == 'i' then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
+  end
+end)
+
 context.trigger_completion = vim.schedule_wrap(function()
   context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
@@ -113,15 +117,13 @@ context.trigger_completion = vim.schedule_wrap(function()
     local params = vim.lsp.util.make_position_params()
     context.completion.lsp.cancel_func = vim.lsp.buf_request_all(buf, 'textDocument/completion', params, function(result)
       context.completion.lsp.result = result
-      vim.api.nvim_feedkeys(Constants.keys.completefunc, 'n', false)
+      if vim.fn.mode() == 'i' then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
+      end
     end)
   end
 
-  local callback = vim.schedule_wrap(function()
-    context.index_buffer()
-    context.scan_paths()
-  end)
-  context.completion.timer:start(10, 0, callback)
+  context.completion.timer:start(10, 0, context.trigger_other_completion)
 end)
 
 context.stop_completion = function()
@@ -132,41 +134,47 @@ context.stop_completion = function()
   context.completion.lsp.cancel_func = nil
 end
 
-context.get_completion_info_text = function(event)
+context.get_completion_info_text = function(event, callback)
   local completed_item = util.table_get(event, { 'completed_item' }) or {}
   local text = completed_item.info or ''
   if not util.is_whitespace(text) then
     local lines = { '<text>' }
     vim.list_extend(lines, vim.split(text, '\n', false))
     table.insert(lines, '</text>')
-    return lines
+    callback(lines)
+    return
   end
 
   local completed_item_source = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'source' })
   if completed_item_source ~= 'lsp' then
-    return nil
+    callback(nil)
+    return
   end
 
   local lsp_completion_item = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'completion_item' })
   if not lsp_completion_item then
-    return nil
+    callback(nil)
+    return
   end
 
   local doc = lsp_completion_item.documentation
   if doc then
     local lines = vim.lsp.util.convert_input_to_markdown_lines(doc)
-    return vim.lsp.util.trim_empty_lines(lines)
+    callback(vim.lsp.util.trim_empty_lines(lines))
+    return
   end
 
   local current_buffer = vim.api.nvim_get_current_buf()
 
-  local result = vim.lsp.buf_request_sync(current_buffer, 'completionItem/resolve', lsp_completion_item)
-  return util.process_lsp_response(result, function(response)
-    if not response.documentation and not response.detail then
-      return {}
-    end
-    local res = vim.lsp.util.convert_input_to_markdown_lines(response.documentation or response.detail)
-    return vim.lsp.util.trim_empty_lines(res)
+  vim.lsp.buf_request_all(current_buffer, 'completionItem/resolve', lsp_completion_item, function(result)
+    util.process_lsp_response(result, function(response)
+      if not response.documentation and not response.detail then
+        callback(nil)
+        return
+      end
+      local res = vim.lsp.util.convert_input_to_markdown_lines(response.documentation or response.detail)
+      callback(vim.lsp.util.trim_empty_lines(res))
+    end)
   end)
 end
 
@@ -205,28 +213,34 @@ context.get_info_window_options = function(event)
 end
 
 context.trigger_info = function(event)
-  local info_text = context.get_completion_info_text(event)
-  if not info_text or util.is_whitespace(info_text) then
-    return
-  end
-
-
   util.create_buffer(context.info.lsp, 'completion-info')
-  vim.lsp.util.stylize_markdown(context.info.lsp.buffer, info_text)
 
-  local callback = vim.schedule_wrap(function()
-    local options = context.get_info_window_options(event)
-    if vim.fn.pumvisible() ~= 1 and vim.fn.mode() == 'i' then
+  local info_handler = function(info_text)
+    if not info_text or util.is_whitespace(info_text) then
       return
     end
 
-    util.open_action_window(context.info.lsp, options)
-  end)
-  context.info.timer:start(10, 0, callback)
+    vim.lsp.util.stylize_markdown(context.info.lsp.buffer, info_text)
+    local callback = vim.schedule_wrap(function()
+      local options = context.get_info_window_options(event)
+      if vim.fn.pumvisible() ~= 1 and vim.fn.mode() == 'i' then
+        return
+      end
+
+      util.open_action_window(context.info.lsp, options)
+    end)
+    context.info.timer:start(10, 0, callback)
+  end
+
+  context.get_completion_info_text(event, info_handler)
 end
 
 context.stop_info = function()
   context.info.timer:stop()
+  if context.info.cancel_func ~= nil then
+    context.info.cancel_func()
+  end
+  context.info.cancel_func = nil
   util.close_action_window(context.info.lsp)
 end
 
@@ -394,28 +408,23 @@ M.auto_complete = function()
   context.completion.timer:start(config.completion.delay, 0, context.trigger_completion)
 end
 
-M.auto_info = function()
-  local event = vim.v.event
-
+M.auto_info = util.debounce(function(event)
   if vim.tbl_isempty(event.completed_item) then
     return
   end
 
-  local timer_callback = vim.schedule_wrap(function()
-    context.trigger_info(event)
-  end)
-  context.info.timer:start(config.info.delay, 0, timer_callback)
-end
+  context.trigger_info(event)
+end, context.info.timer, config.info.delay)
 
-M.auto_signature = function()
+M.auto_signature = util.debounce(function()
   local left_char = util.get_left_char()
   local char_is_trigger = left_char == ')' or util.is_lsp_trigger(left_char, 'signature')
   if not char_is_trigger then
     return
   end
 
-  context.signature.timer:start(config.info.delay, 0, context.trigger_signature)
-end
+  context.trigger_signature()
+end, context.signature.timer, config.signature.delay)
 
 M.complete_func = function(findstart, base)
   if findstart == 1 then
@@ -476,6 +485,12 @@ M.confirm_completion = function()
   end
 end
 
+M.close_timers = function()
+  context.completion.timer:close()
+  context.info.timer:close()
+  context.signature.timer:close()
+end
+
 M.setup = function()
   vim.api.nvim_create_autocmd({'InsertCharPre'}, {
     callback = M.auto_complete
@@ -484,9 +499,10 @@ M.setup = function()
     callback = M.stop
   })
   vim.api.nvim_create_autocmd({'CompleteChanged'}, {
-    callback = M.auto_info,
+    callback = function()
+      M.auto_info(vim.v.event)
+    end
   })
-
   vim.api.nvim_create_autocmd({'TextChangedI'}, {
     callback = context.stop_info
   })
@@ -495,6 +511,10 @@ M.setup = function()
   })
   vim.api.nvim_create_autocmd({'CursorMovedI'}, {
     callback = M.auto_signature
+  })
+
+  vim.api.nvim_create_autocmd({'VimLeavePre'}, {
+    callback = M.close_timers
   })
 
   _G.completion = M

@@ -6,6 +6,7 @@ local config = {
     exclude_trigger = {
       c = { '{' },
       cpp = { '{' },
+      lua = { '{', ')' },
       javascript = { '{' },
       typescript = { '{' },
     },
