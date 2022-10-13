@@ -123,7 +123,7 @@ util.buffer_result_to_complete_items = function(words, base)
       table.insert(res, {
         word = word,
         abbr = word,
-        kind = '🗉',
+        kind = '\u{1F5D2}',
         menu = '',
         info = word,
         icase = 1,
@@ -314,7 +314,7 @@ util.scan_directory = function(dirname)
         table.insert(items, {
           word = name,
           abbr = '/' .. name,
-          kind = '🗀',
+          kind = '\u{1F4C1}',
           menu = 'Dir',
           info = 'Directory',
           icase = 1,
@@ -328,7 +328,7 @@ util.scan_directory = function(dirname)
             table.insert(items, {
               word = name,
               abbr = '/' .. name,
-              kind = '🗀',
+              kind = '\u{1F4C1}',
               menu = 'Dir*',
               info = 'Directory Link',
               icase = 1,
@@ -339,7 +339,7 @@ util.scan_directory = function(dirname)
             table.insert(items, {
               word = name,
               abbr = name,
-              kind = '🗎',
+              kind = '\u{1F4C2}',
               menu = 'File*',
               info = 'File Link',
               icase = 1,
@@ -352,7 +352,7 @@ util.scan_directory = function(dirname)
         table.insert(items, {
           word = name,
           abbr = name,
-          kind = '🗎',
+          kind = '\u{1F4C2}',
           menu = 'File',
           info = 'File',
           icase = 1,
