@@ -4,11 +4,7 @@ local config = {
     menu_max_len = 20,
     delay = 100,
     exclude_trigger = {
-      c = { '{' },
-      cpp = { '{' },
-      lua = { '{', ')' },
-      javascript = { '{' },
-      typescript = { '{' },
+      __global__ = {'{', ')'},
     },
   },
   info = {

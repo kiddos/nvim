@@ -428,15 +428,22 @@ end, context.signature.timer, config.signature.delay)
 
 M.complete_func = function(findstart, base)
   if findstart == 1 then
-    if context.completion.lsp.result == nil then
+    if context.completion.lsp.result == nil and
+        context.completion.buffer.result == nil and
+        context.completion.file == nil then
 	    return -3
 	  else
 	    return util.get_completion_start()
     end
   else
     local left_char = util.get_left_char()
+    local exclude = config.completion.exclude_trigger.__global__
+    if exclude and util.in_table(exclude, left_char) then
+      return
+    end
+
     local ft = vim.bo.filetype
-    local exclude = config.completion.exclude_trigger[ft]
+    exclude = config.completion.exclude_trigger[ft]
     if exclude and util.in_table(exclude, left_char) then
       return
     end
@@ -450,12 +457,13 @@ M.complete_func = function(findstart, base)
         util.sort_lsp_result(items)
         return util.lsp_completion_response_items_to_complete_items(items, client_id)
       end)
-
     end
 
     if context.completion.file.result then
       for _, item in pairs(context.completion.file.result) do
-        table.insert(result, item)
+        if vim.startswith(item.word, base) then
+          table.insert(result, item)
+        end
       end
     end
 
@@ -463,7 +471,9 @@ M.complete_func = function(findstart, base)
     if context.completion.buffer.result[current_buf] then
       local items = util.buffer_result_to_complete_items(context.completion.buffer.result[current_buf], base)
       for _, item in pairs(items) do
-        table.insert(result, item)
+        if vim.startswith(item.word, base) then
+          table.insert(result, item)
+        end
       end
     end
 

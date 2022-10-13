@@ -239,6 +239,14 @@ util.get_words = function(line)
   return words
 end
 
+util.is_slash_comment = function(_)
+  local commentstring = vim.bo.commentstring or ''
+  local no_filetype = vim.bo.filetype == ''
+  local is_slash_comment = false
+  is_slash_comment = is_slash_comment or commentstring:match('/%*')
+  is_slash_comment = is_slash_comment or commentstring:match('//')
+  return is_slash_comment and not no_filetype
+end
 
 util.get_current_dirname = function()
   local name_pattern = [[\%([^/\\:\*?<>'"`\|]\)]]
@@ -272,7 +280,7 @@ util.get_current_dirname = function()
     -- Ignore math calculation
     accept = accept and not prefix:match('[%d%)]%s*/$')
     -- Ignore / comment
-    accept = accept and (not prefix:match('^[%s/]*$') or not self:_is_slash_comment())
+    accept = accept and (not prefix:match('^[%s/]*$') or not util.is_slash_comment())
     if accept then
       return vim.fn.resolve('/' .. dirname)
     end
