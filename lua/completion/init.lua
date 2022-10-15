@@ -489,7 +489,7 @@ end
 
 M.confirm_completion = function()
   if vim.fn.pumvisible() == 1 then
-    return vim.api.nvim_replace_termcodes('<C-N><C-Y>', true, true, true)
+    return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
   else
     return vim.api.nvim_replace_termcodes('<CR>', true, true, true) 
   end
