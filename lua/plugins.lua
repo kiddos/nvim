@@ -66,7 +66,7 @@ return require('packer').startup(function()
     cmd = {'GitGutterToggle'}
   }
   use {
-    'kiddos/git-blame.nvim',
+    'f-person/git-blame.nvim',
     cmd = {'GitBlameToggle'}
   }
   use {

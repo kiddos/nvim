@@ -530,7 +530,14 @@ M.setup = function()
   _G.completion = M
   vim.opt.completefunc = 'v:lua.completion.complete_func'
 
+  -- options
   vim.api.nvim_set_option('completeopt', 'menuone,noinsert')
+  -- maximum number of items to show in the popup menu
+  vim.api.nvim_set_option('pumheight', 30)
+  -- keyword completion
+  vim.api.nvim_set_option('complete', '.,w,b,u,U,t,k')
+  -- do not show XXX completion (YYY)
+  vim.api.nvim_set_option('shortmess', vim.api.nvim_get_option('shortmess') .. 'c')
 
   vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.completion.confirm_completion()', {expr = true, noremap = true})
 end

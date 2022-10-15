@@ -1,15 +1,13 @@
 --
 --  Author: Joseph Yu
---  Last Modified: 2022/01/27
 --
 
 require('commands').setup()
 
 require('plugins')
 require('plugin-settings').setup()
-require('treesitter')
-require('diagnostic')
-require('lsp')
+require('treesitter-config').apply()
+require('lsp').setup()
 
-require('settings')
+require('options').apply()
 require('apm_server')

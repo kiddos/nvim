@@ -1,17 +1,16 @@
 local settings = {}
 
 settings.setup = function()
-  require('bufferline').setup({
-    animation = true,
-  })
   -- barbar
-  vim.api.nvim_set_var('bufferline', {
+  local bufferline = require('bufferline')
+  bufferline.setup({
+    animation = false,
     icon_custom_colors = true,
     maximum_padding = 2,
   })
 
-  -- vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
-  -- vim.api.nvim_set_keymap('n', '<A-.>', ':BufferNext<CR>', {silent=true, noremap=true})
+  vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
+  vim.api.nvim_set_keymap('n', '<A-.>', ':BufferNext<CR>', {silent=true, noremap=true})
 
   vim.api.nvim_set_var('mapleader', ',')
   -- Re-order to previous/next
@@ -39,8 +38,6 @@ settings.setup = function()
   -- Sort automatically by...
   -- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
   -- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-  --
-
 
   -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
