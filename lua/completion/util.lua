@@ -387,4 +387,21 @@ util.debounce = function(callback, timer, timeout)
   return f
 end
 
+util.throttle = function(callback, timeout)
+  local last_called = -1
+  local f = function(params)
+    local current_time = vim.loop.now()
+    if current_time - last_called < timeout then
+      return
+    end
+
+    last_called = vim.loop.now()
+    vim.defer_fn(function()
+      callback(params)
+    end, 0)
+  end
+
+  return f
+end
+
 return util

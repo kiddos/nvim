@@ -56,11 +56,10 @@ context.signature = {
 context.index_buffer = function()
   local current_buf = vim.api.nvim_get_current_buf()
   local num_lines = vim.api.nvim_buf_line_count(current_buf)
+  local current_line = vim.api.nvim__buf_stats(0).current_lnum
   local lines = nil
-  if context.completion.buffer.init_index[current_buf] then
-    local current_line = vim.api.nvim__buf_stats(0).current_lnum
-    local line_count = vim.api.nvim_buf_line_count(current_buf)
-    lines = vim.api.nvim_buf_get_lines(current_buf, math.max(0, current_line - 30), math.min(line_count, current_line + 30), false)
+  if context.completion.buffer.init_index[current_buf] or num_lines > config.completion.buffer_max_size then
+    lines = vim.api.nvim_buf_get_lines(current_buf, math.max(0, current_line - 30), math.min(num_lines, current_line + 30), false)
   else
     lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, false)
   end
@@ -101,29 +100,33 @@ context.scan_paths = function()
   context.completion.file.result = items
 end
 
-context.trigger_other_completion = vim.schedule_wrap(function()
+context.trigger_auto_complete = util.throttle(function()
+  if vim.fn.mode() == 'i' then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
+  end
+end, 100)
+
+context.trigger_other_completion = util.throttle(function()
   context.index_buffer()
   context.scan_paths()
 
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
-end)
+end, 66)
 
 context.trigger_completion = vim.schedule_wrap(function()
-  context.completion.lsp.result = nil
+  -- context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
     context.completion.lsp.cancel_func = vim.lsp.buf_request_all(buf, 'textDocument/completion', params, function(result)
       context.completion.lsp.result = result
-      if vim.fn.mode() == 'i' then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
-      end
+      context.trigger_auto_complete()
     end)
   end
 
-  context.completion.timer:start(10, 0, context.trigger_other_completion)
+  context.trigger_other_completion()
 end)
 
 context.stop_completion = function()
@@ -132,6 +135,9 @@ context.stop_completion = function()
     context.completion.lsp.cancel_func()
   end
   context.completion.lsp.cancel_func = nil
+
+  context.completion.lsp.result = nil
+  context.completion.file.result = nil
 end
 
 context.get_completion_info_text = function(event, callback)
@@ -139,7 +145,7 @@ context.get_completion_info_text = function(event, callback)
   local text = completed_item.info or ''
   if not util.is_whitespace(text) then
     local lines = { '<text>' }
-    vim.list_extend(lines, vim.split(text, '\n', false))
+    vim.list_extend(lines, vim.split(text, '\n'))
     table.insert(lines, '</text>')
     callback(lines)
     return
@@ -288,7 +294,7 @@ context.process_signature_response = function(response)
         first, last = first - 1, last
       end
     elseif type(param_label) == 'table' then
-      first, last = unpack(param_label)
+      first, last = table.unpack(param_label)
     end
     if first then hl_range = { first = first, last = last } end
   end
@@ -491,7 +497,7 @@ M.confirm_completion = function()
   if vim.fn.pumvisible() == 1 then
     return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
   else
-    return vim.api.nvim_replace_termcodes('<CR>', true, true, true) 
+    return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
   end
 end
 
@@ -516,9 +522,6 @@ M.setup = function()
   vim.api.nvim_create_autocmd({'TextChangedI'}, {
     callback = context.stop_info
   })
-  vim.api.nvim_create_autocmd({'CompleteDonePre'}, {
-    callback = M.stop
-  })
   vim.api.nvim_create_autocmd({'CursorMovedI'}, {
     callback = M.auto_signature
   })
@@ -539,7 +542,16 @@ M.setup = function()
   -- do not show XXX completion (YYY)
   vim.api.nvim_set_option('shortmess', vim.api.nvim_get_option('shortmess') .. 'c')
 
-  vim.api.nvim_set_keymap('i', '<CR>', 'v:lua.completion.confirm_completion()', {expr = true, noremap = true})
+  vim.api.nvim_set_keymap('i', '<CR>', '', {
+    expr = true,
+    noremap = true,
+    callback = completion.confirm_completion,
+  })
+  vim.api.nvim_set_keymap('i', '<C-Space>', '', {
+    expr = true,
+    noremap = true,
+    callback = M.auto_complete,
+  })
 end
 
 return M

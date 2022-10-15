@@ -6,6 +6,7 @@ local config = {
     exclude_trigger = {
       __global__ = {'{', ')'},
     },
+    buffer_max_size = 1000,
   },
   info = {
     max_width = 60,
