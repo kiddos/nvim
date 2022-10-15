@@ -3,6 +3,17 @@ local context = {
   highlight_group = nil
 }
 
+local ALTERNATE_EXTENSIONS = {
+  c = {'h'},
+  cpp = {'h', 'hpp'},
+  cc = {'h', 'hpp'},
+  html = {'css'},
+  css = {'html', 'js'},
+  js = {'css'},
+  jsx = {'css'},
+  ts = {'html'},
+}
+
 commands.typo_command = function()
   vim.api.nvim_create_user_command('WQ', 'wq', {})
   vim.api.nvim_create_user_command('Wq', 'wq', {})
@@ -72,6 +83,36 @@ commands.trim_trailing_space = function()
 end
 
 
+commands.alternate_file = function()
+  local current_path = vim.fn.expand('%:p')
+  local current_extension = string.lower(vim.fn.fnamemodify(current_path, ':e'))
+  local alternate_extensions = ALTERNATE_EXTENSIONS[current_extension]
+
+  local function file_exists(filename)
+    local stat = vim.loop.fs_stat(filename)
+    return stat and stat.type or false
+  end
+
+  if not alternate_extensions or vim.tbl_isempty(alternate_extensions) then
+    return
+  end
+
+  local function find_alternate_file()
+    local filename = vim.fn.expand('%:p:r')
+    for _, ext in pairs(alternate_extensions) do
+      local alternate_file = filename .. '.' .. ext
+      if file_exists(alternate_file) then
+        return alternate_file
+      end
+    end
+    return filename .. '.' .. alternate_extensions[1]
+  end
+
+  local alternate_file = find_alternate_file()
+  vim.api.nvim_exec(':e ' .. alternate_file, false)
+end
+
+
 commands.setup = function()
   commands.typo_command()
   commands.semicolon()
@@ -88,7 +129,14 @@ commands.setup = function()
   })
   vim.api.nvim_create_user_command('TrimSpace', commands.trim_trailing_space, {})
   -- vim.defer_fn(commands.highlight_trailing_space, 100)
-  -- vim.api.nvim_create_user_command('TrimSpaces', )
+
+  vim.api.nvim_create_user_command('A', commands.alternate_file, {})
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', '', {
+    silent = true,
+    noremap = true,
+    callback = commands.alternate_file,
+    desc = 'Alternate file',
+  })
 end
 
 return commands
