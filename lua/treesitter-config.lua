@@ -11,6 +11,7 @@ treesitter_config.apply = function()
       'dart',
       'go',
       'lua',
+      'proto',
       'rust',
       'python',
       'julia',

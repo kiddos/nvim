@@ -19,7 +19,7 @@ return require('packer').startup(function()
 
   -- tabline
   use {
-    'romgrk/barbar.nvim',
+    'kiddos/barbar.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
   }
 
@@ -27,7 +27,7 @@ return require('packer').startup(function()
   use {
     'kiddos/malokai.vim',
     config = function()
-      vim.api.nvim_command('set background="dark"')
+      vim.opt.background = 'dark'
       vim.api.nvim_command('syntax enable')
       vim.api.nvim_command('syntax on')
       vim.api.nvim_command('colorscheme malokai')
@@ -95,7 +95,6 @@ return require('packer').startup(function()
   use 'kyazdani42/nvim-web-devicons' -- icons
   use 'gelguy/wilder.nvim' -- wild menu
   use 'chentoast/marks.nvim' -- use marks
-  use 'gennaro-tedesco/nvim-peekup' -- peek register
   -- file browser
   use {
     'scrooloose/nerdtree',
@@ -122,10 +121,6 @@ return require('packer').startup(function()
     cmd = 'Prettier',
   }
   use {
-    'kiddos/a.vim',
-    cmd = {'A'}
-  }
-  use {
     'tpope/vim-eunuch',
     cmd = {'Delete', 'Unlink', 'Remove', 'Move', 'Rename', 'Chmod', 'Mkdir'}
   }
@@ -144,11 +139,6 @@ return require('packer').startup(function()
 
 
   -- language specific
-  -- protobuf
-  use {
-    'kiddos/vim-protobuf',
-    ft = {'proto'}
-  }
   -- clang-format
   use {
     'rhysd/vim-clang-format',
@@ -166,8 +156,6 @@ return require('packer').startup(function()
   }
   -- javascript
   use 'leafOfTree/vim-vue-plugin'
-  -- go
-  use 'fatih/vim-go'
   -- vhdl
   use 'kiddos/vim-vhdl'
   -- markdown

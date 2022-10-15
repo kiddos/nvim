@@ -95,7 +95,6 @@ settings.setup = function()
   }
   local rg_command = 'rg ' .. table.concat(rg_options, ' ') .. ' -- '
   vim.api.nvim_create_user_command('Rg', 'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
-
   vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
 
 
@@ -109,7 +108,7 @@ settings.setup = function()
   vim.api.nvim_set_var('startify_files_number', 3)
   vim.g.startify_bookmarks = {
     {vimrc = '~/.vim/vimrc'},
-    {nvimrc = '~/.config/nvim/init.vim'}
+    {nvimrc = '~/.config/nvim/init.lua'}
   }
   -- vim.g.startify_custom_header = vim.api.nvim_eval("map(split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']")
   vim.g.startify_custom_header = vim.api.nvim_eval("split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n')")
@@ -207,7 +206,7 @@ settings.setup = function()
   vim.api.nvim_set_var('clang_format#code_style', 'google')
   vim.api.nvim_set_var('clang_format#filetype_style_options', {
     cpp = {
-      ['Standard'] = 'C++11',
+      ['Standard'] = 'C++17',
       ['ColumnLimit'] = 80,
     },
     javascript = {
@@ -238,15 +237,6 @@ settings.setup = function()
   local marks = require('marks')
   marks.setup()
   vim.api.nvim_set_keymap('n', '<Leader>dm', ':delmarks a-zA-Z0-9<CR>', {silent=true, noremap=true})
-
-
-  -- nvim-peekup
-  local peekup = require('nvim-peekup')
-  vim.api.nvim_set_keymap('n', '<F4>', '', {
-    noremap = true,
-    silent = true,
-    callback = peekup.peekup_open,
-  })
 end
 
 return settings
