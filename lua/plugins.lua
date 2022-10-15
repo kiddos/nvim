@@ -10,6 +10,13 @@ return require('packer').startup(function()
     'gfanto/fzf-lsp.nvim',
     requires = { 'nvim-lua/plenary.nvim' }
   }
+  use {
+    'ojroques/nvim-lspfuzzy',
+    requires = {
+      {'junegunn/fzf'},
+      {'junegunn/fzf.vim'},  -- to enable preview (optional)
+    },
+  }
 
   -- treesitter
   use {

@@ -230,6 +230,8 @@ lsp.setup = function()
       --[[ lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'}, ]]
     },
   }
+
+  require('lspfuzzy').setup{}
 end
 
 return lsp
