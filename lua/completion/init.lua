@@ -59,7 +59,9 @@ context.index_buffer = function()
   local current_line = vim.api.nvim__buf_stats(0).current_lnum
   local lines = nil
   if context.completion.buffer.init_index[current_buf] or num_lines > config.completion.buffer_max_size then
-    lines = vim.api.nvim_buf_get_lines(current_buf, math.max(0, current_line - 30), math.min(num_lines, current_line + 30), false)
+    lines = vim.api.nvim_buf_get_lines(current_buf,
+      math.max(0, current_line - config.completion.buffer_reindex_range),
+      math.min(num_lines, current_line + config.completion.buffer_reindex_range), false)
   else
     lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, false)
   end

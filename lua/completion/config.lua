@@ -7,6 +7,7 @@ local config = {
       __global__ = {'{', ')'},
     },
     buffer_max_size = 1000,
+    buffer_reindex_range = 100,
   },
   info = {
     max_width = 60,
