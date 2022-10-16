@@ -294,7 +294,7 @@ context.process_signature_response = function(response)
         first, last = first - 1, last
       end
     elseif type(param_label) == 'table' then
-      first, last = table.unpack(param_label)
+      first, last = unpack(param_label)
     end
     if first then hl_range = { first = first, last = last } end
   end
