@@ -231,7 +231,7 @@ context.trigger_info = function(event)
     vim.lsp.util.stylize_markdown(context.info.lsp.buffer, info_text)
     local callback = vim.schedule_wrap(function()
       local options = context.get_info_window_options(event)
-      if vim.fn.pumvisible() ~= 1 and vim.fn.mode() == 'i' then
+      if vim.fn.pumvisible() ~= 1 or vim.fn.mode() ~= 'i' then
         return
       end
 
