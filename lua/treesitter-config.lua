@@ -38,23 +38,48 @@ treesitter_config.apply = function()
     },
   }
 
-  vim.opt.foldenable = false
-  vim.opt.foldmethod = 'expr'
-  vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
-
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'bash', 'zsh', 'vim'},
-    command = 'setlocal foldmethod=marker',
+    pattern = {
+      'c',
+      'cpp',
+      'cuda',
+      'dart',
+      'go',
+      'lua',
+      'rust',
+      'python',
+      'julia',
+      'java',
+      'javascript',
+      'typescript',
+      'json',
+      'tsx',
+      'html',
+      'css',
+      'yaml',
+      'vim'
+    },
+    callback = function()
+      vim.opt_local.foldenable = false
+      vim.opt_local.foldmethod = 'expr'
+      vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+    end
   })
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'bash', 'zsh'},
-    command = 'setlocal foldmarker={,}',
+    callback = function()
+      vim.opt_local.foldmethod = 'marker'
+      vim.opt_local.foldmarker = '{,}'
+    end
   })
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'vim'},
-    command = 'setlocal foldmarker={{{,}}}',
+    callback = function()
+      vim.opt_local.foldmethod = 'marker'
+      vim.opt_local.foldmarker = '{{{,}}}'
+    end
   })
 end
 
