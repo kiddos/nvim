@@ -3,11 +3,9 @@ local config = {
     abbr_max_len = 60,
     menu_max_len = 20,
     delay = 100,
-    exclude_trigger = {
-      __global__ = {'{', ')'},
-    },
     buffer_max_size = 1000,
     buffer_reindex_range = 100,
+    confirm_timeout = 600,
   },
   info = {
     max_width = 60,

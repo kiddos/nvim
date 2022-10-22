@@ -29,7 +29,9 @@ context.completion = {
   },
   file = {
     result = nil,
-  }
+  },
+  confirm_timer = vim.loop.new_timer(),
+  can_confirm_result = true,
 }
 
 context.info = {
@@ -117,7 +119,16 @@ context.trigger_other_completion = util.throttle(function()
   end
 end, 66)
 
+context.disable_confirm_result = function()
+  context.completion.can_confirm_result = false
+end
+
+context.enable_confirm_result = util.debounce(function()
+  context.completion.can_confirm_result = true
+end, context.completion.confirm_timer, config.completion.confirm_timeout)
+
 context.trigger_completion = vim.schedule_wrap(function()
+  context.disable_confirm_result()
   -- context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
@@ -129,6 +140,7 @@ context.trigger_completion = vim.schedule_wrap(function()
   end
 
   context.trigger_other_completion()
+  context.enable_confirm_result()
 end)
 
 context.stop_completion = function()
@@ -444,18 +456,6 @@ M.complete_func = function(findstart, base)
 	    return util.get_completion_start()
     end
   else
-    local left_char = util.get_left_char()
-    local exclude = config.completion.exclude_trigger.__global__
-    if exclude and util.in_table(exclude, left_char) then
-      return
-    end
-
-    local ft = vim.bo.filetype
-    exclude = config.completion.exclude_trigger[ft]
-    if exclude and util.in_table(exclude, left_char) then
-      return
-    end
-
     local result = {}
     if context.completion.lsp.result then
       result = util.process_lsp_response(context.completion.lsp.result, function(response, client_id)
@@ -497,7 +497,11 @@ end
 
 M.confirm_completion = function()
   if vim.fn.pumvisible() == 1 then
-    return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
+    if context.completion.can_confirm_result then
+      return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
+    else
+      return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
+    end
   else
     return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
   end
