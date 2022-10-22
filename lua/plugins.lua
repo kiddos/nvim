@@ -26,7 +26,7 @@ return require('packer').startup(function()
 
   -- tabline
   use {
-    'kiddos/barbar.nvim',
+    'romgrk/barbar.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
   }
 
@@ -35,8 +35,6 @@ return require('packer').startup(function()
     'kiddos/malokai.vim',
     config = function()
       vim.opt.background = 'dark'
-      vim.api.nvim_command('syntax enable')
-      vim.api.nvim_command('syntax on')
       vim.api.nvim_command('colorscheme malokai')
     end
   }
