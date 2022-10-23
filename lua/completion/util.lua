@@ -49,11 +49,45 @@ util.has_lsp_capability = function(capability)
   return false
 end
 
+util.find_last = function(s, pattern)
+  local last_index = nil
+  local p = 0
+  while true do
+    p = string.find(s, pattern, p + 1, true)
+    if p then
+      if type(p) == 'table' then
+        last_index = p[1]
+        p = p[1]
+      else
+        last_index = p
+      end
+    else
+      break
+    end
+  end
+  return last_index
+end
+
 util.get_completion_start = function()
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = vim.api.nvim_get_current_line()
   local line_to_cursor = line:sub(1, pos[2])
-  return vim.fn.match(line_to_cursor, '\\k*$')
+  local start = -1
+  for _, client in pairs(vim.lsp.buf_get_clients()) do
+    local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
+    for _, trigger_char in pairs(triggers) do
+      local result = util.find_last(line_to_cursor, trigger_char)
+      if result then
+        start = math.max(start, result)
+      end
+    end
+  end
+
+  local result = vim.fn.match(line_to_cursor, '\\w*$')
+  if result < pos[2] then
+    start = math.max(start, result)
+  end
+  return start
 end
 
 util.process_lsp_response = function(request_result, processor)

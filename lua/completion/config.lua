@@ -5,7 +5,6 @@ local config = {
     delay = 100,
     buffer_max_size = 1000,
     buffer_reindex_range = 100,
-    confirm_timeout = 600,
   },
   info = {
     max_width = 60,
