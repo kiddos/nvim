@@ -75,10 +75,12 @@ util.get_completion_start = function()
   local start = -1
   for _, client in pairs(vim.lsp.buf_get_clients()) do
     local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
-    for _, trigger_char in pairs(triggers) do
-      local result = util.find_last(line_to_cursor, trigger_char)
-      if result then
-        start = math.max(start, result)
+    if triggers then
+      for _, trigger_char in pairs(triggers) do
+        local result = util.find_last(line_to_cursor, trigger_char)
+        if result then
+          start = math.max(start, result)
+        end
       end
     end
   end
