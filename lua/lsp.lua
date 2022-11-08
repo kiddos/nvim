@@ -63,11 +63,13 @@ lsp.setup = function()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   lspconfig.cssls.setup{
     capabilities = capabilities,
+    filetypes = {'css', 'scss', 'less', 'html', 'webmacro'}
   }
 
   -- html
   lspconfig.html.setup {
     capabilities = capabilities,
+    filetypes = {'html', 'webmacro'}
   }
 
   -- python
@@ -111,23 +113,11 @@ lsp.setup = function()
     }
   end
 
-  -- dart
-  local home = vim.loop.os_homedir()
-  local dart_sdk = home .. '/.local/flutter/bin/cache/dart-sdk/bin/'
-  local executable = dart_sdk .. 'dart'
-  if file_exists(executable) then
-    lspconfig.dartls.setup{
-      cmd = {dart_sdk .. 'dart', dart_sdk .. 'snapshots/analysis_server.dart.snapshot', '--lsp'},
-      handlers = {
-        ['textDocument/publishDiagnostics'] = on_publish_diagnostics;
-      }
-    }
-  end
-
   -- webmacro
   lspconfig.webmacrols.setup{}
 
   -- java language server
+  local home = vim.loop.os_homedir()
   local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
   if file_exists(java_lsp_bin) then
     lspconfig.java_language_server.setup{
