@@ -86,7 +86,7 @@ util.get_completion_start = function()
   end
 
   local result = vim.fn.match(line_to_cursor, '\\w*$')
-  if result < pos[2] then
+  if result <= pos[2] then
     start = math.max(start, result)
   end
   return start

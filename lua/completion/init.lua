@@ -3,6 +3,7 @@ local context = {}
 
 local util = require('completion.util')
 local config = require('completion.config')
+local lru = require('completion.lru')
 
 function dump(o)
   if type(o) == 'table' then
@@ -24,7 +25,7 @@ context.completion = {
     cancel_func = nil,
   },
   buffer = {
-    init_index = {},
+    cache = {},
     result = {},
   },
   file = {
@@ -58,7 +59,8 @@ context.index_buffer = function()
   local num_lines = vim.api.nvim_buf_line_count(current_buf)
   local current_line = vim.api.nvim__buf_stats(0).current_lnum
   local lines = nil
-  if context.completion.buffer.init_index[current_buf] or num_lines > config.completion.buffer_max_size then
+
+  if num_lines > config.completion.buffer_max_size then
     lines = vim.api.nvim_buf_get_lines(current_buf,
       math.max(0, current_line - config.completion.buffer_reindex_range),
       math.min(num_lines, current_line + config.completion.buffer_reindex_range), false)
@@ -67,23 +69,18 @@ context.index_buffer = function()
   end
 
   if lines then
-    local result = {}
+    if not context.completion.buffer.cache[current_buf] then
+      context.completion.buffer.cache[current_buf] = lru.create_lru(config.completion.lru_size)
+    end
+
+    local current_cache = context.completion.buffer.cache[current_buf]
     for i = 1, #lines do
       local words = util.get_words(lines[i])
       for _, word in pairs(words) do
-        result[word] = true
+        current_cache:add_data(word)
       end
     end
-
-    if not context.completion.buffer.init_index[current_buf] then
-      context.completion.buffer.init_index[current_buf] = result
-      context.completion.buffer.result[current_buf] = result
-    else
-      for word, _ in pairs(context.completion.buffer.init_index[current_buf]) do
-        result[word] = true
-      end
-      context.completion.buffer.result[current_buf] = result
-    end
+    context.completion.buffer.result[current_buf] = current_cache:get_keys()
   end
 end
 
@@ -106,7 +103,7 @@ context.trigger_auto_complete = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
-end, 100)
+end, config.completion.debounce_time)
 
 context.trigger_other_completion = util.throttle(function()
   context.index_buffer()
@@ -115,7 +112,7 @@ context.trigger_other_completion = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
-end, 66)
+end, config.completion.debounce_time)
 
 context.trigger_completion = vim.schedule_wrap(function()
   -- context.completion.lsp.result = nil
