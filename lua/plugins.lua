@@ -5,7 +5,7 @@ return require('packer').startup(function()
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/lsp-status.nvim'
   use 'onsails/lspkind-nvim'
-  use 'tami5/lspsaga.nvim'
+  use 'glepnir/lspsaga.nvim'
   use {
     'gfanto/fzf-lsp.nvim',
     requires = { 'nvim-lua/plenary.nvim' }

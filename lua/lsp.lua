@@ -141,35 +141,99 @@ lsp.setup = function()
 
   -- lsp saga
   local saga = require('lspsaga')
-  saga.init_lsp_saga {
-    finder_action_keys = {
-      open = 'o',
-      vsplit = 's',
-      split = 'i',
-      quit = 'q', -- quit can be a table
-      scroll_down = '<C-f>',
-      scroll_up = '<C-b>'
-    },
-    code_action_prompt = { enable = false,
+  saga.init_lsp_saga({
+    border_style = 'rounded',
+    max_preview_lines = 30,
+    code_action_lightbulb = {
+      enable = true,
+      enable_in_insert = false,
+      cache_code_action = true,
       sign = false,
+      update_time = 1000,
       sign_priority = 20,
-      virtual_text = false,
+      virtual_text = true,
     },
-    use_saga_diagnostic_sign = false
-  }
+    code_action_keys = {
+      quit = '<Esc>',
+      exec = '<CR>',
+    },
+    finder_request_timeout = 6000,
+  })
 
   vim.api.nvim_set_var('mapleader', ',')
-  vim.api.nvim_set_keymap('n', '<Leader>find', [[<Cmd>lua require'lspsaga.provider'.lsp_finder()<CR>]], {noremap=true, silent=true})
-  -- vim.api.nvim_set_keymap('n', '<Leader>code', [[<Cmd>lua require'lspsaga.codeaction'.code_action()<CR>]], {noremap=true, silent=true})
-  -- vim.api.nvim_set_keymap('v', '<Leader>code', [[<Cmd>lua require'lspsaga.codeaction'.rannge_code_action()<CR>]], {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('n', '<Leader>doc', [[<Cmd>lua require'lspsaga.hover'.render_hover_doc()<CR>]], {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('n', '<Leader>sig', [[<Cmd>lua require'lspsaga.signaturehelp'.signature_help()<CR>]], {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('n', '<Leader>rename', [[<Cmd>lua require'lspsaga.rename'.rename()<CR>]], {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('n', '<Leader>def', [[<Cmd>lua require'lspsaga.provider'.preview_definition()<CR>]], {noremap=true, silent=true})
-  -- vim.api.nvim_set_keymap('n', '<Leader>impl', [[<Cmd>lua require'lspsaga.implement'.lspsaga_implementation()<CR>]], {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('n', '<Leader>diag', [[<Cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>]], {noremap=true, silent=true})
-  -- vim.api.nvim_set_keymap('n', '[e', [[<Cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>]], {noremap=true, silent=true})
-  -- vim.api.nvim_set_keymap('n', ']e', [[<Cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>]], {noremap=true, silent=true})
+  vim.api.nvim_set_keymap('n', '<Leader>find', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga lsp_finder')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>code', '', {
+    noremap=true,
+    silent=true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga code_action')
+    end
+  })
+
+  vim.api.nvim_set_keymap('v', '<Leader>code', '', {
+    noremap=true,
+    silent=true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga code_action')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>rename', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga rename')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>doc', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga peek_definition')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>diag', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga show_cursor_diagnostics')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>hover', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga hover_doc')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<A-d>', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga open_floaterm')
+    end
+  })
+
+  vim.api.nvim_set_keymap('t', '<A-d>', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true), 'n', false)
+      vim.api.nvim_command('Lspsaga close_floaterm')
+    end
+  })
+
 
   -- completion
   local completion = require('completion')
@@ -189,23 +253,23 @@ lsp.setup = function()
   -- vim.api.nvim_command('sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=')
 
   -- commands
-  vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
-  vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
-  vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
-  vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
-  vim.api.nvim_create_user_command('GotoDocumentSymbol', vim.lsp.buf.document_symbol, {})
-  vim.api.nvim_create_user_command('GotoWorkspaceSymbol', vim.lsp.buf.workspace_symbol, {})
-  vim.api.nvim_create_user_command('DisplayInfo', vim.lsp.buf.hover, {})
-  vim.api.nvim_create_user_command('LspListDocumentSymbol', vim.lsp.buf.document_symbol, {})
+  -- vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
+  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
+  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
+  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+  -- vim.api.nvim_create_user_command('GotoDocumentSymbol', vim.lsp.buf.document_symbol, {})
+  -- vim.api.nvim_create_user_command('GotoWorkspaceSymbol', vim.lsp.buf.workspace_symbol, {})
+  -- vim.api.nvim_create_user_command('DisplayInfo', vim.lsp.buf.hover, {})
+  -- vim.api.nvim_create_user_command('LspListDocumentSymbol', vim.lsp.buf.document_symbol, {})
   vim.api.nvim_create_user_command('LspFormat', function()
     vim.lsp.buf.format({})
   end, {})
   vim.api.nvim_create_user_command('LspClients', function()
     print(vim.inspect(vim.lsp.buf_get_clients()))
   end, {})
-  vim.api.nvim_create_user_command('LspIncomingCalls', vim.lsp.buf.incoming_calls, {})
-  vim.api.nvim_create_user_command('LspOutgoingCalls', vim.lsp.buf.outgoing_calls, {})
-  vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
+  -- vim.api.nvim_create_user_command('LspIncomingCalls', vim.lsp.buf.incoming_calls, {})
+  -- vim.api.nvim_create_user_command('LspOutgoingCalls', vim.lsp.buf.outgoing_calls, {})
+  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
 
   -- lualine
