@@ -103,7 +103,7 @@ context.trigger_auto_complete = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
-end, config.completion.debounce_time)
+end, config.completion.throttle_time)
 
 context.trigger_other_completion = util.throttle(function()
   context.index_buffer()
@@ -112,9 +112,9 @@ context.trigger_other_completion = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
-end, config.completion.debounce_time)
+end, config.completion.throttle_time)
 
-context.trigger_completion = vim.schedule_wrap(function()
+context.trigger_completion = util.debounce(function()
   -- context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
@@ -126,7 +126,7 @@ context.trigger_completion = vim.schedule_wrap(function()
   end
 
   context.trigger_other_completion()
-end)
+end, context.completion.timer, config.completion.debounce_time)
 
 context.stop_completion = function()
   context.completion.timer:stop()
@@ -410,7 +410,7 @@ context.stop_signature = function()
 end
 
 M.auto_complete = function()
-  context.completion.timer:start(config.completion.delay, 0, context.trigger_completion)
+  context.trigger_completion()
 end
 
 M.auto_info = util.debounce(function(event)
