@@ -125,10 +125,6 @@ return require('packer').startup(function()
     -- ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
     cmd = 'Prettier',
   }
-  use {
-    'tpope/vim-eunuch',
-    cmd = {'Delete', 'Unlink', 'Remove', 'Move', 'Rename', 'Chmod', 'Mkdir'}
-  }
   use 'tpope/vim-surround'
   use 'mattn/emmet-vim'
   use 'mhinz/vim-startify'
