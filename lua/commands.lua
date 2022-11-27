@@ -111,7 +111,89 @@ commands.alternate_file = function()
   end
 
   local alternate_file = find_alternate_file()
-  vim.api.nvim_exec(':e ' .. alternate_file, false)
+  vim.api.nvim_command(':e ' .. alternate_file)
+end
+
+commands.reattach_current_buf_lsp = function()
+  -- re-attach lsp servers
+  local current_buf = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.buf_get_clients()
+  for _, client in pairs(clients) do
+    vim.lsp.buf_detach_client(current_buf, client.id)
+    vim.lsp.buf_attach_client(current_buf, client.id)
+  end
+end
+
+-- linux commands binding
+commands.rename = function(opts)
+  local current_dir = vim.fn.expand('%:h')
+  local name = opts.args
+  local input_dir = vim.fn.fnamemodify(name, ':h')
+
+  local dirname = current_dir
+  if input_dir ~= '' then
+    dirname = dirname .. '/' .. input_dir
+  end
+  local filename = vim.fn.fnamemodify(name, ':t')
+  vim.fn.mkdir(dirname, 'p')
+  vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
+  vim.api.nvim_command('write!')
+
+  commands.reattach_current_buf_lsp()
+  vim.api.nvim_command('redraw')
+
+  print('Rename file to ' .. name)
+end
+
+commands.move = function(opts)
+  local dirname = opts.args
+  local filename = vim.fn.expand('%:t')
+  vim.fn.mkdir(dirname, 'p')
+  vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
+  vim.api.nvim_command('write!')
+
+  commands.reattach_current_buf_lsp()
+  vim.api.nvim_command('redraw')
+
+  print('Move file to ' .. dirname)
+end
+
+commands.remove = function()
+  local current_path = vim.fn.expand('%:p')
+  local result = vim.fn.confirm('Remove the file (' .. current_path .. ') ?', '&Yes\n&No', 1)
+  if result == 1 then
+    local current_buf = vim.api.nvim_get_current_buf()
+    local clients = vim.lsp.buf_get_clients()
+    for _, client in pairs(clients) do
+      vim.lsp.buf_detach_client(current_buf, client.id)
+    end
+
+    vim.api.nvim_command('BufferClose')
+    vim.fn.delete(current_path)
+    vim.api.nvim_command('redraw')
+    print('File (' .. current_path .. ') deleted.')
+  end
+end
+
+commands.mkdir = function(opts)
+  local dirname = opts.args
+  vim.fn.mkdir(dirname, 'p')
+  vim.api.nvim_command('redraw')
+end
+
+commands.chmod = function(opts)
+  local current_path = vim.fn.expand('%:p')
+  local args = opts.args
+
+  local function file_exists(filename)
+    local stat = vim.loop.fs_stat(filename)
+    return stat and stat.type or false
+  end
+
+  if file_exists(current_path) then
+    vim.api.nvim_exec('!chmod ' .. args .. ' ' .. current_path, false)
+    vim.api.nvim_command('redraw')
+  end
 end
 
 
@@ -120,7 +202,7 @@ commands.setup = function()
   commands.semicolon()
   commands.compile()
 
-  vim.api.nvim_exec('hi TrailingSpace guibg=#D70000 guibg=#D70000 ctermbg=160 ctermfg=160', true)
+  vim.api.nvim_command('hi TrailingSpace guibg=#D70000 guibg=#D70000 ctermbg=160 ctermfg=160')
   vim.api.nvim_create_user_command('HighlightTrailingSpace', commands.highlight_trailing_space, {})
   vim.api.nvim_set_var('mapleader', ',')
   vim.api.nvim_set_keymap('n', '<Leader><Space><Space><Space>', '', {
@@ -139,6 +221,53 @@ commands.setup = function()
     callback = commands.alternate_file,
     desc = 'Alternate file',
   })
+
+  local refresh_nerdtree = function()
+    if vim.fn.exists(':NERDTreeRefreshRoot') == 1 then
+      vim.api.nvim_command('NERDTreeRefreshRoot')
+    end
+  end
+
+  vim.api.nvim_create_user_command('Rename',
+    function(opts)
+      commands.rename(opts)
+      refresh_nerdtree()
+    end, { nargs = 1, complete = 'buffer' })
+
+  vim.api.nvim_create_user_command('Move',
+    function(opts)
+      commands.move(opts)
+      refresh_nerdtree()
+    end, { nargs = 1, complete = 'file' })
+
+  vim.api.nvim_create_user_command('Remove',
+    function(opts)
+      commands.remove()
+      refresh_nerdtree()
+    end, {})
+
+  vim.api.nvim_create_user_command('Remove',
+    function(opts)
+      commands.remove()
+      refresh_nerdtree()
+    end, {})
+
+  vim.api.nvim_create_user_command('Mkdir',
+    function(opts)
+      commands.mkdir(opts)
+      refresh_nerdtree()
+    end, { nargs = 1, complete = 'file' })
+
+  vim.api.nvim_create_user_command('Chmod',
+    function(opts)
+      commands.chmod(opts)
+      refresh_nerdtree()
+    end, {
+      nargs = 1,
+      complete = function(ArgLead, CmdLine, CursorPos)
+        return { '+x', '777', '664' }
+      end
+    })
 end
 
 return commands
