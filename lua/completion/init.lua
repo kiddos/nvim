@@ -491,7 +491,11 @@ end
 M.confirm_completion = function()
   local char = util.get_left_char()
   if char == '{' then
-    return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
+    if vim.fn.pumvisible() == 1 then
+      return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
+    else
+      return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+    end
   else
     if vim.fn.pumvisible() == 1 then
       return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
