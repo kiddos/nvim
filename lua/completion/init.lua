@@ -99,14 +99,17 @@ context.scan_paths = function()
   context.completion.file.result = items
 end
 
+context.prepare_buffer_completion = util.throttle(function()
+  context.index_buffer()
+end, config.completion.throttle_time)
+
 context.trigger_auto_complete = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
   end
 end, config.completion.throttle_time)
 
-context.trigger_other_completion = util.throttle(function()
-  context.index_buffer()
+context.trigger_file_completion = util.throttle(function()
   context.scan_paths()
 
   if vim.fn.mode() == 'i' then
@@ -115,6 +118,8 @@ context.trigger_other_completion = util.throttle(function()
 end, config.completion.throttle_time)
 
 context.trigger_completion = util.debounce(function()
+  context.trigger_file_completion()
+
   -- context.completion.lsp.result = nil
   if util.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
@@ -124,8 +129,6 @@ context.trigger_completion = util.debounce(function()
       context.trigger_auto_complete()
     end)
   end
-
-  context.trigger_other_completion()
 end, context.completion.timer, config.completion.debounce_time)
 
 context.stop_completion = function()
@@ -486,10 +489,15 @@ M.stop = function()
 end
 
 M.confirm_completion = function()
-  if vim.fn.pumvisible() == 1 then
-    return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
+  local char = util.get_left_char()
+  if char == '{' then
+    return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
   else
-    return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+    if vim.fn.pumvisible() == 1 then
+      return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
+    else
+      return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+    end
   end
 end
 
@@ -503,14 +511,22 @@ M.setup = function()
   vim.api.nvim_create_autocmd({'InsertCharPre'}, {
     callback = M.auto_complete
   })
+
   vim.api.nvim_create_autocmd({'InsertLeavePre'}, {
-    callback = M.stop
+    callback = function()
+      context.prepare_buffer_completion()
+      M.stop()
+    end
   })
   vim.api.nvim_create_autocmd({'CompleteChanged'}, {
     callback = function()
       M.auto_info(vim.v.event)
     end
   })
+  vim.api.nvim_create_autocmd({'VimEnter'}, {
+    callback = context.prepare_buffer_completion,
+  })
+
   vim.api.nvim_create_autocmd({'TextChangedI'}, {
     callback = context.stop_info
   })
