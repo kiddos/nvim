@@ -31,6 +31,7 @@ context.completion = {
   file = {
     result = nil,
   },
+  special_chars = {},
 }
 
 context.info = {
@@ -490,7 +491,7 @@ end
 
 M.confirm_completion = function()
   local char = util.get_left_char()
-  if char == '{' then
+  if context.completion.special_chars[char] ~= nil then
     if vim.fn.pumvisible() == 1 then
       return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
     else
@@ -512,6 +513,10 @@ M.close_timers = function()
 end
 
 M.setup = function()
+  for _, char in pairs(config.completion.special_chars) do
+    context.completion.special_chars[char] = true
+  end
+
   vim.api.nvim_create_autocmd({'InsertCharPre'}, {
     callback = M.auto_complete
   })
