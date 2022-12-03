@@ -126,8 +126,15 @@ end
 
 -- linux commands binding
 commands.rename = function(opts)
-  local current_dir = vim.fn.expand('%:h')
   local name = opts.args
+
+  local current_filename = vim.fn.expand('%:t')
+  if current_filename == name then
+    return
+  end
+
+  local current_path = vim.fn.expand('%:p')
+  local current_dir = vim.fn.expand('%:h')
   local input_dir = vim.fn.fnamemodify(name, ':h')
 
   local dirname = current_dir
@@ -138,6 +145,7 @@ commands.rename = function(opts)
   vim.fn.mkdir(dirname, 'p')
   vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
   vim.api.nvim_command('write!')
+  vim.fn.delete(current_path)
 
   commands.reattach_current_buf_lsp()
   vim.api.nvim_command('redraw')
@@ -146,11 +154,13 @@ commands.rename = function(opts)
 end
 
 commands.move = function(opts)
+  local current_path = vim.fn.expand('%:p')
   local dirname = opts.args
   local filename = vim.fn.expand('%:t')
   vim.fn.mkdir(dirname, 'p')
   vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
   vim.api.nvim_command('write!')
+  vim.fn.delete(current_path)
 
   commands.reattach_current_buf_lsp()
   vim.api.nvim_command('redraw')
