@@ -207,6 +207,52 @@ commands.chmod = function(opts)
 end
 
 
+commands.translate = function(target_lang)
+  local get_selection = function()
+    local s = vim.fn.getpos("'<")
+    local e = vim.fn.getpos("'>")
+    local buf = vim.api.nvim_get_current_buf()
+    local lines = vim.api.nvim_buf_get_lines(buf, s[2]-1, e[2], false)
+    if #lines == 0 then
+      return ''
+    end
+
+    lines[#lines] = string.sub(lines[#lines], 1, e[3])
+    lines[1] = string.sub(lines[1], s[3], #lines[1])
+    return table.concat(lines, '\n')
+  end
+
+  local selected_text = get_selection()
+
+  local t = function(text, target)
+    local text_arg = text:gsub('"', '\\"')
+    text_arg = text:gsub('\n', '\\n')
+    local result = vim.api.nvim_cmd({
+      cmd = '!python3',
+      args = {'~/.config/nvim/translate.py', '--text', '"' .. text_arg .. '"', '--target', target},
+    }, {
+      output = true,
+    })
+
+    if result == '' then
+      return ''
+    end
+
+    local lines = vim.split(result, '\r\n')
+    table.remove(lines, 1)
+    return vim.trim(table.concat(lines, '\n'))
+  end
+
+  local translated = t(selected_text, target_lang)
+  selected_text = selected_text:gsub('\n', '\\n')
+  selected_text = selected_text:gsub('\r\n', '\\r\\n')
+  translated = translated:gsub('\\n', '\\r')
+  local replace_command = "'<,'>s/\\%V" .. selected_text .. '/' .. translated .. '/g'
+  vim.api.nvim_command(replace_command)
+  vim.api.nvim_command('redraw')
+end
+
+
 commands.setup = function()
   commands.typo_command()
   commands.semicolon()
@@ -277,6 +323,27 @@ commands.setup = function()
       complete = function(ArgLead, CmdLine, CursorPos)
         return { '+x', '777', '664' }
       end
+    })
+
+  vim.api.nvim_create_user_command('TranslateTW',
+    function(opts)
+      commands.translate('zh-TW')
+    end, {
+      range = true
+    })
+
+  vim.api.nvim_create_user_command('TranslateCN',
+    function(opts)
+      commands.translate('zh-CN')
+    end, {
+      range = true
+    })
+
+  vim.api.nvim_create_user_command('TranslateEN',
+    function(opts)
+      commands.translate('en')
+    end, {
+      range = true
     })
 end
 
