@@ -73,10 +73,38 @@ lsp.setup = function()
   }
 
   -- python
-  lspconfig.jedi_language_server.setup{
-    handlers = {
-      ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-    },
+  lspconfig.pylsp.setup{
+    settings = {
+      pylsp = {
+        plugins = {
+          preload = {
+            modules = {'tensorflow', 'torch', 'torchvision'}
+          },
+          autopep8 = {
+            enabled = false,
+          },
+          yapf = {
+            enabled = true,
+          },
+          jedi_completion = {
+            cache_for = {
+              'pandas',
+              'numpy',
+              'tensorflow',
+              'matplotlib',
+              'torch',
+              'torchvision',
+            }
+          },
+          pycodestyle = {
+            -- convention = 'google',
+            ignore = {'W391', 'E303', 'E501', 'E226'},
+            indentSize = 2,
+            maxLineLength = 80,
+          }
+        }
+      }
+    }
   }
 
   -- vim
