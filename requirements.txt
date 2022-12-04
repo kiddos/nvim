@@ -1,2 +1,3 @@
 pynput
 psutil
+google-cloud-translate
