@@ -208,48 +208,69 @@ end
 
 
 commands.translate = function(target_lang)
-  local get_selection = function()
-    local s = vim.fn.getpos("'<")
-    local e = vim.fn.getpos("'>")
-    local buf = vim.api.nvim_get_current_buf()
-    local lines = vim.api.nvim_buf_get_lines(buf, s[2]-1, e[2], false)
-    if #lines == 0 then
-      return ''
-    end
+  local current_buf = vim.api.nvim_get_current_buf()
+  local start_cursor = vim.fn.getpos("'<")
+  local end_cursor = vim.fn.getpos("'>")
+  local start_row = start_cursor[2]-1
+  local start_col = start_cursor[3]
+  local end_row = end_cursor[2]
+  local end_col = end_cursor[3]
 
-    lines[#lines] = string.sub(lines[#lines], 1, e[3])
-    lines[1] = string.sub(lines[1], s[3], #lines[1])
-    return table.concat(lines, '\n')
+  local lines = vim.api.nvim_buf_get_lines(current_buf, start_row, end_row, false)
+  if #lines == 0 then
+    return false
   end
 
-  local selected_text = get_selection()
+  lines[#lines] = string.sub(lines[#lines], 1, end_col)
+  lines[1] = string.sub(lines[1], start_col, #lines[1])
+  local selected_text = table.concat(lines, '\\n')
+  selected_text = selected_text:gsub('"', '\\"'):gsub('\n', '\\n'):gsub('\r', '\\r'):gsub('\t', '\\t')
 
-  local t = function(text, target)
-    local text_arg = text:gsub('"', '\\"')
-    text_arg = text:gsub('\n', '\\n')
-    local result = vim.api.nvim_cmd({
-      cmd = '!python3',
-      args = {'~/.config/nvim/translate.py', '--text', '"' .. text_arg .. '"', '--target', target},
-    }, {
-      output = true,
-    })
+  -- print(selected_text)
 
-    if result == '' then
-      return ''
-    end
+  local cmd = '!echo "' .. selected_text .. '" | ~/.config/nvim/translate.py --target ' .. target_lang
+  local result = vim.trim(vim.api.nvim_exec(cmd, true))
+  local result_lines = vim.split(result, '\r\n')
+  table.remove(result_lines, 1)
+  result = vim.trim(table.concat(result_lines, ''))
+  result_lines = vim.split(result, '\n')
 
-    local lines = vim.split(result, '\r\n')
-    table.remove(lines, 1)
-    return vim.trim(table.concat(lines, '\n'))
+  -- print('result lines: ')
+  -- for i, line in pairs(result_lines) do
+  --   print(tostring(i) .. ': ' .. line)
+  -- end
+
+  if #result_lines == 0 then
+    return false
   end
 
-  local translated = t(selected_text, target_lang)
-  selected_text = selected_text:gsub('\n', '\\n')
-  selected_text = selected_text:gsub('\r\n', '\\r\\n')
-  translated = translated:gsub('\\n', '\\r')
-  local replace_command = "'<,'>s/\\%V" .. selected_text .. '/' .. translated .. '/g'
-  vim.api.nvim_command(replace_command)
+  lines = vim.api.nvim_buf_get_lines(current_buf, start_row, end_row, false)
+  -- for i, line in pairs(lines) do
+  --   print(tostring(i) .. ': ' .. line)
+  -- end
+
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], 1, start_col-1) .. result .. string.sub(lines[1], end_col+1, #lines[1]+1)
+  else
+    for i = 1,#lines do
+      local target_text = result_lines[i]
+
+      if i == 1 then
+        lines[i] = string.sub(lines[i], 1, start_col-1) .. target_text
+      elseif i == #lines then
+        lines[i] = target_text .. string.sub(lines[i], math.min(end_col+1, #lines[i]+1), #lines[i]+1)
+      else
+        lines[i] = target_text
+      end
+    end
+  end
+
+  -- print('output: ')
+  -- print(vim.trim(table.concat(lines, '\n')))
+
+  vim.api.nvim_buf_set_lines(current_buf, start_row, end_row, false, lines)
   vim.api.nvim_command('redraw')
+  return true
 end
 
 

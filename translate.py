@@ -2,14 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import six
+import sys
 from google.cloud import translate_v2 as translate
 from argparse import ArgumentParser
 
 
 parser = ArgumentParser()
-parser.add_argument('--text', required=True)
-parser.add_argument('--target', required=True)
-
+parser.add_argument('--target', default='zh-TW')
 args = parser.parse_args()
 
 
@@ -29,14 +28,20 @@ def translate_text(target, text):
   # will return a sequence of results for each text.
   result = translate_client.translate(text, target_language=target)
 
-  print(result['translatedText'])
   #  print(u"Text: {}".format(result["input"]))
   #  print(u"Translation: {}".format(result["translatedText"]))
   #  print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
+  return result
 
 
 def main():
-  translate_text(args.target, args.text)
+  lines = sys.stdin.readlines()
+  output = []
+  for line in lines:
+    result = translate_text(args.target, line.strip())
+    translated = result['translatedText']
+    output.append(translated)
+  print('\n'.join(output))
 
 
 if __name__ == '__main__':
