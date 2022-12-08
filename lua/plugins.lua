@@ -1,4 +1,19 @@
-return require('packer').startup(function()
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
+
+local packer_bootstrap = ensure_packer()
+
+local packer = require('packer')
+
+local M = packer.startup(function()
   use 'wbthomason/packer.nvim'
 
   -- lsp
@@ -133,10 +148,8 @@ return require('packer').startup(function()
     requires = {'junegunn/fzf'},
     run = ':call fzf#install()',
   }
-  use {
-    'Shougo/neosnippet.vim',
-    requires = {'kiddos/snippets.vim'}
-  }
+  use 'dcampos/nvim-snippy'
+  use 'kiddos/snippets.vim'
 
 
   -- language specific
@@ -146,21 +159,11 @@ return require('packer').startup(function()
     ft = {'c', 'cpp'},
     cmd = {'ClangFormat'},
   }
-  -- python
-  use {
-    'tell-k/vim-autopep8',
-    ft = {'python'},
-  }
-  use {
-    'Vimjas/vim-python-pep8-indent',
-    ft = {'python'}
-  }
-  -- javascript
+  -- vue
   use 'leafOfTree/vim-vue-plugin'
   -- vhdl
   use 'kiddos/vim-vhdl'
   -- markdown
-  use 'tpope/vim-markdown'
   use {
     'iamcco/markdown-preview.nvim',
     run = 'cd app && yarn install',
@@ -172,8 +175,6 @@ return require('packer').startup(function()
     'gennaro-tedesco/nvim-jqx',
     cmd = {'JqxList', 'JqxQuery'},
   }
-  -- julia
-  use 'JuliaEditorSupport/julia-vim'
   -- rust
   use 'rust-lang/rust.vim'
   -- dart
@@ -187,4 +188,17 @@ return require('packer').startup(function()
     'alec-gibson/nvim-tetris',
     cmd = {'Tetris'}
   }
+
+  if packer_bootstrap then
+    packer.sync()
+  end
 end)
+
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
+
+return M

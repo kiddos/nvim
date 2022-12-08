@@ -200,13 +200,15 @@ settings.setup = function()
     space = ' '
   })
 
-  -- neosnippets
-  vim.api.nvim_set_var('neosnippet#enable_snipmate_compatibility', 1)
-  vim.api.nvim_set_var('neosnippet#enable_completed_snippet', 1)
-  
-  vim.api.nvim_set_keymap('i', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
-  vim.api.nvim_set_keymap('s', '<Tab>', 'neosnippet#expandable_or_jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"', {expr=true, silent=true})
-
+  -- snippy
+  require('snippy').setup({
+    mappings = {
+      is = {
+        ['<Tab>'] = 'expand_or_advance',
+        ['<S-Tab>'] = 'previous',
+      },
+    },
+  })
 
   -- clang-format
   vim.api.nvim_set_var('clang_format#code_style', 'google')
