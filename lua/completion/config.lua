@@ -8,7 +8,8 @@ local config = {
     buffer_max_size = 1000,
     buffer_reindex_range = 100,
     lru_size = 1000,
-    special_chars = {'{', ':', ';'}
+    special_chars = {'{', ':', ';', '(', '[', ','},
+    cr_mapping = nil,
   },
   info = {
     max_width = 60,

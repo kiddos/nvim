@@ -490,19 +490,18 @@ M.stop = function()
 end
 
 M.confirm_completion = function()
-  local char = util.get_left_char()
-  if context.completion.special_chars[char] ~= nil then
-    if vim.fn.pumvisible() == 1 then
-      return vim.api.nvim_replace_termcodes('<C-E><CR>', true, true, true)
+  local cr = config.completion.cr_mapping ~= nil and config.completion.cr_mapping()
+    or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+
+  if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then
+    local char = util.get_left_char()
+    if context.completion.special_chars[char] ~= nil then
+      return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr
     else
-      return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+      return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
     end
   else
-    if vim.fn.pumvisible() == 1 then
-      return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
-    else
-      return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-    end
+    return cr
   end
 end
 
@@ -512,7 +511,17 @@ M.close_timers = function()
   context.signature.timer:close()
 end
 
-M.setup = function()
+M.apply_options = function(opts)
+  opts = opts or {}
+  if opts.cr_mapping ~= nil then
+    config.completion.cr_mapping = opts.cr_mapping
+  end
+end
+
+M.setup = function(opts)
+  M.apply_options(opts)
+
+  -- cache special characters
   for _, char in pairs(config.completion.special_chars) do
     context.completion.special_chars[char] = true
   end

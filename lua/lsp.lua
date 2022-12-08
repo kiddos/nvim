@@ -128,7 +128,7 @@ lsp.setup = function()
       settings = {
         Lua = {
           diagnostics = {
-            globals = {'vim'}
+            globals = {'vim', 'use'}
           },
           workspace = {
             library = {
@@ -262,15 +262,17 @@ lsp.setup = function()
     end
   })
 
+  local npairs = require('nvim-autopairs')
+  npairs.setup({
+    -- map_cr = true,
+  })
 
   -- completion
   local completion = require('completion')
-  completion.setup()
-
-  local npairs = require('nvim-autopairs')
-  npairs.setup({
-    map_cr = false,
+  completion.setup({
+    cr_mapping = npairs.autopairs_cr
   })
+
 
   -- sign
   vim.api.nvim_command('sign define DiagnosticSignError text=✖ texthl=DiagnosticSignError linehl= numhl=')
