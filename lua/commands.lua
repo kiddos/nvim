@@ -250,7 +250,9 @@ commands.translate = function(target_lang)
   -- end
 
   if #lines == 1 then
-    lines[1] = string.sub(lines[1], 1, start_col-1) .. result .. string.sub(lines[1], end_col+1, #lines[1]+1)
+    local prefix = string.sub(lines[1], 1, start_col-1)
+    local suffix = end_col+1 <= #lines[1]+1 and string.sub(lines[1], end_col+1, #lines[1]+1) or ''
+    lines[1] = prefix .. result .. suffix
   else
     for i = 1,#lines do
       local target_text = result_lines[i]:gsub('\n', '')
