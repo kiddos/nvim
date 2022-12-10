@@ -253,7 +253,7 @@ commands.translate = function(target_lang)
     lines[1] = string.sub(lines[1], 1, start_col-1) .. result .. string.sub(lines[1], end_col+1, #lines[1]+1)
   else
     for i = 1,#lines do
-      local target_text = result_lines[i]
+      local target_text = result_lines[i]:gsub('\n', '')
 
       if i == 1 then
         lines[i] = string.sub(lines[i], 1, start_col-1) .. target_text
