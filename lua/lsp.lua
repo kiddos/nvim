@@ -1,5 +1,3 @@
-local configs = require('lspconfig/configs')
-local util = require('lspconfig/util')
 local lspconfig = require('lspconfig')
 local lsp_status = require('lsp-status')
 
@@ -7,25 +5,15 @@ local lsp = {}
 
 lsp.setup = function()
   vim.diagnostic.config({
-    underline = false,
-    virtual_text = false,
-    signs = false,
+    underline = true,
+    virtual_text = true,
+    signs = true,
     update_in_insert = false,
+    severity_sort = true,
   })
 
   -- setting lsp
   lsp_status.register_progress()
-
-  -- enable lsp diagnostic
-  local on_publish_diagnostics = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-      underline = true,
-      virtual_text = true,
-      signs = true,
-      update_in_insert = false,
-      severity_sort = true,
-    }
-  );
 
   local function file_exists(filename)
     local stat = vim.loop.fs_stat(filename)
@@ -52,11 +40,7 @@ lsp.setup = function()
   -- javascript/typescript
   lspconfig.tsserver.setup{}
 
-  lspconfig.eslint.setup{
-    handlers = {
-      ["textDocument/publishDiagnostics"] = on_publish_diagnostics,
-    },
-  }
+  lspconfig.eslint.setup{}
 
   -- css
   local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -169,23 +153,34 @@ lsp.setup = function()
 
   -- lsp saga
   local saga = require('lspsaga')
-  saga.init_lsp_saga({
-    border_style = 'rounded',
-    max_preview_lines = 30,
-    code_action_lightbulb = {
+  saga.setup({
+    request_timeout = 10000,
+    ui = {
+      border = 'rounded',
+      winblend = 0,
+      expand = '',
+      collapse = '',
+      preview = '🖵  ',
+      code_action = '💡',
+      diagnostic = '🐞',
+      incoming = ' ',
+      outgoing = ' ',
+    },
+    lightbulb = {
       enable = true,
       enable_in_insert = false,
-      cache_code_action = true,
-      sign = false,
-      update_time = 1000,
-      sign_priority = 20,
-      virtual_text = true,
+      sign = true,
+      sign_priority = 40,
+      virtual_text = false,
     },
-    code_action_keys = {
-      quit = '<Esc>',
-      exec = '<CR>',
+    symbol_in_winbar = {
+      enable = false,
+      separator = ' ',
+      hide_keyword = true,
+      show_file = true,
+      folder_level = 2,
+      respect_root = false,
     },
-    finder_request_timeout = 6000,
   })
 
   vim.api.nvim_set_var('mapleader', ',')
