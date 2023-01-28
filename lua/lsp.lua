@@ -62,7 +62,7 @@ lsp.setup = function()
       pylsp = {
         plugins = {
           preload = {
-            modules = {'tensorflow', 'torch', 'torchvision'}
+            modules = {'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets'}
           },
           autopep8 = {
             enabled = false,
@@ -78,6 +78,9 @@ lsp.setup = function()
               'matplotlib',
               'torch',
               'torchvision',
+              'torchaudio',
+              'transformers',
+              'datasets',
             }
           },
           pycodestyle = {
@@ -112,7 +115,7 @@ lsp.setup = function()
       settings = {
         Lua = {
           diagnostics = {
-            globals = {'vim', 'use'}
+            globals = {'vim', 'use', 'use_rocks'}
           },
           workspace = {
             library = {
