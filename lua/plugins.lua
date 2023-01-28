@@ -14,6 +14,8 @@ local packer_bootstrap = ensure_packer()
 local packer = require('packer')
 
 local M = packer.startup(function()
+  use_rocks 'lua-cjson'
+
   use 'wbthomason/packer.nvim'
 
   -- lsp
@@ -200,5 +202,7 @@ vim.cmd([[
     autocmd BufWritePost plugins.lua source <afile> | PackerCompile
   augroup end
 ]])
+
+-- require'packer.luarocks'.install_commands()
 
 return M

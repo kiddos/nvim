@@ -207,75 +207,6 @@ commands.chmod = function(opts)
 end
 
 
-commands.translate = function(target_lang)
-  local current_buf = vim.api.nvim_get_current_buf()
-  local start_cursor = vim.fn.getpos("'<")
-  local end_cursor = vim.fn.getpos("'>")
-  local start_row = start_cursor[2]-1
-  local start_col = start_cursor[3]
-  local end_row = end_cursor[2]
-  local end_col = end_cursor[3]
-
-  local lines = vim.api.nvim_buf_get_lines(current_buf, start_row, end_row, false)
-  if #lines == 0 then
-    return false
-  end
-
-  lines[#lines] = string.sub(lines[#lines], 1, end_col)
-  lines[1] = string.sub(lines[1], start_col, #lines[1])
-  local selected_text = table.concat(lines, '\\n')
-  selected_text = selected_text:gsub('"', '\\"'):gsub('\n', '\\n'):gsub('\r', '\\r'):gsub('\t', '\\t')
-
-  -- print(selected_text)
-
-  local cmd = '!echo "' .. selected_text .. '" | ~/.config/nvim/translate.py --target ' .. target_lang
-  local result = vim.trim(vim.api.nvim_exec(cmd, true))
-  local result_lines = vim.split(result, '\r\n')
-  table.remove(result_lines, 1)
-  result = vim.trim(table.concat(result_lines, ''))
-  result_lines = vim.split(result, '\n')
-
-  -- print('result lines: ')
-  -- for i, line in pairs(result_lines) do
-  --   print(tostring(i) .. ': ' .. line)
-  -- end
-
-  if #result_lines == 0 then
-    return false
-  end
-
-  lines = vim.api.nvim_buf_get_lines(current_buf, start_row, end_row, false)
-  -- for i, line in pairs(lines) do
-  --   print(tostring(i) .. ': ' .. line)
-  -- end
-
-  if #lines == 1 then
-    local prefix = string.sub(lines[1], 1, start_col-1)
-    local suffix = end_col+1 <= #lines[1]+1 and string.sub(lines[1], end_col+1, #lines[1]+1) or ''
-    lines[1] = prefix .. result .. suffix
-  else
-    for i = 1,#lines do
-      local target_text = result_lines[i]:gsub('\n', '')
-
-      if i == 1 then
-        lines[i] = string.sub(lines[i], 1, start_col-1) .. target_text
-      elseif i == #lines then
-        lines[i] = target_text .. string.sub(lines[i], math.min(end_col+1, #lines[i]+1), #lines[i]+1)
-      else
-        lines[i] = target_text
-      end
-    end
-  end
-
-  -- print('output: ')
-  -- print(vim.trim(table.concat(lines, '\n')))
-
-  vim.api.nvim_buf_set_lines(current_buf, start_row, end_row, false, lines)
-  vim.api.nvim_command('redraw')
-  return true
-end
-
-
 commands.setup = function()
   commands.typo_command()
   commands.semicolon()
@@ -320,13 +251,13 @@ commands.setup = function()
     end, { nargs = 1, complete = 'file' })
 
   vim.api.nvim_create_user_command('Remove',
-    function(opts)
+    function()
       commands.remove()
       refresh_nerdtree()
     end, {})
 
   vim.api.nvim_create_user_command('Remove',
-    function(opts)
+    function()
       commands.remove()
       refresh_nerdtree()
     end, {})
@@ -343,31 +274,12 @@ commands.setup = function()
       refresh_nerdtree()
     end, {
       nargs = 1,
-      complete = function(ArgLead, CmdLine, CursorPos)
+      complete = function()
         return { '+x', '777', '664' }
       end
     })
 
-  vim.api.nvim_create_user_command('TranslateTW',
-    function(opts)
-      commands.translate('zh-TW')
-    end, {
-      range = true
-    })
-
-  vim.api.nvim_create_user_command('TranslateCN',
-    function(opts)
-      commands.translate('zh-CN')
-    end, {
-      range = true
-    })
-
-  vim.api.nvim_create_user_command('TranslateEN',
-    function(opts)
-      commands.translate('en')
-    end, {
-      range = true
-    })
+  require('translate').setup()
 end
 
 return commands
