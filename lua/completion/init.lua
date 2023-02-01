@@ -61,17 +61,17 @@ context.index_buffer = function()
   local current_line = vim.api.nvim__buf_stats(0).current_lnum
   local lines = nil
 
-  if num_lines > config.completion.buffer_max_size then
+  if num_lines > config.completion.buffer_max_lines then
     lines = vim.api.nvim_buf_get_lines(current_buf,
       math.max(0, current_line - config.completion.buffer_reindex_range),
-      math.min(num_lines, current_line + config.completion.buffer_reindex_range), false)
+      math.min(num_lines, current_line + config.completion.buffer_reindex_line_range), false)
   else
     lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, false)
   end
 
   if lines then
     if not context.completion.buffer.cache[current_buf] then
-      context.completion.buffer.cache[current_buf] = lru.create_lru(config.completion.lru_size)
+      context.completion.buffer.cache[current_buf] = lru.create_lru(config.completion.buffer_lru_size)
     end
 
     local current_cache = context.completion.buffer.cache[current_buf]
@@ -147,10 +147,8 @@ context.get_completion_info_text = function(event, callback)
   local completed_item = util.table_get(event, { 'completed_item' }) or {}
   local text = completed_item.info or ''
   if not util.is_whitespace(text) then
-    local lines = { '<text>' }
-    vim.list_extend(lines, vim.split(text, '\n'))
-    table.insert(lines, '</text>')
-    callback(lines)
+    local lines = vim.lsp.util.convert_input_to_markdown_lines(text)
+    callback(vim.lsp.util.trim_empty_lines(lines))
     return
   end
 
