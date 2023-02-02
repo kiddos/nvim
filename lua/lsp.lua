@@ -309,6 +309,7 @@ lsp.setup = function()
     },
     sections = {
       lualine_c = {'filename', "require'lsp-status'.status()"},
+      lualine_x = {'tabnine'},
       --[[ lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'}, ]]
     },
   }

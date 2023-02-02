@@ -153,6 +153,7 @@ local M = packer.startup(function()
   use 'dcampos/nvim-snippy'
   use 'kiddos/snippets.vim'
   use 'aduros/ai.vim'
+  use { 'codota/tabnine-nvim', run = "./dl_binaries.sh" }
 
 
   -- language specific

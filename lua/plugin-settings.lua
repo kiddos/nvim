@@ -205,7 +205,7 @@ settings.setup = function()
     mappings = {
       is = {
         ['<Tab>'] = 'expand_or_advance',
-        ['<S-Tab>'] = 'previous',
+        -- ['<S-Tab>'] = 'previous',
       },
     },
   })
@@ -245,6 +245,15 @@ settings.setup = function()
   local marks = require('marks')
   marks.setup()
   vim.api.nvim_set_keymap('n', '<Leader>dm', ':delmarks a-zA-Z0-9<CR>', {silent=true, noremap=true})
+
+  require('tabnine').setup({
+    disable_auto_comment = true,
+    accept_keymap="<S-Tab>",
+    dismiss_keymap = "<C-]>",
+    debounce_ms = 200,
+    suggestion_color = {gui = "#808080", cterm = 244},
+    execlude_filetypes = {"TelescopePrompt"}
+  })
 end
 
 return settings
