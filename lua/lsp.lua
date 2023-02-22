@@ -107,11 +107,11 @@ lsp.setup = function()
   lspconfig.rust_analyzer.setup{}
 
   -- lua
-  local sumneko_root_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
-  local sumneko_binary = sumneko_root_path .. '/bin/lua-language-server'
-  if file_exists(sumneko_binary) then
-    lspconfig.sumneko_lua.setup{
-      cmd = { sumneko_binary },
+  local lua_lsp_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
+  local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
+  if file_exists(lua_lsp_binary) then
+    lspconfig.lua_ls.setup{
+      cmd = { lua_lsp_binary },
       settings = {
         Lua = {
           diagnostics = {
