@@ -124,12 +124,6 @@ local M = packer.startup(function()
     requires = {'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons'},
   }
   use 'scrooloose/nerdcommenter' -- comments
-  use {
-    'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons', -- optional, for file icons
-    },
-  }
   -- commands
   use {
     'arecarn/crunch.vim',
@@ -152,16 +146,10 @@ local M = packer.startup(function()
   }
   use 'dcampos/nvim-snippy'
   use 'kiddos/snippets.vim'
-  use 'aduros/ai.vim'
+  use 'farmergreg/vim-lastplace'
 
 
   -- language specific
-  -- clang-format
-  use {
-    'rhysd/vim-clang-format',
-    ft = {'c', 'cpp'},
-    cmd = {'ClangFormat'},
-  }
   -- vue
   use 'leafOfTree/vim-vue-plugin'
   -- vhdl
@@ -173,23 +161,12 @@ local M = packer.startup(function()
     ft = {'markdown'},
     cmd = 'MarkdownPreview',
   }
-  -- json
-  use {
-    'gennaro-tedesco/nvim-jqx',
-    cmd = {'JqxList', 'JqxQuery'},
-  }
   -- rust
   use 'rust-lang/rust.vim'
   -- dart
   use {
     'akinsho/flutter-tools.nvim',
     requires = 'plenary.nvim',
-  }
-
-  -- games
-  use {
-    'alec-gibson/nvim-tetris',
-    cmd = {'Tetris'}
   }
 
   if packer_bootstrap then

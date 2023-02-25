@@ -65,10 +65,6 @@ settings.setup = function()
   vim.api.nvim_set_keymap('n', '<F1>', ':NERDTreeToggle .<CR>', {noremap=true, silent=true})
   vim.api.nvim_set_keymap('i', '<F1>', '<Esc>:NERDTreeToggle .<CR>', {noremap=true, silent=true})
 
-  -- nvim-tree
-  require("nvim-tree").setup()
-  vim.api.nvim_set_keymap('n', '<F5>', ':NvimTreeToggle<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F5>', '<Esc>:NvimTreeToggle<CR>', {noremap=true, silent=true})
 
   -- A
   vim.api.nvim_set_var('mapleader', ',')

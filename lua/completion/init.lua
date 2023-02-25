@@ -554,6 +554,13 @@ M.setup = function(opts)
     callback = M.close_timers
   })
 
+  vim.api.nvim_create_autocmd({'BufLeave'}, {
+    callback = function()
+      local current_buf = vim.api.nvim_get_current_buf()
+      context.completion.buffer.cache[current_buf] = nil
+    end
+  })
+
   _G.completion = M
   vim.opt.completefunc = 'v:lua.completion.complete_func'
 
