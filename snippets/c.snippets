@@ -1,0 +1,58 @@
+## Main
+# main
+snippet main
+	int main(void) {
+		${0:// code here}
+		return 0;
+	}
+# main(void)
+snippet main_args
+	int main(int argc, char** argv) {
+		// code here
+		return 0;
+	}
+##
+## macros
+snippet macro_max
+	#define MAX(a, b) \
+		({ __typeof__ (a) _a = (a); \
+			__typeof__ (b) _b = (b); \
+			_a > _b ? _a : _b; })
+snippet macro_min
+	#define MIN(a, b) \
+		({ __typeof__ (a) _a = (a); \
+			__typeof__ (b) _b = (b); \
+			_a < _b ? _a : _b; })
+##
+## Preprocessor
+# #include <...>
+snippet include
+	#include <stdio.h>
+# header include guard
+snippet once
+	#ifndef ${1:`toupper(expand('%:r'))_H`}
+	#define $1
+
+	${0:// code here...}
+
+	#endif /* end of include guard: $1 */
+## Miscellaneous
+##
+snippet module
+	#ifndef ${2:`toupper(expand('%:r'))`_H}
+	#define $2
+
+	typedef struct ${3:_$1 }{
+		${4:/* data */}
+	} ${1:`expand('%:r')`}_t;
+
+	#endif /* end of include guard: $1 */
+##
+## main
+snippet template_c_basic
+	#include <stdio.h>
+	#include <stdlib.h>
+
+	int main(void) {
+		return 0;
+	}

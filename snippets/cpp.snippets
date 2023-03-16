@@ -1,0 +1,271 @@
+## header include guard
+snippet once
+	#ifndef ${1:`toupper(expand('%:r'))`_H}
+	#define $1
+
+	${0}
+
+	#endif /* end of include guard: $1 */
+snippet template
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    int main(void) {
+        ios::sync_with_stdio(false);
+        cin.tie(0);
+
+        // code here...
+        return 0;
+    }
+snippet codeforce
+	#include <bits/stdc++.h>
+
+	using namespace std;
+
+	void solve() {
+		${0:// implement for test case}
+	}
+
+	int main(void) {
+		ios::sync_with_stdio(false);
+		cin.tie(0);
+
+		int T = 0;
+		cin >> T;
+		for (int t = 0; t < T; ++t) {
+			solve();
+		}
+		return 0;
+	}
+##
+## namespace
+snippet namespace
+	namespace ${1:`expand('%:r')`} {
+		${2}
+	} // end of $1 namespace
+snippet static_if
+	#ifndef STATIC_IF_H
+	#define STATIC_IF_H
+
+	#include <utility>
+
+	#define FWD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
+
+	template <bool Bool>
+	using bool_ = std::integral_constant<bool, Bool>;
+
+	template <bool Bool>
+	constexpr bool_<Bool> bool_v {};
+
+	template <typename Predicate>
+	auto static_if(Predicate) noexcept;
+
+	namespace sf {
+
+	template <bool PredicateResult>
+	struct static_if_impl;
+
+	template <typename Function>
+	struct static_if_result;
+
+	template <typename Function>
+	auto make_static_if_result(Function&& f) noexcept;
+
+	template <>
+	struct static_if_impl<true> {
+	template <typename Function>
+	auto& else_(Function&&) noexcept {
+		return *this;
+	}
+
+	template <typename Predicate>
+	auto& else_if(Predicate) noexcept {
+		return *this;
+	}
+
+	template <typename Function>
+	auto then(Function&& f) noexcept {
+		return make_static_if_result(FWD(f));
+	}
+	};
+
+	template <>
+	struct static_if_impl<false> {
+	template <typename Function>
+	auto& then(Function&& f) noexcept {
+		return *this;
+	}
+
+	template <typename Function>
+	auto else_(Function&& f) noexcept {
+		return make_static_if_result(FWD(f));
+	}
+
+	template <typename Predicate>
+	auto else_if(Predicate) noexcept {
+		return static_if(Predicate{});
+	}
+
+	template <typename ...T>
+	auto operator()(T&&...) noexcept {}
+	};
+
+	template <typename Function>
+	struct static_if_result : Function {
+	template <typename F>
+	static_if_result(F&& f) noexcept : Function(FWD(f)) {}
+
+	template <typename F>
+	auto& then(F&& f) noexcept {
+		return *this;
+	}
+
+	template <typename Predicate>
+	auto& else_if(Predicate p) noexcept {
+		return *this;
+	}
+
+	template <typename F>
+	auto& else_(F&&) noexcept {
+		return *this;
+	}
+	};
+
+	template <typename Function>
+	auto make_static_if_result(Function&& f) noexcept {
+	return static_if_result<Function>{FWD(f)};
+	}
+
+	} /* end of sf namespace */
+
+	template <typename Predicate>
+	auto static_if(Predicate) noexcept {
+	return sf::static_if_impl<Predicate{}>{};
+	}
+
+	#endif /* end of include guard: STATIC_IF_H */
+##
+## Class
+snippet exception
+	#include <exception>
+
+	class ${1:Exception} : public std::exception {
+	 public:
+		$1() : msg_("Exception occur") {}
+		explicit $1(const char* msg)
+			: msg_(msg) {}
+		explicit $1(const std::string& msg)
+			: msg_(msg) {}
+		virtual ~$1() {}
+		virtual const char* what() const noexcept {
+			return std::string("$1: ") + msg_.c_str();
+		}
+
+	 protected:
+		std::string msg_;
+	};
+##
+## Meta Programming
+snippet meta_value
+	struct ${1:ValueHolder} {
+		enum { value = ${0:0} };
+	}
+snippet meta_function
+	template <int ${2:A}, int ${3:B}>
+	struct ${1:Add} {
+		enum { result = $2 ${4:+} $3  };
+	}
+snippet meta_branch
+	template <typename ${2:T1}, typename ${3:T2}>
+	struct ${1:SameType} {
+		enum { result = 0 };
+	}
+
+	template <typename T>
+	struct $1<T, T> {
+		enum { result = 1 };
+	}
+#
+# main
+snippet main
+	int main(void) {
+		// code here...
+		return 0;
+	}
+snippet main_args
+	int main(int argc, char* argv[]) {
+		// code here...
+		return 0;
+	}
+snippet main_glog
+	#include <glog/logging.h>
+
+	int main(int argc, char** argv) {
+		google::InitGoogleLogging(argv[0]);
+		google::LogToStderr();
+		return 0;
+	}
+#
+## glog
+snippet glog_include
+	#include <glog/logging.h>
+snippet glog
+	google::InitGoogleLogging(argv[0]);
+	google::LogToStderr();
+# basic templates
+## glog
+snippet template_glog
+	#include <glog/logging.h>
+
+	int main(int argc, char** argv) {
+		google::InitGoogleLogging(argv[0]);
+		google::LogToStderr();
+		return 0;
+	}
+snippet gtest
+	#include <gtest/gtest.h>
+
+	TEST(${1:TestName}, ${2:Description}) {
+		// test code...
+	}
+
+	int main(int argc, char **argv) {
+		::testing::InitGoogleTest(&argc, argv);
+		return RUN_ALL_TESTS();
+	}
+snippet gtest_template
+	template <typename T>
+	class ${1:TestName} : public ::testing::Test {
+	 public:
+		void ${2:TestCast}() {
+			// test code
+		}
+	 int size_;
+	};
+
+	typedef ::testing::Types<${1:float, double}> TestTypes;
+	TYPED_TEST_CASE($1, TestTypes);
+
+	TYPED_TEST($1, $2) {
+		this->size_ = 1;
+		this->$2();
+	}
+snippet gtest_fixture
+	class ${1:FixtureTest} : public ::testing::Test {
+	 protected:
+		$1() {}
+		~$1() {}
+
+		void SetUp() override {
+			// setup
+		}
+
+		void TearDown() override {
+			// delete
+		}
+	};
+
+	TEST_F($1, ${2:TestName}) {
+		// test code
+	}

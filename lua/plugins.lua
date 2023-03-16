@@ -145,7 +145,6 @@ local M = packer.startup(function()
     run = ':call fzf#install()',
   }
   use 'dcampos/nvim-snippy'
-  use 'kiddos/snippets.vim'
   use 'farmergreg/vim-lastplace'
 
 
