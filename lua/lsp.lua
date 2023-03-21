@@ -87,7 +87,7 @@ lsp.setup = function()
             -- convention = 'google',
             ignore = {'W391', 'E303', 'E501', 'E226'},
             indentSize = 2,
-            maxLineLength = 80,
+            maxLineLength = 120,
           }
         }
       }
