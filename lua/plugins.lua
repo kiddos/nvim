@@ -14,8 +14,6 @@ local packer_bootstrap = ensure_packer()
 local packer = require('packer')
 
 local M = packer.startup(function()
-  use_rocks 'lua-cjson'
-
   use 'wbthomason/packer.nvim'
 
   -- lsp
@@ -52,7 +50,6 @@ local M = packer.startup(function()
   use {
     'kiddos/malokai.vim',
     config = function()
-      vim.opt.background = 'dark'
       vim.api.nvim_command('colorscheme malokai')
     end
   }
@@ -147,6 +144,13 @@ local M = packer.startup(function()
   }
   use 'dcampos/nvim-snippy'
   use 'farmergreg/vim-lastplace'
+  use {
+    'kiddos/translate.nvim',
+    rocks = {
+      'lua-cjson',
+      'luasec',
+    }
+  }
 
 
   -- language specific

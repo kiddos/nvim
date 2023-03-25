@@ -241,6 +241,9 @@ settings.setup = function()
   local marks = require('marks')
   marks.setup()
   vim.api.nvim_set_keymap('n', '<Leader>dm', ':delmarks a-zA-Z0-9<CR>', {silent=true, noremap=true})
+
+  -- translate
+  require('translate').setup()
 end
 
 return settings

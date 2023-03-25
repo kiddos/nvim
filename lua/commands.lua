@@ -279,7 +279,7 @@ commands.setup = function()
       end
     })
 
-  require('translate').setup()
+  -- require('translate').setup()
 end
 
 return commands
