@@ -53,28 +53,6 @@ local M = packer.startup(function()
       vim.api.nvim_command('colorscheme malokai')
     end
   }
-  -- use {
-  --   'kaicataldo/material.vim',
-  --   branch = 'main',
-  --   config = function()
-  --     vim.api.nvim_command('set termguicolors')
-  --     vim.api.nvim_command('let $NVIM_TUI_ENABLE_TRUE_COLOR = 1')
-
-  --     vim.api.nvim_command('syntax enable')
-  --     vim.api.nvim_command('syntax on')
-  --     vim.api.nvim_command('let g:material_theme_style = "darker"')
-  --     vim.api.nvim_command('colorscheme material')
-  --   end
-  -- }
-  -- use {
-  --   'tomasr/molokai',
-  --   config = function()
-  --     vim.api.nvim_command('set termguicolors')
-  --     vim.api.nvim_command('syntax enable')
-  --     vim.api.nvim_command('syntax on')
-  --     vim.api.nvim_command('colorscheme molokai')
-  --   end
-  -- }
 
   -- git
   use {
@@ -154,23 +132,19 @@ local M = packer.startup(function()
 
 
   -- language specific
-  -- vue
-  use 'leafOfTree/vim-vue-plugin'
-  -- vhdl
-  use 'kiddos/vim-vhdl'
-  -- markdown
   use {
     'iamcco/markdown-preview.nvim',
     run = 'cd app && yarn install',
     ft = {'markdown'},
     cmd = 'MarkdownPreview',
   }
-  -- rust
-  use 'rust-lang/rust.vim'
   -- dart
   use {
     'akinsho/flutter-tools.nvim',
-    requires = 'plenary.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim',
+    },
   }
 
   if packer_bootstrap then

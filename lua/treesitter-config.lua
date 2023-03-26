@@ -3,28 +3,49 @@ local treesitter_config = {}
 treesitter_config.apply = function()
   require('nvim-treesitter.configs').setup {
     ensure_installed = {
-      'bash',
       'c',
       'cpp',
       'cuda',
-      'cmake',
       'dart',
       'go',
       'lua',
-      'proto',
       'rust',
       'python',
-      'julia',
       'java',
+      'kotlin',
+      'r',
+      'ruby',
+      'verilog',
+      'vim',
+
+      'proto',
+      'glsl',
+
+      'bash',
+      'diff',
+      'cmake',
+      'make',
+      'ninja',
+
+      'gitattributes',
+      'gitcommit',
+      'gitignore',
+
       'javascript',
       'typescript',
       'json',
       'tsx',
+      'vue',
+
       'html',
+      'markdown',
+      'markdown_inline',
       'css',
+
       'sql',
+
       'yaml',
-      'vim'
+      'ini',
     },
     indent = {
       enable = true,

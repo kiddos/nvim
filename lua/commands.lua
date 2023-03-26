@@ -278,8 +278,6 @@ commands.setup = function()
         return { '+x', '777', '664' }
       end
     })
-
-  -- require('translate').setup()
 end
 
 return commands
