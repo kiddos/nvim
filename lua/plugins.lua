@@ -20,7 +20,19 @@ local M = packer.startup(function()
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/lsp-status.nvim'
   use 'onsails/lspkind-nvim'
-  use 'glepnir/lspsaga.nvim'
+  use {
+    'glepnir/lspsaga.nvim',
+    opt = true,
+    branch = 'main',
+    event = 'LspAttach',
+    config = function()
+      require('lspsaga-settings').setup()
+    end,
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+      'nvim-treesitter/nvim-treesitter'
+    },
+  }
   use {
     'gfanto/fzf-lsp.nvim',
     requires = { 'nvim-lua/plenary.nvim' }
@@ -43,6 +55,7 @@ local M = packer.startup(function()
   -- tabline
   use {
     'romgrk/barbar.nvim',
+    tag = 'v1.5.0',
     requires = {'kyazdani42/nvim-web-devicons'},
   }
 

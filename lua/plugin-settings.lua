@@ -5,8 +5,17 @@ settings.setup = function()
   local bufferline = require('bufferline')
   bufferline.setup({
     animation = false,
+    auto_hide = false,
+    icons = true,
     icon_custom_colors = true,
-    maximum_padding = 2,
+    maximum_padding = 1,
+    icon_pinned = '📌',
+    diagnostics = {
+      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'Ⓧ '},
+      [vim.diagnostic.severity.HINT] = {enabled = true, icon = '💡'},
+      [vim.diagnostic.severity.INFO] = {enabled = true, icon = 'ⓘ '},
+      [vim.diagnostic.severity.WARN] = {enabled = true, icon = '⚠️ '},
+    }
   })
 
   vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})

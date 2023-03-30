@@ -1,6 +1,6 @@
 ## header include guard
 snippet once
-	#ifndef ${1:`toupper(expand('%:r'))`_H}
+	#ifndef ${1:`toupper(expand('%:t:r'))`_H}
 	#define $1
 
 	${0}
