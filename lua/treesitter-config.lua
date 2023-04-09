@@ -102,6 +102,17 @@ treesitter_config.apply = function()
       vim.opt_local.foldmarker = '{{{,}}}'
     end
   })
+
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>t', '', {
+    expr = true,
+    noremap = true,
+    callback = function()
+      local captures = vim.treesitter.get_captures_at_cursor(0)
+      for _, cap in pairs(captures) do
+        print(cap)
+      end
+    end
+  })
 end
 
 return treesitter_config
