@@ -131,15 +131,6 @@ lsp.setup = function()
   -- webmacro
   lspconfig.webmacrols.setup{}
 
-  -- java language server
-  local home = vim.loop.os_homedir()
-  local java_lsp_bin = home .. '/.local/lsp/java-language-server/dist/lang_server_linux.sh'
-  if file_exists(java_lsp_bin) then
-    lspconfig.java_language_server.setup{
-      cmd = {java_lsp_bin,  '--quiet'},
-    }
-  end
-
   -- yaml
   lspconfig.yamlls.setup{}
 
