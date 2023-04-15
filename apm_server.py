@@ -1,32 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from time import time, sleep
-from threading import Thread
 import logging
+from concurrent import futures
+from time import time
+from threading import Thread
 from argparse import ArgumentParser
-
+import socket
+import psutil
+import os
 
 from pynput.keyboard import Key, Listener
-import psutil
-import asyncore
-import socket
-
-
-def str2bool(v):
-  if v.lower() in ('yes', 'true', 't', 'y', '1'):
-    return True
-  elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-    return False
-  else:
-    return True
+import grpc
+from editor_pb2 import APMResponse
+import editor_pb2_grpc
 
 
 parser = ArgumentParser()
-parser.add_argument('--timeout', default=60, type=int,
-  help='timeout')
-parser.add_argument('--debug', default=True, type=str2bool,
-  help='debug mode')
+parser.add_argument('--port', default=50051, type=int, help='grpc port to use')
+parser.add_argument('--timeout', default=60, type=int, help='timeout')
+parser.add_argument('--debug', default=True, type=bool, help='debug mode')
 args = parser.parse_args()
 
 
@@ -61,57 +54,44 @@ class InputListener(object):
 
   def start(self):
     try:
-      with Listener(on_press=self.on_press,
-          on_release=self.on_release) as listener:
+      with Listener(on_press=self.on_press, on_release=self.on_release) as listener:
         listener.join()
     except KeyboardInterrupt:
       logger.info('stop key listener')
 
 
-class APMServer(asyncore.dispatcher):
-  def __init__(self, host, port):
-    asyncore.dispatcher.__init__(self)
-    self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.set_reuse_addr()
-    self.bind((host, port))
-    self.listen(1)
-
+class EditorServicer(editor_pb2_grpc.EditorServicer):
+  def __init__(self):
     self.listener = InputListener()
+    self.start_listener()
 
-  def handle_accept(self):
-    pair = self.accept()
-    if pair is not None:
-      sock, addr = pair
-      data = '% 4.2f' % self.listener.compute_apm()
-      sock.sendall(bytes(data, 'utf8'))
+  def start_listener(self):
+    self.listener_task = Thread(target=self.listener.start)
+    self.listener_task.start()
 
-  def start_asyncore(self):
-    try:
-      asyncore.loop()
-    except KeyboardInterrupt:
-      logger.info('stop apm server')
+  def GetAPM(self, request, context):
+    apm = self.listener.compute_apm()
+    return APMResponse(apm=apm)
 
 
-  def start_both(self):
-    try:
-      listener_task = Thread(target=self.listener.start)
-      listener_task.start()
-
-      server_task = Thread(target=self.start_asyncore)
-      server_task.daemon = True
-      server_task.start()
-
-      listener_task.join()
-    except KeyboardInterrupt:
-      logger.info('stopped')
+def is_port_in_use(port: int) -> bool:
+  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    return s.connect_ex(('localhost', port)) == 0
 
 
 def main():
-  try:
-    server = APMServer('localhost', 9006)
-    server.start_both()
-  except socket.error:
-    logger.error('process started')
+  if is_port_in_use(args.port):
+    logger.info('grpc server already started')
+    return
+
+  p = psutil.Process(os.getpid())
+  p.nice(16)
+
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+  editor_pb2_grpc.add_EditorServicer_to_server(EditorServicer(), server)
+  server.add_insecure_port(f'[::]:{args.port}')
+  server.start()
+  server.wait_for_termination()
 
 
 if __name__ == '__main__':

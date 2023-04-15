@@ -7,5 +7,7 @@ bundle/*
 plugged/*
 autoload/plug.vim
 
+__pycache__
+
 pack
 plugin
