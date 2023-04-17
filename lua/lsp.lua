@@ -29,8 +29,9 @@ lsp.setup = function()
 
   if file_exists('/usr/bin/' .. clangd) then
     lspconfig.clangd.setup{
-      cmd = {clangd, "--background-index", "--header-insertion=never"};
+      cmd = {clangd, '--background-index', '--header-insertion=never'};
       handlers = clangd_handler,
+      filetypes= {'c', 'cpp', 'cuda'},
       init_options = {
         clangdFileStatus = true
       },
