@@ -157,7 +157,6 @@ lsp.setup = function()
     cr_mapping = npairs.autopairs_cr
   })
 
-
   -- sign
   vim.api.nvim_command('sign define DiagnosticSignError text=✖ texthl=DiagnosticSignError linehl= numhl=')
   vim.api.nvim_command('sign define DiagnosticSignWarn text=⚠ texthl=DiagnosticSignWarn linehl= numhl=')

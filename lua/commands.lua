@@ -278,6 +278,11 @@ commands.setup = function()
         return { '+x', '777', '664' }
       end
     })
+
+  vim.api.nvim_create_user_command('SqlFormat',
+    function()
+      vim.cmd('%!sqlformat --reindent --keywords upper --identifiers lower -')
+    end, {})
 end
 
 return commands
