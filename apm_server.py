@@ -6,11 +6,12 @@ from concurrent import futures
 from time import time
 from threading import Thread
 from argparse import ArgumentParser
+from collections import deque
 import socket
 import psutil
 import os
 
-from pynput.keyboard import Key, Listener
+from pynput import keyboard
 import grpc
 from editor_pb2 import APMResponse
 import editor_pb2_grpc
@@ -30,34 +31,38 @@ logger.setLevel(logging.INFO)
 
 class InputListener(object):
   def __init__(self):
-    self.start_time = time()
-    self.actions = 0
-    self.last_pressed = time()
+    self.actions = deque()
 
   def on_press(self, key):
-    self.actions += 1
-    self.last_pressed = time()
+    self.actions.append(dict(
+      time=time(),
+      key=key,
+    ))
 
   def on_release(self, key):
     if args.debug:
       logger.info('apm: %f', self.compute_apm())
-    if args.debug and key == Key.esc:
-      # Stop listener
-      return False
+    if args.debug and key == keyboard.Key.esc:
+      pass
 
   def compute_apm(self):
-    passed = time() - self.start_time
-    if self.last_pressed - self.start_time > args.timeout:
-      self.actions = 0
-      self.start_time = time()
-    return self.actions / passed * 60.0
+    current = time()
+    while len(self.actions) > 0 and current - self.actions[0]['time'] > args.timeout:
+      self.actions.popleft()
+    num_action = len(self.actions)
+    t0 = 0
+    if len(self.actions) > 0:
+      t0 = self.actions[0]['time']
+    passed = current - max(t0, 1e-6)
+    apm = num_action / passed * 60.0
+    return apm
 
   def start(self):
     try:
-      with Listener(on_press=self.on_press, on_release=self.on_release) as listener:
+      with keyboard.Listener(on_press=self.on_press, on_release=self.on_release) as listener:
         listener.join()
-    except KeyboardInterrupt:
-      logger.info('stop key listener')
+    except Exception as e:
+      logger.error('listener stopped', e)
 
 
 class EditorServicer(editor_pb2_grpc.EditorServicer):

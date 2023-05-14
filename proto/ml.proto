@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package model;
+
+message DocumentRequest {
+  string language = 1;
+  int32 num_response = 2;
+  string code = 3;
+}
+
+message DocumentResponse {
+  repeated string doc = 1;
+}
+
+message CommitRequest {
+  string model_name = 1;
+  int32 num_response = 2;
+}
+
+message CommitResponse {
+  repeated string commit_msgs = 1;
+}
+
+service ML {
+  rpc GenerateDocument(DocumentRequest) returns (DocumentResponse) {}
+  rpc GenerateCommit(CommitRequest) returns (CommitResponse) {}
+}

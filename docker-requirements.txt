@@ -1,0 +1,3 @@
+grpcio-tools==1.36.1
+transformers
+optimum[onnxruntime]
