@@ -55,7 +55,7 @@ local M = packer.startup(function()
   -- tabline
   use {
     'romgrk/barbar.nvim',
-    tag = 'v1.5.0',
+    tag = 'v1.6.5',
     requires = {'kyazdani42/nvim-web-devicons'},
   }
 

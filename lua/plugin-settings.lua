@@ -6,16 +6,23 @@ settings.setup = function()
   bufferline.setup({
     animation = false,
     auto_hide = false,
-    icons = true,
-    icon_custom_colors = true,
+    icons = {
+      filetype = {
+        enabled = true,
+        custom_colors = true,
+      },
+      pinned = {
+        button = '📌',
+      },
+      button = '✕',
+      diagnostics = {
+        [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'Ⓧ '},
+        [vim.diagnostic.severity.HINT] = {enabled = true, icon = '💡'},
+        [vim.diagnostic.severity.INFO] = {enabled = true, icon = 'ⓘ '},
+        [vim.diagnostic.severity.WARN] = {enabled = true, icon = '⚠️ '},
+      }
+    },
     maximum_padding = 1,
-    icon_pinned = '📌',
-    diagnostics = {
-      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'Ⓧ '},
-      [vim.diagnostic.severity.HINT] = {enabled = true, icon = '💡'},
-      [vim.diagnostic.severity.INFO] = {enabled = true, icon = 'ⓘ '},
-      [vim.diagnostic.severity.WARN] = {enabled = true, icon = '⚠️ '},
-    }
   })
 
   vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
