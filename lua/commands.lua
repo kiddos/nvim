@@ -91,7 +91,7 @@ commands.alternate_file = function()
   local alternate_extensions = ALTERNATE_EXTENSIONS[current_extension]
 
   local function file_exists(filename)
-    local stat = vim.loop.fs_stat(filename)
+    local stat = vim.uv.fs_stat(filename)
     return stat and stat.type or false
   end
 
@@ -196,7 +196,7 @@ commands.chmod = function(opts)
   local args = opts.args
 
   local function file_exists(filename)
-    local stat = vim.loop.fs_stat(filename)
+    local stat = vim.uv.fs_stat(filename)
     return stat and stat.type or false
   end
 

@@ -16,7 +16,7 @@ lsp.setup = function()
   lsp_status.register_progress()
 
   local function file_exists(filename)
-    local stat = vim.loop.fs_stat(filename)
+    local stat = vim.uv.fs_stat(filename)
     return stat and stat.type or false
   end
 
@@ -108,7 +108,7 @@ lsp.setup = function()
   lspconfig.rust_analyzer.setup{}
 
   -- lua
-  local lua_lsp_path = vim.loop.os_homedir() .. '/.local/lsp/lua-language-server'
+  local lua_lsp_path = vim.uv.os_homedir() .. '/.local/lsp/lua-language-server'
   local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
   if file_exists(lua_lsp_binary) then
     lspconfig.lua_ls.setup{
@@ -185,7 +185,6 @@ lsp.setup = function()
   -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
 
-  -- lualine
   require('lualine').setup{
     options = {
       theme = 'onedark',
@@ -198,8 +197,6 @@ lsp.setup = function()
       --[[ lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'}, ]]
     },
   }
-
-  require('lspfuzzy').setup{}
 end
 
 return lsp

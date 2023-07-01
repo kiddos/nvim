@@ -325,7 +325,7 @@ util.get_current_dirname = function()
 end
 
 util.scan_directory = function(dirname)
-  local fs, err = vim.loop.fs_scandir(dirname)
+  local fs, err = vim.uv.fs_scandir(dirname)
   if err then
     return nil
   end
@@ -333,7 +333,7 @@ util.scan_directory = function(dirname)
   local items = {}
 
   while true do
-    local name, type, e = vim.loop.fs_scandir_next(fs)
+    local name, type, e = vim.uv.fs_scandir_next(fs)
     if e then
       return items
     end
@@ -358,7 +358,7 @@ util.scan_directory = function(dirname)
           empty = 1,
         })
       elseif type == 'link' then
-        local stat = vim.loop.fs_stat(dirname .. '/' .. name)
+        local stat = vim.uv.fs_stat(dirname .. '/' .. name)
         if stat then
           if stat.type == 'directory' then
             table.insert(items, {
@@ -426,12 +426,12 @@ end
 util.throttle = function(callback, timeout)
   local last_called = -1
   local f = function(params)
-    local current_time = vim.loop.now()
+    local current_time = vim.uv.now()
     if current_time - last_called < timeout then
       return
     end
 
-    last_called = vim.loop.now()
+    last_called = vim.uv.now()
     vim.defer_fn(function()
       callback(params)
     end, 0)

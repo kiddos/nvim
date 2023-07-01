@@ -19,7 +19,7 @@ function dump(o)
 end
 
 context.completion = {
-  timer = vim.loop.new_timer(),
+  timer = vim.uv.new_timer(),
   lsp = {
     result = nil,
     cancel_func = nil,
@@ -35,7 +35,7 @@ context.completion = {
 }
 
 context.info = {
-  timer = vim.loop.new_timer(),
+  timer = vim.uv.new_timer(),
   lsp = {
     result = nil,
     cancel_func = nil,
@@ -45,7 +45,7 @@ context.info = {
 }
 
 context.signature = {
-  timer = vim.loop.new_timer(),
+  timer = vim.uv.new_timer(),
   lsp = {
     result = nil,
     cancel_func = nil,
@@ -91,7 +91,7 @@ context.scan_paths = function()
     return
   end
 
-  local stat = vim.loop.fs_stat(dirname)
+  local stat = vim.uv.fs_stat(dirname)
   if not stat then
     return
   end

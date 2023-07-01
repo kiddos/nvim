@@ -7,13 +7,13 @@ M.setup = function()
     ui = {
       border = 'rounded',
       winblend = 0,
-      expand = '',
-      collapse = '',
+      expand = ' ',
+      collapse = ' ',
       preview = '🖵  ',
       code_action = '💡',
       diagnostic = '🐞',
-      incoming = ' ',
-      outgoing = ' ',
+      incoming = '➡',
+      outgoing = '⬅',
     },
     lightbulb = {
       enable = true,
@@ -50,9 +50,7 @@ M.setup = function()
     end
   })
 
-  vim.api.nvim_set_keymap('v', '<Leader>code', '', {
-    noremap=true,
-    silent=true,
+  vim.api.nvim_set_keymap('v', '<Leader>code', '', { noremap=true, silent=true,
     callback = function()
       vim.api.nvim_command('Lspsaga code_action')
     end

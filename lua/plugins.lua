@@ -25,9 +25,7 @@ local M = packer.startup(function()
     opt = true,
     branch = 'main',
     event = 'LspAttach',
-    config = function()
-      require('lspsaga-settings').setup()
-    end,
+    config = require('plugin-settings/lspsaga-settings').setup,
     requires = {
       'nvim-tree/nvim-web-devicons',
       'nvim-treesitter/nvim-treesitter'
@@ -35,7 +33,7 @@ local M = packer.startup(function()
   }
   use {
     'gfanto/fzf-lsp.nvim',
-    requires = { 'nvim-lua/plenary.nvim' }
+    requires = {'nvim-lua/plenary.nvim'}
   }
   use {
     'ojroques/nvim-lspfuzzy',
@@ -43,6 +41,7 @@ local M = packer.startup(function()
       {'junegunn/fzf'},
       {'junegunn/fzf.vim'},  -- to enable preview (optional)
     },
+    config = require('plugin-settings/lspfuzzy').setup,
   }
 
   -- treesitter
@@ -57,6 +56,7 @@ local M = packer.startup(function()
     'romgrk/barbar.nvim',
     tag = 'v1.6.5',
     requires = {'kyazdani42/nvim-web-devicons'},
+    config = require('plugin-settings/bufferline').setup,
   }
 
   -- color scheme
@@ -81,16 +81,11 @@ local M = packer.startup(function()
     cmd = {'GitBlameToggle'}
   }
   use {
-    'sindrets/diffview.nvim',
-    cmd = {'DiffviewOpen', 'DiffviewClose', 'DiffviewToggleFiles', 'DiffviewFocusFiles', 'DiffviewRefresh', 'DiffviewFileHistory'}
-  }
-  use {
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
     }
   }
-  use 'akinsho/git-conflict.nvim'
 
   -- tmux
   use 'christoomey/vim-tmux-navigator'
@@ -102,10 +97,10 @@ local M = packer.startup(function()
 
   -- utility
   use 'windwp/nvim-autopairs' -- auto pairs
-  use 'hoob3rt/lualine.nvim' -- status line
+  -- status line
+  use 'hoob3rt/lualine.nvim'
   use 'kyazdani42/nvim-web-devicons' -- icons
   use 'gelguy/wilder.nvim' -- wild menu
-  use 'chentoast/marks.nvim' -- use marks
   -- file browser
   use {
     'scrooloose/nerdtree',

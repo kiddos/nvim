@@ -1,60 +1,6 @@
 local settings = {}
 
 settings.setup = function()
-  -- barbar
-  local bufferline = require('bufferline')
-  bufferline.setup({
-    animation = false,
-    auto_hide = false,
-    icons = {
-      filetype = {
-        enabled = true,
-        custom_colors = true,
-      },
-      pinned = {
-        button = '📌',
-      },
-      button = '✕',
-      diagnostics = {
-        [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'Ⓧ '},
-        [vim.diagnostic.severity.HINT] = {enabled = true, icon = '💡'},
-        [vim.diagnostic.severity.INFO] = {enabled = true, icon = 'ⓘ '},
-        [vim.diagnostic.severity.WARN] = {enabled = true, icon = '⚠️ '},
-      }
-    },
-    maximum_padding = 1,
-  })
-
-  vim.api.nvim_set_keymap('n', '<A-,>', ':BufferPrevious<CR>', {silent=true, noremap=true})
-  vim.api.nvim_set_keymap('n', '<A-.>', ':BufferNext<CR>', {silent=true, noremap=true})
-
-  vim.api.nvim_set_var('mapleader', ',')
-  -- Re-order to previous/next
-  vim.api.nvim_set_keymap('n', '<A-Left>', ':BufferMovePrevious<CR>', {silent=true, noremap=true})
-  vim.api.nvim_set_keymap('n', '<A-Right>', ':BufferMoveNext<CR>', {silent=true, noremap=true})
-
-  for i = 1,9,1 do
-    vim.api.nvim_set_keymap('n', string.format('<Leader>%d', i), string.format(':BufferGoto %d<CR>', i), {silent=true, noremap=true})
-  end
-
-  -- Goto buffer in position...
-  vim.api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', {silent=true, noremap=true})
-  -- Close buffer
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>c', ':BufferClose<CR>', {silent=true, noremap=true})
-  vim.api.nvim_set_keymap('n', '<Leader><Leader><Space>', ':BufferCloseAllButCurrent<CR>', {silent=true, noremap=true})
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>s', ':BufferPick<CR>', {silent=true, noremap=true})
-
-  -- Wipeout buffer
-  -- :BufferWipeout<CR>
-  -- Close commands
-  -- :BufferCloseAllButCurrent<CR>
-  -- :BufferCloseBuffersLeft<CR>
-  -- :BufferCloseBuffersRight<CR>
-  -- Magic buffer-picking mode nnoremap <silent> <C-s>    :BufferPick<CR>
-  -- Sort automatically by...
-  -- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-  -- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-
   -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
   vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})
@@ -63,8 +9,6 @@ settings.setup = function()
   vim.api.nvim_set_var('gitblame_enabled', false)
   vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', {noremap=true, silent=true})
   vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', {noremap=true, silent=true})
-
-  require('git-conflict').setup()
 
 
   -- NerdTree
@@ -251,12 +195,6 @@ settings.setup = function()
     left = {' ', wilder.popupmenu_devicons()},
     right = {' ', wilder.popupmenu_scrollbar()},
   }))
-
-
-  -- marks
-  local marks = require('marks')
-  marks.setup()
-  vim.api.nvim_set_keymap('n', '<Leader>dm', ':delmarks a-zA-Z0-9<CR>', {silent=true, noremap=true})
 
   -- translate
   require('translate').setup()
