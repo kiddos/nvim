@@ -7,8 +7,8 @@ M.setup = function()
     ui = {
       border = 'rounded',
       winblend = 0,
-      expand = ' ',
-      collapse = ' ',
+      expand = '⊞',
+      collapse = '⊟',
       preview = '🖵  ',
       code_action = '💡',
       diagnostic = '🐞',
@@ -17,9 +17,9 @@ M.setup = function()
     },
     lightbulb = {
       enable = true,
-      enable_in_insert = false,
       sign = true,
-      sign_priority = 40,
+      sign_priority = 100,
+      debounce = 2000,
       virtual_text = false,
     },
     symbol_in_winbar = {
@@ -38,7 +38,7 @@ M.setup = function()
     noremap = true,
     silent = true,
     callback = function()
-      vim.api.nvim_command('Lspsaga lsp_finder')
+      vim.api.nvim_command('Lspsaga finder')
     end
   })
 
@@ -64,6 +64,30 @@ M.setup = function()
     end
   })
 
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>r', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga rename')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader>imp', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga finder imp')
+    end
+  })
+
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>i', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.api.nvim_command('Lspsaga finder imp')
+    end
+  })
+
   vim.api.nvim_set_keymap('n', '<Leader>doc', '', {
     noremap = true,
     silent = true,
@@ -85,23 +109,6 @@ M.setup = function()
     silent = true,
     callback = function()
       vim.api.nvim_command('Lspsaga hover_doc')
-    end
-  })
-
-  vim.api.nvim_set_keymap('n', '<A-d>', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga open_floaterm')
-    end
-  })
-
-  vim.api.nvim_set_keymap('t', '<A-d>', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true), 'n', false)
-      vim.api.nvim_command('Lspsaga close_floaterm')
     end
   })
 end

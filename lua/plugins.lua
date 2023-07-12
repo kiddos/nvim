@@ -21,15 +21,9 @@ local M = packer.startup(function()
   use 'nvim-lua/lsp-status.nvim'
   use 'onsails/lspkind-nvim'
   use {
-    'glepnir/lspsaga.nvim',
-    opt = true,
-    branch = 'main',
-    event = 'LspAttach',
+    'nvimdev/lspsaga.nvim',
+    after = 'nvim-lspconfig',
     config = require('plugin-settings/lspsaga-settings').setup,
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-      'nvim-treesitter/nvim-treesitter'
-    },
   }
   use {
     'gfanto/fzf-lsp.nvim',
