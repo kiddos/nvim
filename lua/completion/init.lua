@@ -216,6 +216,7 @@ context.get_info_window_options = function(event)
     height = info_height,
     focusable = false,
     style = 'minimal',
+    border = 'rounded',
   }
 end
 
@@ -227,7 +228,11 @@ context.trigger_info = function(event)
       return
     end
 
-    vim.lsp.util.stylize_markdown(context.info.lsp.buffer, info_text)
+    vim.lsp.util.stylize_markdown(context.info.lsp.buffer, info_text, {
+      max_width = 60,
+      width = 60,
+      separator = '=======================',
+    })
     local callback = vim.schedule_wrap(function()
       local options = context.get_info_window_options(event)
       if vim.fn.pumvisible() ~= 1 or vim.fn.mode() ~= 'i' then
@@ -368,7 +373,7 @@ context.show_signature_window = function()
   end
 
   util.create_buffer(context.signature.lsp, 'function-signature')
-  vim.lsp.util.stylize_markdown(context.signature.lsp.buffer, lines)
+  vim.lsp.util.stylize_markdown(context.signature.lsp.buffer, lines, {})
 
   local cur_text = table.concat(lines, '\n')
   if context.signature.lsp.window and cur_text == context.signature.lsp.text then
