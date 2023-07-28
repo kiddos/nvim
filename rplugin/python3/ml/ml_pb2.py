@@ -3,9 +3,9 @@
 # source: ml.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
-from google.protobuf import message as _message
-from google.protobuf import reflection as _reflection
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import symbol_database as _symbol_database
+from google.protobuf.internal import builder as _builder
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -13,235 +13,22 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-  name='ml.proto',
-  package='model',
-  syntax='proto3',
-  serialized_options=None,
-  create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x08ml.proto\x12\x05model\"G\n\x0f\x44ocumentRequest\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x14\n\x0cnum_response\x18\x02 \x01(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x01(\t\"\x1f\n\x10\x44ocumentResponse\x12\x0b\n\x03\x64oc\x18\x01 \x03(\t\"9\n\rCommitRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x14\n\x0cnum_response\x18\x02 \x01(\x05\"%\n\x0e\x43ommitResponse\x12\x13\n\x0b\x63ommit_msgs\x18\x01 \x03(\t2\x8c\x01\n\x02ML\x12\x45\n\x10GenerateDocument\x12\x16.model.DocumentRequest\x1a\x17.model.DocumentResponse\"\x00\x12?\n\x0eGenerateCommit\x12\x14.model.CommitRequest\x1a\x15.model.CommitResponse\"\x00\x62\x06proto3'
-)
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x08ml.proto\x12\x05model\"G\n\x0f\x44ocumentRequest\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x14\n\x0cnum_response\x18\x02 \x01(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x01(\t\"\x1f\n\x10\x44ocumentResponse\x12\x0b\n\x03\x64oc\x18\x01 \x03(\t\"9\n\rCommitRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x14\n\x0cnum_response\x18\x02 \x01(\x05\"%\n\x0e\x43ommitResponse\x12\x13\n\x0b\x63ommit_msgs\x18\x01 \x03(\t2\x8c\x01\n\x02ML\x12\x45\n\x10GenerateDocument\x12\x16.model.DocumentRequest\x1a\x17.model.DocumentResponse\"\x00\x12?\n\x0eGenerateCommit\x12\x14.model.CommitRequest\x1a\x15.model.CommitResponse\"\x00\x62\x06proto3')
 
+_globals = globals()
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ml_pb2', _globals)
+if _descriptor._USE_C_DESCRIPTORS == False:
 
-
-
-_DOCUMENTREQUEST = _descriptor.Descriptor(
-  name='DocumentRequest',
-  full_name='model.DocumentRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='language', full_name='model.DocumentRequest.language', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='num_response', full_name='model.DocumentRequest.num_response', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='code', full_name='model.DocumentRequest.code', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=19,
-  serialized_end=90,
-)
-
-
-_DOCUMENTRESPONSE = _descriptor.Descriptor(
-  name='DocumentResponse',
-  full_name='model.DocumentResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='doc', full_name='model.DocumentResponse.doc', index=0,
-      number=1, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=92,
-  serialized_end=123,
-)
-
-
-_COMMITREQUEST = _descriptor.Descriptor(
-  name='CommitRequest',
-  full_name='model.CommitRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='model_name', full_name='model.CommitRequest.model_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='num_response', full_name='model.CommitRequest.num_response', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=125,
-  serialized_end=182,
-)
-
-
-_COMMITRESPONSE = _descriptor.Descriptor(
-  name='CommitResponse',
-  full_name='model.CommitResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='commit_msgs', full_name='model.CommitResponse.commit_msgs', index=0,
-      number=1, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=184,
-  serialized_end=221,
-)
-
-DESCRIPTOR.message_types_by_name['DocumentRequest'] = _DOCUMENTREQUEST
-DESCRIPTOR.message_types_by_name['DocumentResponse'] = _DOCUMENTRESPONSE
-DESCRIPTOR.message_types_by_name['CommitRequest'] = _COMMITREQUEST
-DESCRIPTOR.message_types_by_name['CommitResponse'] = _COMMITRESPONSE
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-DocumentRequest = _reflection.GeneratedProtocolMessageType('DocumentRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DOCUMENTREQUEST,
-  '__module__' : 'ml_pb2'
-  # @@protoc_insertion_point(class_scope:model.DocumentRequest)
-  })
-_sym_db.RegisterMessage(DocumentRequest)
-
-DocumentResponse = _reflection.GeneratedProtocolMessageType('DocumentResponse', (_message.Message,), {
-  'DESCRIPTOR' : _DOCUMENTRESPONSE,
-  '__module__' : 'ml_pb2'
-  # @@protoc_insertion_point(class_scope:model.DocumentResponse)
-  })
-_sym_db.RegisterMessage(DocumentResponse)
-
-CommitRequest = _reflection.GeneratedProtocolMessageType('CommitRequest', (_message.Message,), {
-  'DESCRIPTOR' : _COMMITREQUEST,
-  '__module__' : 'ml_pb2'
-  # @@protoc_insertion_point(class_scope:model.CommitRequest)
-  })
-_sym_db.RegisterMessage(CommitRequest)
-
-CommitResponse = _reflection.GeneratedProtocolMessageType('CommitResponse', (_message.Message,), {
-  'DESCRIPTOR' : _COMMITRESPONSE,
-  '__module__' : 'ml_pb2'
-  # @@protoc_insertion_point(class_scope:model.CommitResponse)
-  })
-_sym_db.RegisterMessage(CommitResponse)
-
-
-
-_ML = _descriptor.ServiceDescriptor(
-  name='ML',
-  full_name='model.ML',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=None,
-  create_key=_descriptor._internal_create_key,
-  serialized_start=224,
-  serialized_end=364,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='GenerateDocument',
-    full_name='model.ML.GenerateDocument',
-    index=0,
-    containing_service=None,
-    input_type=_DOCUMENTREQUEST,
-    output_type=_DOCUMENTRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
-    name='GenerateCommit',
-    full_name='model.ML.GenerateCommit',
-    index=1,
-    containing_service=None,
-    input_type=_COMMITREQUEST,
-    output_type=_COMMITRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-])
-_sym_db.RegisterServiceDescriptor(_ML)
-
-DESCRIPTOR.services_by_name['ML'] = _ML
-
+  DESCRIPTOR._options = None
+  _globals['_DOCUMENTREQUEST']._serialized_start=19
+  _globals['_DOCUMENTREQUEST']._serialized_end=90
+  _globals['_DOCUMENTRESPONSE']._serialized_start=92
+  _globals['_DOCUMENTRESPONSE']._serialized_end=123
+  _globals['_COMMITREQUEST']._serialized_start=125
+  _globals['_COMMITREQUEST']._serialized_end=182
+  _globals['_COMMITRESPONSE']._serialized_start=184
+  _globals['_COMMITRESPONSE']._serialized_end=221
+  _globals['_ML']._serialized_start=224
+  _globals['_ML']._serialized_end=364
 # @@protoc_insertion_point(module_scope)

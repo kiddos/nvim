@@ -3,9 +3,9 @@
 # source: editor.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
-from google.protobuf import message as _message
-from google.protobuf import reflection as _reflection
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import symbol_database as _symbol_database
+from google.protobuf.internal import builder as _builder
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -13,124 +13,18 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-  name='editor.proto',
-  package='editor',
-  syntax='proto3',
-  serialized_options=None,
-  create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x65\x64itor.proto\x12\x06\x65\x64itor\"\x1a\n\nAPMRequest\x12\x0c\n\x04time\x18\x01 \x01(\x03\"\x1a\n\x0b\x41PMResponse\x12\x0b\n\x03\x61pm\x18\x01 \x01(\x02\x32=\n\x06\x45\x64itor\x12\x33\n\x06GetAPM\x12\x12.editor.APMRequest\x1a\x13.editor.APMResponse\"\x00\x62\x06proto3'
-)
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x65\x64itor.proto\x12\x06\x65\x64itor\"\x1a\n\nAPMRequest\x12\x0c\n\x04time\x18\x01 \x01(\x03\"\x1a\n\x0b\x41PMResponse\x12\x0b\n\x03\x61pm\x18\x01 \x01(\x02\x32=\n\x06\x45\x64itor\x12\x33\n\x06GetAPM\x12\x12.editor.APMRequest\x1a\x13.editor.APMResponse\"\x00\x62\x06proto3')
 
+_globals = globals()
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'editor_pb2', _globals)
+if _descriptor._USE_C_DESCRIPTORS == False:
 
-
-
-_APMREQUEST = _descriptor.Descriptor(
-  name='APMRequest',
-  full_name='editor.APMRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='time', full_name='editor.APMRequest.time', index=0,
-      number=1, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=24,
-  serialized_end=50,
-)
-
-
-_APMRESPONSE = _descriptor.Descriptor(
-  name='APMResponse',
-  full_name='editor.APMResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='apm', full_name='editor.APMResponse.apm', index=0,
-      number=1, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=52,
-  serialized_end=78,
-)
-
-DESCRIPTOR.message_types_by_name['APMRequest'] = _APMREQUEST
-DESCRIPTOR.message_types_by_name['APMResponse'] = _APMRESPONSE
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-APMRequest = _reflection.GeneratedProtocolMessageType('APMRequest', (_message.Message,), {
-  'DESCRIPTOR' : _APMREQUEST,
-  '__module__' : 'editor_pb2'
-  # @@protoc_insertion_point(class_scope:editor.APMRequest)
-  })
-_sym_db.RegisterMessage(APMRequest)
-
-APMResponse = _reflection.GeneratedProtocolMessageType('APMResponse', (_message.Message,), {
-  'DESCRIPTOR' : _APMRESPONSE,
-  '__module__' : 'editor_pb2'
-  # @@protoc_insertion_point(class_scope:editor.APMResponse)
-  })
-_sym_db.RegisterMessage(APMResponse)
-
-
-
-_EDITOR = _descriptor.ServiceDescriptor(
-  name='Editor',
-  full_name='editor.Editor',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=None,
-  create_key=_descriptor._internal_create_key,
-  serialized_start=80,
-  serialized_end=141,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='GetAPM',
-    full_name='editor.Editor.GetAPM',
-    index=0,
-    containing_service=None,
-    input_type=_APMREQUEST,
-    output_type=_APMRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-])
-_sym_db.RegisterServiceDescriptor(_EDITOR)
-
-DESCRIPTOR.services_by_name['Editor'] = _EDITOR
-
+  DESCRIPTOR._options = None
+  _globals['_APMREQUEST']._serialized_start=24
+  _globals['_APMREQUEST']._serialized_end=50
+  _globals['_APMRESPONSE']._serialized_start=52
+  _globals['_APMRESPONSE']._serialized_end=78
+  _globals['_EDITOR']._serialized_start=80
+  _globals['_EDITOR']._serialized_end=141
 # @@protoc_insertion_point(module_scope)

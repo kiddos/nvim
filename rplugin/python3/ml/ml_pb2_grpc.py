@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from .ml_pb2 import *
+import ml_pb2 as ml__pb2
 
 
 class MLStub(object):
@@ -16,13 +16,13 @@ class MLStub(object):
         """
         self.GenerateDocument = channel.unary_unary(
                 '/model.ML/GenerateDocument',
-                request_serializer=DocumentRequest.SerializeToString,
-                response_deserializer=DocumentResponse.FromString,
+                request_serializer=ml__pb2.DocumentRequest.SerializeToString,
+                response_deserializer=ml__pb2.DocumentResponse.FromString,
                 )
         self.GenerateCommit = channel.unary_unary(
                 '/model.ML/GenerateCommit',
-                request_serializer=CommitRequest.SerializeToString,
-                response_deserializer=CommitResponse.FromString,
+                request_serializer=ml__pb2.CommitRequest.SerializeToString,
+                response_deserializer=ml__pb2.CommitResponse.FromString,
                 )
 
 
@@ -46,13 +46,13 @@ def add_MLServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GenerateDocument': grpc.unary_unary_rpc_method_handler(
                     servicer.GenerateDocument,
-                    request_deserializer=DocumentRequest.FromString,
-                    response_serializer=DocumentResponse.SerializeToString,
+                    request_deserializer=ml__pb2.DocumentRequest.FromString,
+                    response_serializer=ml__pb2.DocumentResponse.SerializeToString,
             ),
             'GenerateCommit': grpc.unary_unary_rpc_method_handler(
                     servicer.GenerateCommit,
-                    request_deserializer=CommitRequest.FromString,
-                    response_serializer=CommitResponse.SerializeToString,
+                    request_deserializer=ml__pb2.CommitRequest.FromString,
+                    response_serializer=ml__pb2.CommitResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -76,8 +76,8 @@ class ML(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/model.ML/GenerateDocument',
-            DocumentRequest.SerializeToString,
-            DocumentResponse.FromString,
+            ml__pb2.DocumentRequest.SerializeToString,
+            ml__pb2.DocumentResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -93,7 +93,7 @@ class ML(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/model.ML/GenerateCommit',
-            CommitRequest.SerializeToString,
-            CommitResponse.FromString,
+            ml__pb2.CommitRequest.SerializeToString,
+            ml__pb2.CommitResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

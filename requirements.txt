@@ -1,4 +1,4 @@
 pynput
 psutil
 google-cloud-translate
-grpcio-tools==1.36.1
+grpcio-tools
