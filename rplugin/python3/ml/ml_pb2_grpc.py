@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import ml_pb2 as ml__pb2
+from . import ml_pb2 as ml__pb2
 
 
 class MLStub(object):

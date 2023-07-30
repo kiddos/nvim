@@ -63,7 +63,7 @@ lsp.setup = function()
       pylsp = {
         plugins = {
           preload = {
-            modules = {'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets'}
+            modules = {'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets', 'diffusers'}
           },
           autopep8 = {
             enabled = false,
@@ -82,6 +82,7 @@ lsp.setup = function()
               'torchaudio',
               'transformers',
               'datasets',
+              'diffusers',
             }
           },
           pycodestyle = {
