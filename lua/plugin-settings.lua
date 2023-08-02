@@ -36,13 +36,13 @@ settings.setup = function()
 
 
   -- flutter
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = false
-  require('flutter-tools').setup({
-    lsp = {
-      capabilities = capabilities,
-    }
-  })
+  -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+  -- capabilities.textDocument.completion.completionItem.snippetSupport = false
+  -- require('flutter-tools').setup({
+  --   lsp = {
+  --     capabilities = capabilities,
+  --   }
+  -- })
 
 
   -- fzf

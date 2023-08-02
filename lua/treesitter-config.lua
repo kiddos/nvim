@@ -6,7 +6,7 @@ treesitter_config.apply = function()
       'c',
       'cpp',
       'cuda',
-      'dart',
+      -- 'dart',
       'go',
       'lua',
       'rust',
@@ -51,10 +51,11 @@ treesitter_config.apply = function()
       enable = true,
       disable = {'vim'}
     },
+    ignore_install = {'dart'},
     -- ignore_install = { 'javascript', 'html', 'css', 'vim' },
     highlight = {
       enable = true,
-      disable = {'webmacro'},
+      disable = {'webmacro', 'dart'},
       additional_vim_regex_highlighting = false,
     },
   }
@@ -64,7 +65,6 @@ treesitter_config.apply = function()
       'c',
       'cpp',
       'cuda',
-      'dart',
       'go',
       'lua',
       'rust',

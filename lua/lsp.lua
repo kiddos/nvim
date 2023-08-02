@@ -87,7 +87,7 @@ lsp.setup = function()
           },
           pycodestyle = {
             -- convention = 'google',
-            ignore = {'W391', 'E303', 'E501', 'E226'},
+            ignore = {'W391', 'E303', 'E501', 'E226', 'W504'},
             indentSize = 2,
             maxLineLength = 120,
           }
@@ -96,14 +96,8 @@ lsp.setup = function()
     }
   }
 
-  -- vim
-  lspconfig.vimls.setup{}
-
   -- bash
   lspconfig.bashls.setup{}
-
-  -- angular
-  lspconfig.angularls.setup{}
 
   -- rust
   lspconfig.rust_analyzer.setup{}
@@ -130,14 +124,16 @@ lsp.setup = function()
     }
   end
 
+  -- dart
+  local dart_path = vim.uv.os_homedir() .. '/flutter/bin/dart'
+  if file_exists(dart_path) then
+    lspconfig.dartls.setup{
+      cmd = { dart_path, 'language-server', '--protocol=lsp' },
+    }
+  end
+
   -- webmacro
   lspconfig.webmacrols.setup{}
-
-  -- yaml
-  lspconfig.yamlls.setup{}
-
-  -- latex
-  lspconfig.texlab.setup{}
 
   -- R
   lspconfig.r_language_server.setup{}
@@ -159,31 +155,72 @@ lsp.setup = function()
   })
 
   -- sign
-  vim.api.nvim_command('sign define DiagnosticSignError text=✖ texthl=DiagnosticSignError linehl= numhl=')
-  vim.api.nvim_command('sign define DiagnosticSignWarn text=⚠ texthl=DiagnosticSignWarn linehl= numhl=')
-  vim.api.nvim_command('sign define DiagnosticSignInfo text=ⓘ texthl=DiagnosticSignInfo linehl= numhl=')
-  vim.api.nvim_command('sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=')
-  -- vim.api.nvim_command('sign define LspDiagnosticsSignError text= texthl=Text linehl= numhl=')
-  -- vim.api.nvim_command('sign define LspDiagnosticsSignWarning text=❗️ texthl=Text linehl= numhl=')
+  vim.fn.sign_define('DiagnosticSignError', {
+    text = '✖',
+    texthl = 'DiagnosticSignError',
+    numhl = 'DiagnosticError'
+  })
+  vim.fn.sign_define('DiagnosticSignWarn', {
+    text = '⚠',
+    texthl = 'DiagnosticSignWarn',
+    numhl = 'DiagnosticWarn',
+  })
+  vim.fn.sign_define('DiagnosticSignInfo', {
+    text = 'ⓘ',
+    texthl = 'DiagnosticSignInfo',
+    numhl = 'DiagnosticInfo',
+  })
+  vim.fn.sign_define('DiagnosticSignHint', {
+    text = '🗒',
+    texthl = 'DiagnosticSignHint',
+    numhl = 'DiagnosticHint',
+  })
 
   -- commands
-  -- vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
-  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
-  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
-  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+  vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
+  vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
+  vim.api.nvim_set_keymap('n', '<C-A-b>', '', {
+    silent = true,
+    noremap = true,
+    callback = vim.lsp.buf.implementation,
+    desc = 'Goto implementation',
+  })
+  vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
+  vim.api.nvim_set_keymap('n', '<C-S-b>', '', {
+    silent = true,
+    noremap = true,
+    callback = vim.lsp.buf.type_definition,
+    desc = 'Goto type definition',
+  })
+  vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+  vim.api.nvim_set_keymap('n', '<S-A-7>', '', {
+    silent = true,
+    noremap = true,
+    callback = vim.lsp.buf.references,
+    desc = 'Goto type definition',
+  })
+
   -- vim.api.nvim_create_user_command('GotoDocumentSymbol', vim.lsp.buf.document_symbol, {})
   -- vim.api.nvim_create_user_command('GotoWorkspaceSymbol', vim.lsp.buf.workspace_symbol, {})
   -- vim.api.nvim_create_user_command('DisplayInfo', vim.lsp.buf.hover, {})
-  -- vim.api.nvim_create_user_command('LspListDocumentSymbol', vim.lsp.buf.document_symbol, {})
+  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
+
   vim.api.nvim_create_user_command('LspFormat', function()
     vim.lsp.buf.format({})
   end, {})
+  vim.api.nvim_set_keymap('n', '<C-A-l>', '', {
+    silent = true,
+    noremap = true,
+    callback = function()
+      vim.lsp.buf.format({})
+    end,
+    desc = 'LSP format',
+  })
+
+  -- debuggin lsp clients
   vim.api.nvim_create_user_command('LspClients', function()
-    print(vim.inspect(vim.lsp.buf_get_clients()))
+    print(vim.inspect(vim.lsp.get_clients()))
   end, {})
-  -- vim.api.nvim_create_user_command('LspIncomingCalls', vim.lsp.buf.incoming_calls, {})
-  -- vim.api.nvim_create_user_command('LspOutgoingCalls', vim.lsp.buf.outgoing_calls, {})
-  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
 
   require('lualine').setup{
@@ -194,8 +231,7 @@ lsp.setup = function()
     },
     sections = {
       lualine_c = {'filename', "require'lsp-status'.status()"},
-      lualine_x = {'tabnine'},
-      --[[ lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'}, ]]
+      lualine_x = {"require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype'},
     },
   }
 end

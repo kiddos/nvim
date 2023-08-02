@@ -141,13 +141,14 @@ local M = packer.startup(function()
     cmd = 'MarkdownPreview',
   }
   -- dart
-  use {
-    'akinsho/flutter-tools.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim',
-    },
-  }
+  -- use {
+  --   'akinsho/flutter-tools.nvim',
+  --   tag = 'v1.3.0',
+  --   requires = {
+  --     'nvim-lua/plenary.nvim',
+  --     'stevearc/dressing.nvim',
+  --   },
+  -- }
 
   if packer_bootstrap then
     packer.sync()
