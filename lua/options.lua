@@ -189,10 +189,14 @@ options.apply = function()
   })
 
   -- dart
-  -- vim.api.nvim_command('augroup dart_indent')
-  -- vim.api.nvim_command('autocmd Filetype dart setlocal cindent')
-  -- vim.api.nvim_command('autocmd Filetype dart setlocal cinoptions=(1s,>1s,:1s,g1,m1,+2s')
-  -- vim.api.nvim_command('augroup END')
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = {'dart'},
+    callback = function()
+      vim.api.nvim_buf_set_option(0, 'cindent', true)
+      -- vim.api.nvim_buf_set_option(0, 'cinoptions', 'w1,>1s,:1s,g1,m1,+2s,N-s')
+      vim.api.nvim_buf_set_option(0, 'cinoptions', '(1s,>1s,:1s,g1,m1,+2s')
+    end
+  })
 
   -- c#
   vim.api.nvim_create_autocmd('FileType', {

@@ -49,13 +49,13 @@ treesitter_config.apply = function()
     },
     indent = {
       enable = true,
-      disable = {'vim'}
+      disable = {'vim', 'dart'}
     },
-    ignore_install = {'dart'},
+    ignore_install = {},
     -- ignore_install = { 'javascript', 'html', 'css', 'vim' },
     highlight = {
       enable = true,
-      disable = {'webmacro', 'dart'},
+      disable = {'webmacro'},
       additional_vim_regex_highlighting = false,
     },
   }
