@@ -107,8 +107,18 @@ end, config.completion.throttle_time)
 context.trigger_auto_complete = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
+
+    if config.completion.auto_select_timeout > 0 then
+      context.auto_select()
+    end
   end
 end, config.completion.throttle_time)
+
+context.auto_select = util.debounce(function()
+  if vim.fn.pumvisible() == 1 and vim.fn.mode() == 'i' then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, false, true), 'n', false)
+  end
+end, context.completion.timer, config.completion.auto_select_timeout)
 
 context.trigger_file_completion = util.throttle(function()
   context.scan_paths()
@@ -186,7 +196,7 @@ context.get_completion_info_text = function(event, callback)
 end
 
 context.get_info_window_options = function(event)
-  local lines = vim.api.nvim_buf_get_lines(context.info.lsp.buffer, 0, -1, {})
+  local lines = vim.api.nvim_buf_get_lines(context.info.lsp.buffer, 0, -1, false)
   local info_height, info_width = util.floating_dimensions(lines, config.info.max_height, config.info.max_width)
 
   local left_to_pum = event.col - 1
@@ -570,7 +580,8 @@ M.setup = function(opts)
   vim.opt.completefunc = 'v:lua.completion.complete_func'
 
   -- options
-  vim.api.nvim_set_option('completeopt', 'menuone,noinsert')
+  -- vim.api.nvim_set_option('completeopt', 'menuone,noinsert')
+  vim.api.nvim_set_option('completeopt', 'menuone,noselect')
   -- maximum number of items to show in the popup menu
   vim.api.nvim_set_option('pumheight', 30)
   -- keyword completion
