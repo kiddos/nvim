@@ -156,17 +156,17 @@ lsp.setup = function()
 
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
-    text = '✖',
+    text = '✖ ',
     texthl = 'DiagnosticSignError',
     numhl = 'DiagnosticError'
   })
   vim.fn.sign_define('DiagnosticSignWarn', {
-    text = '⚠',
+    text = '⚠ ',
     texthl = 'DiagnosticSignWarn',
     numhl = 'DiagnosticWarn',
   })
   vim.fn.sign_define('DiagnosticSignInfo', {
-    text = 'ⓘ',
+    text = 'ⓘ ',
     texthl = 'DiagnosticSignInfo',
     numhl = 'DiagnosticInfo',
   })

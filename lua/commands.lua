@@ -59,6 +59,11 @@ commands.compile = function()
   })
 
   vim.api.nvim_create_autocmd('FileType', {
+    pattern = {'rust'},
+    command = 'command! Compile execute ":!rustc %"',
+  })
+
+  vim.api.nvim_create_autocmd('FileType', {
     pattern = {'cuda'},
     command = 'command! Compile execute ":!nvcc % -o %:r"',
   })
@@ -66,6 +71,15 @@ commands.compile = function()
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'java'},
     command = 'command! Compile execute ":!javac %"',
+  })
+
+  vim.api.nvim_set_keymap('n', '<C-F9>', '', {
+    silent = true,
+    noremap = true,
+    callback = function()
+      vim.api.nvim_command('Compile')
+    end,
+    desc = 'compile code',
   })
 end
 

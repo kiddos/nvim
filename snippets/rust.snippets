@@ -1,0 +1,39 @@
+snippet read_int
+	fn read_int<T: FromStr>() -> T where <T as FromStr>::Err: Debug {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.trim().parse::<T>().expect("invalid input")
+	}
+snippet read_vec
+	fn read_vec<T: FromStr>() -> Vec<T> where <T as FromStr>::Err: Debug {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
+	}
+snippet codeforces
+	use std::io;
+	use std::str::FromStr;
+	use std::fmt::Debug;
+
+	fn read_int<T: FromStr>() -> T where <T as FromStr>::Err: Debug {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.trim().parse::<T>().expect("invalid input")
+	}
+
+	fn read_vec<T: FromStr>() -> Vec<T> where <T as FromStr>::Err: Debug {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
+	}
+
+	fn solve() {
+		// implement solution here...
+	}
+
+	fn main() {
+		let n = read_int::<i32>();
+		for _t in 0..n {
+			solve();
+		}
+	}
