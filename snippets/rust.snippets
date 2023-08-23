@@ -10,7 +10,13 @@ snippet read_vec
 		io::stdin().read_line(&mut s).unwrap();
 		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
 	}
-snippet codeforces
+snippet read_str
+	fn read_str() -> String {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.trim().to_string()
+	}
+snippet codeforce
 	use std::io;
 	use std::str::FromStr;
 	use std::fmt::Debug;
@@ -27,6 +33,12 @@ snippet codeforces
 		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
 	}
 
+	fn read_str() -> String {
+		let mut s = String::new();
+		io::stdin().read_line(&mut s).unwrap();
+		s.trim().to_string()
+	}
+
 	fn solve() {
 		// implement solution here...
 	}
@@ -35,5 +47,15 @@ snippet codeforces
 		let n = read_int::<i32>();
 		for _t in 0..n {
 			solve();
+		}
+	}
+snippet test
+	#[cfg(test)]
+	mod tests {
+		use super::*;
+
+		#[test]
+		fn test_case() {
+			// test code here
 		}
 	}

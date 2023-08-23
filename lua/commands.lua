@@ -40,6 +40,7 @@ commands.semicolon = function()
       'html',
       'css',
       'dart',
+      'rust',
 
       'matlab',
       'php',
