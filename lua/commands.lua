@@ -37,41 +37,48 @@ commands.semicolon = function()
       'typescript',
       'javascriptreact',
       'typescriptreact',
-      'html',
       'css',
       'dart',
       'rust',
 
       'matlab',
       'php',
-      'perl',
       'objc',
       'objcpp',
-      'csharp',
     },
-    command = 'nnoremap ; $a;',
+    callback = function()
+      vim.api.nvim_buf_set_keymap(0, 'n', ';', '$a;', {noremap = true});
+    end,
   })
 end
 
 commands.compile = function()
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'c', 'cpp'},
-    command = 'command! Compile execute ":!clang++ % -Wall -std=c++17 -fsanitize=address -O1 -g -o %:r"',
+    callback = function()
+      vim.api.nvim_buf_create_user_command(0, 'Compile', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r', {})
+    end,
   })
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'rust'},
-    command = 'command! Compile execute ":!rustc %"',
+    callback = function()
+      vim.api.nvim_buf_create_user_command(0, 'Compile', '!rustc %', {})
+    end,
   })
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'cuda'},
-    command = 'command! Compile execute ":!nvcc % -o %:r"',
+    callback = function()
+      vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !nvcc % -o %:r &', {})
+    end,
   })
 
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {'java'},
-    command = 'command! Compile execute ":!javac %"',
+    callback = function()
+      vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !javac % &', {})
+    end,
   })
 
   vim.api.nvim_set_keymap('n', '<C-F9>', '', {
@@ -132,7 +139,7 @@ end
 commands.reattach_current_buf_lsp = function()
   -- re-attach lsp servers
   local current_buf = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.buf_get_clients()
+  local clients = vim.lsp.get_clients({bufnr = current_buf})
   for _, client in pairs(clients) do
     vim.lsp.buf_detach_client(current_buf, client.id)
     vim.lsp.buf_attach_client(current_buf, client.id)
@@ -188,7 +195,7 @@ commands.remove = function()
   local result = vim.fn.confirm('Remove the file (' .. current_path .. ') ?', '&Yes\n&No', 1)
   if result == 1 then
     local current_buf = vim.api.nvim_get_current_buf()
-    local clients = vim.lsp.buf_get_clients()
+    local clients = vim.lsp.get_clients({bufnr = current_buf})
     for _, client in pairs(clients) do
       vim.lsp.buf_detach_client(current_buf, client.id)
     end
@@ -216,7 +223,7 @@ commands.chmod = function(opts)
   end
 
   if file_exists(current_path) then
-    vim.api.nvim_exec('!chmod ' .. args .. ' ' .. current_path, false)
+    vim.api.nvim_command('!chmod ' .. args .. ' ' .. current_path)
     vim.api.nvim_command('redraw')
   end
 end
