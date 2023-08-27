@@ -87,7 +87,7 @@ lsp.setup = function()
           },
           pycodestyle = {
             -- convention = 'google',
-            ignore = {'W391', 'E303', 'E501', 'E226', 'W504'},
+            ignore = {'W391', 'E303', 'E501', 'E226', 'W504', 'E251', 'W503', 'E126'},
             indentSize = 2,
             maxLineLength = 120,
           }
@@ -206,13 +206,20 @@ lsp.setup = function()
   -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
   vim.api.nvim_create_user_command('LspFormat', function()
-    vim.lsp.buf.format({})
+    vim.lsp.buf.format({
+      formatting_options = {
+        async = true,
+      },
+    })
   end, {})
   vim.api.nvim_set_keymap('n', '<C-A-l>', '', {
     silent = true,
     noremap = true,
     callback = function()
-      vim.lsp.buf.format({})
+      vim.lsp.buf.format({
+        async = true,
+        timeout_ms = 10000,
+      })
     end,
     desc = 'LSP format',
   })
