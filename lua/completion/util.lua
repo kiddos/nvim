@@ -31,24 +31,6 @@ util.in_table = function(t, key)
   return false
 end
 
-util.has_lsp_capability = function(capability)
-  local clients = vim.lsp.buf_get_clients()
-  if vim.tbl_isempty(clients) then
-    return false
-  end
-  if not capability then
-    return true
-  end
-
-  for _, c in pairs(clients) do
-    local has_capability = util.table_get(c.server_capabilities, capability)
-    if has_capability then
-      return true
-    end
-  end
-  return false
-end
-
 util.find_last = function(s, pattern)
   local last_index = nil
   local p = 0
@@ -185,6 +167,19 @@ util.get_left_char = function()
   local line = vim.api.nvim_get_current_line()
   local col = vim.api.nvim_win_get_cursor(0)[2]
   return string.sub(line, col, col)
+end
+
+util.get_left_non_space_char = function()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  while col >= 0 do
+    local char = string.sub(line, col, col)
+    if char ~= ' ' then
+      return char
+    end
+    col = col - 1;
+  end
+  return ''
 end
 
 util.is_lsp_trigger = function(char, type)

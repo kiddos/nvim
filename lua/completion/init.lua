@@ -107,18 +107,8 @@ end, config.completion.throttle_time)
 context.trigger_auto_complete = util.throttle(function()
   if vim.fn.mode() == 'i' then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
-
-    -- if config.completion.auto_select_timeout > 0 then
-    --   context.auto_select()
-    -- end
   end
 end, config.completion.throttle_time)
-
--- context.auto_select = util.debounce(function()
---   if vim.fn.pumvisible() == 1 and vim.fn.mode() == 'i' then
---     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, false, true), 'n', false)
---   end
--- end, context.completion.timer, config.completion.auto_select_timeout)
 
 context.trigger_file_completion = util.throttle(function()
   context.scan_paths()
@@ -128,11 +118,27 @@ context.trigger_file_completion = util.throttle(function()
   end
 end, config.completion.throttle_time)
 
+context.has_lsp_capability = function(capability)
+  local buf = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({bufnr = buf})
+  if vim.tbl_isempty(clients) then
+    return false
+  end
+
+  for _, c in pairs(clients) do
+    if c.server_capabilities[capability] then
+      return true
+    end
+  end
+  return false
+end
+
+
 context.trigger_completion = util.debounce(function()
   context.trigger_file_completion()
 
   -- context.completion.lsp.result = nil
-  if util.has_lsp_capability('completionProvider') then
+  if context.has_lsp_capability('completionProvider') then
     local buf = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
     context.completion.lsp.cancel_func = vim.lsp.buf_request_all(buf, 'textDocument/completion', params, function(result)
@@ -403,7 +409,7 @@ context.show_signature_window = function()
 end
 
 context.trigger_signature = vim.schedule_wrap(function()
-  if util.has_lsp_capability('signatureHelpProvider') then
+  if context.has_lsp_capability('signatureHelpProvider') then
     local bufnr = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
     context.signature.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params, function(result)
@@ -507,7 +513,7 @@ M.confirm_completion = function()
     or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 
   if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then
-    local char = util.get_left_char()
+    local char = util.get_left_non_space_char()
     if context.completion.special_chars[char] ~= nil then
       return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr
     else
