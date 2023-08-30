@@ -41,14 +41,14 @@ local M = packer.startup(function()
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',
+    tag = 'v0.9.1',
     run = ':TSUpdate',
   }
-  use {'nvim-treesitter/playground'}
 
   -- tabline
   use {
     'romgrk/barbar.nvim',
-    tag = 'v1.6.5',
+    tag = 'v1.7.0',
     requires = {'kyazdani42/nvim-web-devicons'},
     config = require('plugin-settings/bufferline').setup,
   }
@@ -57,7 +57,7 @@ local M = packer.startup(function()
   use {
     'kiddos/malokai.vim',
     config = function()
-      vim.api.nvim_command('colorscheme malokai')
+      vim.cmd.colorscheme('malokai')
     end
   }
 
@@ -102,19 +102,16 @@ local M = packer.startup(function()
     requires = {'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons'},
   }
   use 'scrooloose/nerdcommenter' -- comments
-  -- commands
-  use {
-    'arecarn/crunch.vim',
-    requires = {'arecarn/selection.vim'},
-    cmd = {'Crunch'}
-  }
   use {
     'prettier/vim-prettier',
     run = 'yarn install',
     -- ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
     cmd = 'Prettier',
   }
-  use 'tpope/vim-surround'
+  use {
+    'kylechui/nvim-surround',
+    tag = 'v2.1.1',
+  }
   use 'mattn/emmet-vim'
   use 'mhinz/vim-startify'
   use {
