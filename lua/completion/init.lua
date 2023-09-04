@@ -104,20 +104,6 @@ context.prepare_buffer_completion = util.throttle(function()
   context.index_buffer()
 end, config.completion.throttle_time)
 
-context.trigger_auto_complete = util.throttle(function()
-  if vim.fn.mode() == 'i' then
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
-  end
-end, config.completion.throttle_time)
-
-context.trigger_file_completion = util.throttle(function()
-  context.scan_paths()
-
-  if vim.fn.mode() == 'i' then
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-x><C-u>', true, false, true), 'n', false)
-  end
-end, config.completion.throttle_time)
-
 context.has_lsp_capability = function(capability)
   local buf = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({bufnr = buf})
@@ -133,9 +119,67 @@ context.has_lsp_capability = function(capability)
   return false
 end
 
+context.prepare_completion_item = function(base_word)
+  local result = {}
+  if context.completion.lsp.result then
+    result = util.process_lsp_response(context.completion.lsp.result, function(response, client_id)
+      local items = util.table_get(response, { 'items' }) or response
+      if type(items) ~= 'table' then return {} end
+      items = util.filter_lsp_result(items, base_word)
+      util.sort_lsp_result(items)
+      return util.lsp_completion_response_items_to_complete_items(items, client_id)
+    end)
+  end
+
+  if context.completion.file.result then
+    for _, item in pairs(context.completion.file.result) do
+      if vim.startswith(item.word, base_word) then
+        table.insert(result, item)
+      end
+    end
+  end
+
+  local current_buf = vim.api.nvim_get_current_buf()
+  if context.completion.buffer.result[current_buf] then
+    local items = util.buffer_result_to_complete_items(context.completion.buffer.result[current_buf], base_word)
+    for _, item in pairs(items) do
+      if vim.startswith(item.word, base_word) then
+        table.insert(result, item)
+      end
+    end
+  end
+
+  return result
+end
+
+context.find_completion_base_word = function()
+  if context.completion.lsp.result == nil and
+      context.completion.buffer.result == nil and
+      context.completion.file == nil then
+    return nil
+  else
+    local start = util.get_completion_start()
+    if start <= 0 then
+      return nil
+    else
+      local line = vim.api.nvim_get_current_line()
+      return string.sub(line, start+1, vim.fn.col('.') - 1)
+    end
+  end
+end
+
+context.show_completion = function()
+  local base_word = context.find_completion_base_word()
+  if base_word ~= nil then
+    local items = context.prepare_completion_item(base_word)
+    if vim.fn.mode() == 'i' then
+      vim.fn.complete(util.get_completion_start() + 1, items)
+    end
+  end
+end
 
 context.trigger_completion = util.debounce(function()
-  context.trigger_file_completion()
+  context.scan_paths()
 
   -- context.completion.lsp.result = nil
   if context.has_lsp_capability('completionProvider') then
@@ -143,8 +187,10 @@ context.trigger_completion = util.debounce(function()
     local params = vim.lsp.util.make_position_params()
     context.completion.lsp.cancel_func = vim.lsp.buf_request_all(buf, 'textDocument/completion', params, function(result)
       context.completion.lsp.result = result
-      context.trigger_auto_complete()
+      context.show_completion()
     end)
+  else
+    context.show_completion()
   end
 end, context.completion.timer, config.completion.debounce_time)
 
@@ -341,7 +387,7 @@ context.get_signature_lines = function()
 end
 
 context.signature_window_options = function()
-  local lines = vim.api.nvim_buf_get_lines(context.signature.lsp.buffer, 0, -1, {})
+  local lines = vim.api.nvim_buf_get_lines(context.signature.lsp.buffer, 0, -1, false)
   local height, width = util.floating_dimensions(lines, config.signature.max_height, config.signature.max_width)
 
   -- Compute position
@@ -454,54 +500,6 @@ M.auto_signature = util.debounce(function()
   context.trigger_signature()
 end, context.signature.timer, config.signature.delay)
 
-M.complete_func = function(findstart, base)
-  if findstart == 1 then
-    if context.completion.lsp.result == nil and
-        context.completion.buffer.result == nil and
-        context.completion.file == nil then
-	    return -3
-	  else
-	    local start = util.get_completion_start()
-	    if start <= 0 then
-	      return -3
-	    else
-	      return start
-	    end
-    end
-  else
-    local result = {}
-    if context.completion.lsp.result then
-      result = util.process_lsp_response(context.completion.lsp.result, function(response, client_id)
-        local items = util.table_get(response, { 'items' }) or response
-        if type(items) ~= 'table' then return {} end
-        items = util.filter_lsp_result(items, base)
-        util.sort_lsp_result(items)
-        return util.lsp_completion_response_items_to_complete_items(items, client_id)
-      end)
-    end
-
-    if context.completion.file.result then
-      for _, item in pairs(context.completion.file.result) do
-        if vim.startswith(item.word, base) then
-          table.insert(result, item)
-        end
-      end
-    end
-
-    local current_buf = vim.api.nvim_get_current_buf()
-    if context.completion.buffer.result[current_buf] then
-      local items = util.buffer_result_to_complete_items(context.completion.buffer.result[current_buf], base)
-      for _, item in pairs(items) do
-        if vim.startswith(item.word, base) then
-          table.insert(result, item)
-        end
-      end
-    end
-
-    return result
-  end
-end
-
 M.stop = function()
   context.stop_completion()
   context.stop_info()
@@ -513,7 +511,7 @@ M.confirm_completion = function()
     or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 
   if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then
-    local char = util.get_left_non_space_char()
+    local char = util.get_left_char()
     if context.completion.special_chars[char] ~= nil then
       return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr
     else
@@ -582,9 +580,6 @@ M.setup = function(opts)
     end
   })
 
-  _G.completion = M
-  vim.opt.completefunc = 'v:lua.completion.complete_func'
-
   -- options
   vim.api.nvim_set_option('completeopt', 'menuone,noinsert')
   -- vim.api.nvim_set_option('completeopt', 'menuone,noselect')
@@ -598,7 +593,7 @@ M.setup = function(opts)
   vim.api.nvim_set_keymap('i', '<CR>', '', {
     expr = true,
     noremap = true,
-    callback = completion.confirm_completion,
+    callback = M.confirm_completion,
   })
   vim.api.nvim_set_keymap('i', '<C-Space>', '', {
     expr = true,
