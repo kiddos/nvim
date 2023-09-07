@@ -112,7 +112,7 @@ context.has_lsp_capability = function(capability)
   end
 
   for _, c in pairs(clients) do
-    if c.server_capabilities[capability] then
+    if util.table_get(c, { 'server_capabilities', capability })then
       return true
     end
   end
