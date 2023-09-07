@@ -168,11 +168,12 @@ end
 context.find_completion_base_word = function()
   if context.completion.lsp.result == nil and
       context.completion.buffer.result == nil and
-      context.completion.file == nil then
+      context.completion.file.result == nil and
+      context.completion.snippet.result == nil then
     return nil
   else
     local start = util.get_completion_start()
-    if start <= 0 then
+    if start < 0 then
       return nil
     else
       local line = vim.api.nvim_get_current_line()
