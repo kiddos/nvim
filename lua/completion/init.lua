@@ -4,6 +4,7 @@ local context = {}
 local util = require('completion.util')
 local config = require('completion.config')
 local lru = require('completion.lru')
+local snippet = require('completion.snippet')
 
 function dump(o)
   if type(o) == 'table' then
@@ -29,6 +30,9 @@ context.completion = {
     result = {},
   },
   file = {
+    result = nil,
+  },
+  snippet = {
     result = nil,
   },
   special_chars = {},
@@ -102,6 +106,7 @@ end
 
 context.prepare_buffer_completion = util.throttle(function()
   context.index_buffer()
+  context.completion.snippet.result = snippet.load_snippets()
 end, config.completion.throttle_time)
 
 context.has_lsp_capability = function(capability)
@@ -133,6 +138,14 @@ context.prepare_completion_item = function(base_word)
 
   if context.completion.file.result then
     for _, item in pairs(context.completion.file.result) do
+      if vim.startswith(item.word, base_word) then
+        table.insert(result, item)
+      end
+    end
+  end
+
+  if context.completion.snippet.result then
+    for _, item in pairs(context.completion.snippet.result) do
       if vim.startswith(item.word, base_word) then
         table.insert(result, item)
       end
