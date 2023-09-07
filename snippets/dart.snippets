@@ -1,0 +1,91 @@
+snippet view
+	import 'package:flutter/material.dart';
+
+	class ${0:View} extends StatelessWidget {
+		const $0({super.key});
+
+		@override
+		Widget build(BuildContext context) {
+			return Scaffold(
+				appBar: AppBar(
+					title: const Text('$0'),
+				),
+				body: Container(
+					child: const Text('$0'),
+				),
+			);
+		}
+	}
+
+snippet app_main
+	import 'package:flutter/material.dart';
+
+	class ${0:AppMain} extends StatelessWidget {
+		const $0({super.key});
+
+		@override
+		Widget build(BuildContext context) {
+			return MaterialApp(
+				title: '$0',
+				theme: ThemeData(
+					colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
+					useMaterial3: true,
+				),
+				home: const Container(
+					child: const Text('$0'),
+				),
+			);
+		}
+	}
+
+snippet keep_alive
+	import 'package:flutter/material.dart';
+
+	class ${0:Widget} extends StatefulWidget {
+		const $0({super.key});
+
+		@override
+		State<$0> createState() => _$0State();
+	}
+
+	class _$0State extends State<$0> with AutomaticKeepAliveClientMixin<$0> {
+		@override
+		Widget build(BuildContext context) {
+			super.build(context);
+
+			return SafeArea(
+				child: Container(
+					child: const Text('$0'),
+				),
+			);
+		}
+
+		@override
+		bool get wantKeepAlive => true;
+	}
+
+snippet provider
+	import 'package:flutter/foundation.dart';
+	import 'package:flutter/material.dart';
+	import 'package:provider/provider.dart';
+
+	/// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
+	// ignore: prefer_mixin
+	class ${0:Counter} with ChangeNotifier, DiagnosticableTreeMixin {
+		int _count = 0;
+
+		int get count => _count;
+
+		void increment() {
+			_count++;
+			notifyListeners();
+		}
+
+		/// Makes `Counter` readable inside the devtools by listing all of its properties
+		@override
+		void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+			super.debugFillProperties(properties);
+			properties.add(IntProperty('count', count));
+		}
+	}
+
