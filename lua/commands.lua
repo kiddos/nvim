@@ -58,6 +58,7 @@ commands.compile = function()
     callback = function()
       vim.api.nvim_buf_create_user_command(0, 'Compile', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r', {})
     end,
+    desc = 'compile c++ code',
   })
 
   vim.api.nvim_create_autocmd('FileType', {
@@ -65,6 +66,7 @@ commands.compile = function()
     callback = function()
       vim.api.nvim_buf_create_user_command(0, 'Compile', '!rustc %', {})
     end,
+    desc = 'compile rust code',
   })
 
   vim.api.nvim_create_autocmd('FileType', {
@@ -72,6 +74,7 @@ commands.compile = function()
     callback = function()
       vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !nvcc % -o %:r &', {})
     end,
+    desc = 'compile cuda code',
   })
 
   vim.api.nvim_create_autocmd('FileType', {
@@ -79,6 +82,15 @@ commands.compile = function()
     callback = function()
       vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !javac % &', {})
     end,
+    desc = 'compile java code',
+  })
+
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = {'dart'},
+    callback = function()
+      vim.api.nvim_buf_create_user_command(0, 'Test', '!flutter test', {})
+    end,
+    desc = 'run flutter test',
   })
 
   vim.api.nvim_set_keymap('n', '<C-F9>', '', {
