@@ -1,4 +1,4 @@
-snippet view
+snippet scaffold
 	import 'package:flutter/material.dart';
 
 	class ${0:View} extends StatelessWidget {
@@ -17,7 +17,41 @@ snippet view
 		}
 	}
 
-snippet app_main
+snippet stateless
+	import 'package:flutter/material.dart';
+
+	class ${0:MyWidget} extends StatelessWidget {
+		const $0({super.key});
+
+		@override
+		Widget build(BuildContext context) {
+			return const Text('');
+		}
+	}
+
+snippet stateful
+	import 'package:flutter/material.dart';
+
+	class ${0:MyWidget} extends StatefulWidget {
+		const $0({super.key});
+
+		@override
+		State<$0> createState() => _$0State();
+	}
+
+	class _$0State extends State<$0> {
+		@override
+		void initState() {
+			super.initState();
+		}
+
+		@override
+		Widget build(BuildContext context) {
+			return const Text('');
+		}
+	}
+
+snippet material_app
 	import 'package:flutter/material.dart';
 
 	class ${0:AppMain} extends StatelessWidget {
@@ -69,7 +103,7 @@ snippet provider
 	import 'package:flutter/material.dart';
 	import 'package:provider/provider.dart';
 
-	/// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
+	// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
 	// ignore: prefer_mixin
 	class ${0:Counter} with ChangeNotifier, DiagnosticableTreeMixin {
 		int _count = 0;
@@ -81,7 +115,7 @@ snippet provider
 			notifyListeners();
 		}
 
-		/// Makes `Counter` readable inside the devtools by listing all of its properties
+		// Makes $0 readable inside the devtools by listing all of its properties
 		@override
 		void debugFillProperties(DiagnosticPropertiesBuilder properties) {
 			super.debugFillProperties(properties);
