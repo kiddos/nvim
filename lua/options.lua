@@ -2,50 +2,50 @@ local options = {}
 
 options.apply = function()
   -- File type setting
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.i', '*.swg'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.i', '*.swg' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'swig')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.BUILD'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.BUILD' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'bzl')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.m'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.m' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'objc')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.mm'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.mm' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'objcpp')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.h'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.h' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'cpp')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.pro'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.pro' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'make')
     end
   })
 
-  vim.api.nvim_create_autocmd({'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter'}, {
-    pattern = {'*.wmm'},
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
+    pattern = { '*.wmm' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'filetype', 'webmacro')
     end
@@ -112,7 +112,7 @@ options.apply = function()
 
   -- swap file
   -- save swap after this time passed
-  vim.opt.updatetime = 60000
+  -- vim.opt.updatetime = 60000
   -- save swap after this many character typed
   vim.opt.updatecount = 360
 
@@ -160,7 +160,7 @@ options.apply = function()
 
   -- java
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'java'},
+    pattern = { 'java' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'tabstop', 4)
       vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
@@ -170,7 +170,7 @@ options.apply = function()
 
   -- make
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'make'},
+    pattern = { 'make' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'tabstop', 4)
       vim.api.nvim_buf_set_option(0, 'softtabstop', 2)
@@ -180,7 +180,7 @@ options.apply = function()
 
   -- snippet
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'snippets'},
+    pattern = { 'snippets' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'tabstop', 4)
       vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
@@ -190,7 +190,7 @@ options.apply = function()
 
   -- dart
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'dart'},
+    pattern = { 'dart' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'cindent', true)
       -- vim.api.nvim_buf_set_option(0, 'cinoptions', 'w1,>1s,:1s,g1,m1,+2s,N-s')
@@ -200,7 +200,7 @@ options.apply = function()
 
   -- c#
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'csharp'},
+    pattern = { 'csharp' },
     callback = function()
       vim.api.nvim_buf_set_option(0, 'tabstop', 4)
       vim.api.nvim_buf_set_option(0, 'softtabstop', 4)
