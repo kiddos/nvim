@@ -9,9 +9,9 @@ local snippet = require('completion.snippet')
 function dump(o)
   if type(o) == 'table' then
     local s = '{ '
-    for k,v in pairs(o) do
-      if type(k) ~= 'number' then k = '"'..k..'"' end
-      s = s .. '['..k..'] = ' .. dump(v) .. ','
+    for k, v in pairs(o) do
+      if type(k) ~= 'number' then k = '"' .. k .. '"' end
+      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
     end
     return s .. '} '
   else
@@ -111,13 +111,13 @@ end, config.completion.throttle_time)
 
 context.has_lsp_capability = function(capability)
   local buf = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_clients({bufnr = buf})
+  local clients = vim.lsp.get_clients({ bufnr = buf })
   if vim.tbl_isempty(clients) then
     return false
   end
 
   for _, c in pairs(clients) do
-    if util.table_get(c, { 'server_capabilities', capability })then
+    if util.table_get(c, { 'server_capabilities', capability }) then
       return true
     end
   end
@@ -177,7 +177,7 @@ context.find_completion_base_word = function()
       return nil
     else
       local line = vim.api.nvim_get_current_line()
-      return string.sub(line, start+1, vim.fn.col('.') - 1)
+      return string.sub(line, start + 1, vim.fn.col('.') - 1)
     end
   end
 end
@@ -217,6 +217,7 @@ context.stop_completion = function()
 
   context.completion.lsp.result = nil
   context.completion.file.result = nil
+  context.completion.snippet.result = nil
 end
 
 context.get_completion_info_text = function(event, callback)
@@ -472,7 +473,8 @@ context.trigger_signature = vim.schedule_wrap(function()
   if context.has_lsp_capability('signatureHelpProvider') then
     local bufnr = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
-    context.signature.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params, function(result)
+    context.signature.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params,
+    function(result)
       context.signature.lsp.result = result
       context.show_signature_window()
     end)
@@ -522,7 +524,7 @@ end
 
 M.confirm_completion = function()
   local cr = config.completion.cr_mapping ~= nil and config.completion.cr_mapping()
-    or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+      or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 
   if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then
     local char = util.get_left_char()
@@ -557,37 +559,37 @@ M.setup = function(opts)
     context.completion.special_chars[char] = true
   end
 
-  vim.api.nvim_create_autocmd({'InsertCharPre'}, {
+  vim.api.nvim_create_autocmd({ 'InsertCharPre' }, {
     callback = M.auto_complete
   })
 
-  vim.api.nvim_create_autocmd({'InsertLeavePre'}, {
+  vim.api.nvim_create_autocmd({ 'InsertLeavePre' }, {
     callback = function()
       context.prepare_buffer_completion()
       M.stop()
     end
   })
-  vim.api.nvim_create_autocmd({'CompleteChanged'}, {
+  vim.api.nvim_create_autocmd({ 'CompleteChanged' }, {
     callback = function()
       M.auto_info(vim.v.event)
     end
   })
-  vim.api.nvim_create_autocmd({'VimEnter'}, {
+  vim.api.nvim_create_autocmd({ 'VimEnter' }, {
     callback = context.prepare_buffer_completion,
   })
 
-  vim.api.nvim_create_autocmd({'TextChangedI'}, {
+  vim.api.nvim_create_autocmd({ 'TextChangedI' }, {
     callback = context.stop_info
   })
-  vim.api.nvim_create_autocmd({'CursorMovedI'}, {
+  vim.api.nvim_create_autocmd({ 'CursorMovedI' }, {
     callback = M.auto_signature
   })
 
-  vim.api.nvim_create_autocmd({'VimLeavePre'}, {
+  vim.api.nvim_create_autocmd({ 'VimLeavePre' }, {
     callback = M.close_timers
   })
 
-  vim.api.nvim_create_autocmd({'BufLeave'}, {
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     callback = function()
       local current_buf = vim.api.nvim_get_current_buf()
       context.completion.buffer.cache[current_buf] = nil
