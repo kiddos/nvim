@@ -63,10 +63,11 @@ treesitter_config.apply = function()
       end,
     },
     ignore_install = {},
+    -- ignore_install = { 'dart' },
     -- ignore_install = { 'javascript', 'html', 'css', 'vim' },
     highlight = {
       enable = true,
-      disable = {'webmacro'},
+      disable = { 'webmacro' },
       additional_vim_regex_highlighting = false,
     },
   }
@@ -99,7 +100,7 @@ treesitter_config.apply = function()
   })
 
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'bash', 'zsh'},
+    pattern = { 'bash', 'zsh' },
     callback = function()
       vim.opt_local.foldmethod = 'marker'
       vim.opt_local.foldmarker = '{,}'
@@ -107,7 +108,7 @@ treesitter_config.apply = function()
   })
 
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'vim'},
+    pattern = { 'vim' },
     callback = function()
       vim.opt_local.foldmethod = 'marker'
       vim.opt_local.foldmarker = '{{{,}}}'
