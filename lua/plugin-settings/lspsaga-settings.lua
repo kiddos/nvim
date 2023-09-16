@@ -16,7 +16,7 @@ M.setup = function()
       outgoing = '⬅',
     },
     lightbulb = {
-      enable = true,
+      enable = false,
       sign = true,
       sign_priority = 100,
       debounce = 2000,
@@ -33,84 +33,69 @@ M.setup = function()
     },
   })
 
+  -- vim.cmd('aunmenu LspSaga')
   vim.api.nvim_set_var('mapleader', ',')
-  vim.api.nvim_set_keymap('n', '<Leader>find', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga finder')
-    end
-  })
 
-  vim.api.nvim_set_keymap('n', '<Leader>code', '', {
-    noremap=true,
-    silent=true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga code_action')
-    end
-  })
+  local register_command = function(saga_command, binding, command, menu)
+    vim.api.nvim_set_keymap('n', binding, '', {
+      noremap = true,
+      silent = true,
+      callback = function()
+        vim.api.nvim_command(saga_command)
+      end
+    })
+    vim.api.nvim_create_user_command(command, function()
+      vim.defer_fn(function()
+        vim.api.nvim_command(saga_command)
+      end, 0)
+    end, {})
 
-  vim.api.nvim_set_keymap('v', '<Leader>code', '', { noremap=true, silent=true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga code_action')
-    end
-  })
+    vim.api.nvim_command('nnoremenu LspSaga.' .. menu:gsub(' ', '\\ ') .. ' :' .. command .. '<CR>')
+  end
 
-  vim.api.nvim_set_keymap('n', '<Leader>rename', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga rename')
-    end
-  })
+  register_command('Lspsaga hover_doc', '<Leader>hover_doc', 'HoverDoc', 'Hover ✨')
+  register_command('Lspsaga code_action', '<Leader>code', 'Code', 'Code Action ⚡⚡⚡')
+  register_command('Lspsaga rename', '<Leader>rename', 'Rename', 'Rename ✍ ')
+  register_command('Lspsaga show_cursor_diagnostics', '<Leader>cursor_diag', 'CurrentDiagnostics', 'Cursor Diagnostic 💩')
+  register_command('Lspsaga finder imp', '<Leader>implementation', 'GotoImplementation', 'Goto Implementation 🐻')
+  register_command('Lspsaga goto_definition', '<Leader>gotod', 'GotoDefinition', 'Goto Definition 🐣')
+  register_command('Lspsaga goto_type_definition', '<Leader>gotot', 'GotoTypeDefinition', 'Goto Type Definition 🐥')
+  register_command('Lspsaga peek_definition', '<Leader>peekdef', 'PeekDefinition', 'Peek Definition 🐦')
+  register_command('Lspsaga incoming_calls', '<Leader>incoming', 'IncomingCall', 'Incoming Call 🐉')
+  register_command('Lspsaga outgoing_calls', '<Leader>outgoing', 'OutgoingCall', 'Outgoing Call 🐬')
+  register_command('Lspsaga term_toggle', '<Leader>terminal', 'OpenTerminal', 'Open Terminal 🌌 ')
+  register_command('Lspsaga finder', '<Leader>find', 'Finder', 'Finder ⭐ ')
 
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>r', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga rename')
-    end
-  })
+  local register_popup_keymap = function(key)
+    vim.api.nvim_set_keymap('n', key, '', {
+      expr = true,
+      noremap = true,
+      silent = true,
+      callback = function()
+        if vim.fn.pumvisible() == 0 then
+          vim.api.nvim_command('popup LspSaga')
+        end
+      end
+    })
+  end
 
-  vim.api.nvim_set_keymap('n', '<Leader>imp', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga finder imp')
-    end
-  })
+  register_popup_keymap('<C-n>')
+  register_popup_keymap('<C-Space>')
 
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>i', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga finder imp')
-    end
-  })
 
-  vim.api.nvim_set_keymap('n', '<Leader>doc', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga peek_definition')
-    end
-  })
+  local register_toggle_key = function(key, command)
+    vim.api.nvim_set_keymap('n', key, '', {
+      expr = true,
+      noremap = true,
+      silent = true,
+      callback = function()
+        vim.api.nvim_command('Lspsaga ' .. command)
+      end
+    })
+  end
 
-  vim.api.nvim_set_keymap('n', '<Leader>diag', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga show_cursor_diagnostics')
-    end
-  })
-
-  vim.api.nvim_set_keymap('n', '<Leader>hover', '', {
-    noremap = true,
-    silent = true,
-    callback = function()
-      vim.api.nvim_command('Lspsaga hover_doc')
-    end
-  })
+  register_toggle_key('<F4>', 'outline')
+  register_toggle_key('<F5>', 'winbar_toggle')
 end
 
 return M

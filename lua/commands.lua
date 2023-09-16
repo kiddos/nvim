@@ -53,54 +53,34 @@ commands.semicolon = function()
 end
 
 commands.compile = function()
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'c', 'cpp'},
-    callback = function()
-      vim.api.nvim_buf_create_user_command(0, 'Compile', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r', {})
-    end,
-    desc = 'compile c++ code',
-  })
+  local register_command = function(filetype, command)
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = filetype,
+      callback = function()
+        local current = vim.api.nvim_get_current_buf()
 
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'rust'},
-    callback = function()
-      vim.api.nvim_buf_create_user_command(0, 'Compile', '!rustc %', {})
-    end,
-    desc = 'compile rust code',
-  })
+        vim.api.nvim_buf_create_user_command(current, 'Compile', command, {
+          force = true,
+          desc = 'compile code',
+        })
 
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'cuda'},
-    callback = function()
-      vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !nvcc % -o %:r &', {})
-    end,
-    desc = 'compile cuda code',
-  })
+        vim.api.nvim_buf_set_keymap(current, 'n', '<C-F9>', '', {
+          silent = true,
+          noremap = true,
+          desc = 'compile code',
+          callback = function()
+            vim.api.nvim_command(command)
+          end
+        })
+      end,
+    })
+  end
 
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'java'},
-    callback = function()
-      vim.api.nvim_buf_create_user_command(0, 'Compile', 'silent !javac % &', {})
-    end,
-    desc = 'compile java code',
-  })
-
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = {'dart'},
-    callback = function()
-      vim.api.nvim_buf_create_user_command(0, 'Test', '!flutter test', {})
-    end,
-    desc = 'run flutter test',
-  })
-
-  vim.api.nvim_set_keymap('n', '<C-F9>', '', {
-    silent = true,
-    noremap = true,
-    callback = function()
-      vim.api.nvim_command('Compile')
-    end,
-    desc = 'compile code',
-  })
+  register_command({ 'c', 'cpp' }, '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r')
+  register_command({ 'rust' }, '!rustc %')
+  register_command({ 'cuda' }, '!nvcc % -o %:r &')
+  register_command({ 'java' }, '!javac % &')
+  register_command({ 'dart' }, '!flutter test')
 end
 
 commands.unhighlight_trailing_space = function()

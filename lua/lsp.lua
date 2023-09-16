@@ -178,30 +178,29 @@ lsp.setup = function()
   })
 
   -- commands
-  vim.api.nvim_create_user_command('GotoDeclaration', vim.lsp.buf.declaration, {})
-  vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
-  vim.api.nvim_set_keymap('n', '<C-A-b>', '', {
-    silent = true,
-    noremap = true,
-    callback = vim.lsp.buf.implementation,
-    desc = 'Goto implementation',
-  })
-  vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
-  vim.api.nvim_set_keymap('n', '<C-S-b>', '', {
-    silent = true,
-    noremap = true,
-    callback = vim.lsp.buf.type_definition,
-    desc = 'Goto type definition',
-  })
-  vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
-  vim.api.nvim_set_keymap('n', '<S-A-7>', '', {
-    silent = true,
-    noremap = true,
-    callback = vim.lsp.buf.references,
-    desc = 'Goto type definition',
-  })
+  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
+  -- vim.api.nvim_set_keymap('n', '<C-A-b>', '', {
+  --   silent = true,
+  --   noremap = true,
+  --   callback = vim.lsp.buf.implementation,
+  --   desc = 'Goto implementation',
+  -- })
+  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
+  -- vim.api.nvim_set_keymap('n', '<C-S-b>', '', {
+  --   silent = true,
+  --   noremap = true,
+  --   callback = vim.lsp.buf.type_definition,
+  --   desc = 'Goto type definition',
+  -- })
+  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+  -- vim.api.nvim_set_keymap('n', '<S-A-7>', '', {
+  --   silent = true,
+  --   noremap = true,
+  --   callback = vim.lsp.buf.references,
+  --   desc = 'Goto type definition',
+  -- })
 
-  vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
+  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
 
   -- goto type definition
   vim.api.nvim_set_keymap('n', 'gt', '', {
@@ -233,35 +232,41 @@ lsp.setup = function()
     desc = 'LSP type definition',
   })
 
-  -- hover
-  vim.opt.updatetime = 3000
-  vim.api.nvim_create_autocmd({ 'CursorHold' }, {
-    pattern = { '*.dart' },
-    callback = function()
-      local current_line = vim.api.nvim_get_current_line()
-      local pos = vim.api.nvim_win_get_cursor(0)
-      local current_char = string.sub(current_line, pos[2] + 1, pos[2] + 1)
-      if vim.fn.mode() == 'n' and current_char ~= ' ' then
-        vim.lsp.buf.hover()
-        -- local current_buffer = vim.api.nvim_get_current_buf()
-        -- local win_id, _ = plenary_popup.create(current_buffer, {
-        --   width = 60,
-        --   height = 30,
-        --   border = true,
-        --   title = 'hello',
-        --   should_enter = true,
-        --   padding = { 1, 1, 1, 1}
-        -- })
+  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
+  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
 
-        -- plenary_popup.move(win_id, {
-        --   line = pos[1],
-        --   col = pos[2],
-        -- })
-        -- vim.fn.complete(pos[2], {'hello', 'world'})
-        -- vim.lsp.buf.signature_help()
-      end
-    end
-  })
+  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
+  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
+
+  -- hover
+  -- vim.opt.updatetime = 3000
+  -- vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+  --   pattern = { '*.dart' },
+  --   callback = function()
+  --     local current_line = vim.api.nvim_get_current_line()
+  --     local pos = vim.api.nvim_win_get_cursor(0)
+  --     local current_char = string.sub(current_line, pos[2] + 1, pos[2] + 1)
+  --     if vim.fn.mode() == 'n' and current_char ~= ' ' then
+  --       vim.lsp.buf.hover()
+  --       -- local current_buffer = vim.api.nvim_get_current_buf()
+  --       -- local win_id, _ = plenary_popup.create(current_buffer, {
+  --       --   width = 60,
+  --       --   height = 30,
+  --       --   border = true,
+  --       --   title = 'hello',
+  --       --   should_enter = true,
+  --       --   padding = { 1, 1, 1, 1}
+  --       -- })
+
+  --       -- plenary_popup.move(win_id, {
+  --       --   line = pos[1],
+  --       --   col = pos[2],
+  --       -- })
+  --       -- vim.fn.complete(pos[2], {'hello', 'world'})
+  --       -- vim.lsp.buf.signature_help()
+  --     end
+  --   end
+  -- })
 
   vim.api.nvim_create_user_command('LspFormat', function()
     vim.lsp.buf.format({
@@ -299,6 +304,7 @@ lsp.setup = function()
       lualine_x = { "require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype' },
     },
   }
+
 end
 
 return lsp

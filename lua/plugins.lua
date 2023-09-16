@@ -23,7 +23,9 @@ local M = packer.startup(function()
   use {
     'nvimdev/lspsaga.nvim',
     after = 'nvim-lspconfig',
-    config = require('plugin-settings/lspsaga-settings').setup,
+    config = function()
+      require('plugin-settings/lspsaga-settings').setup()
+    end
   }
   use {
     'gfanto/fzf-lsp.nvim',
