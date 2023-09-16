@@ -211,7 +211,7 @@ end, context.completion.timer, config.completion.debounce_time)
 context.stop_completion = function()
   context.completion.timer:stop()
   if context.completion.lsp.cancel_func then
-    context.completion.lsp.cancel_func()
+    pcall(context.completion.lsp.cancel_func)
   end
   context.completion.lsp.cancel_func = nil
 
@@ -327,7 +327,7 @@ end
 context.stop_info = function()
   context.info.timer:stop()
   if context.info.cancel_func ~= nil then
-    context.info.cancel_func()
+    pcall(context.info.cancel_func)
   end
   context.info.cancel_func = nil
   util.close_action_window(context.info.lsp)
@@ -486,7 +486,7 @@ context.stop_signature = function()
   context.signature.timer:stop()
 
   if context.signature.lsp.cancel_func then
-    context.signature.lsp.cancel_func()
+    pcall(context.signature.lsp.cancel_func)
   end
 
   context.signature.lsp.cancel_func = nil
