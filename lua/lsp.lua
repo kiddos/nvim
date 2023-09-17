@@ -178,103 +178,6 @@ lsp.setup = function()
   })
 
   -- commands
-  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
-  -- vim.api.nvim_set_keymap('n', '<C-A-b>', '', {
-  --   silent = true,
-  --   noremap = true,
-  --   callback = vim.lsp.buf.implementation,
-  --   desc = 'Goto implementation',
-  -- })
-  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
-  -- vim.api.nvim_set_keymap('n', '<C-S-b>', '', {
-  --   silent = true,
-  --   noremap = true,
-  --   callback = vim.lsp.buf.type_definition,
-  --   desc = 'Goto type definition',
-  -- })
-  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
-  -- vim.api.nvim_set_keymap('n', '<S-A-7>', '', {
-  --   silent = true,
-  --   noremap = true,
-  --   callback = vim.lsp.buf.references,
-  --   desc = 'Goto type definition',
-  -- })
-
-  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
-
-  -- goto type definition
-  vim.api.nvim_set_keymap('n', 'gt', '', {
-    silent = true,
-    noremap = true,
-    callback = function()
-      vim.lsp.buf.type_definition()
-    end,
-    desc = 'LSP type definition',
-  })
-
-  -- goto document symbol
-  vim.api.nvim_set_keymap('n', 'gd', '', {
-    silent = true,
-    noremap = true,
-    callback = function()
-      vim.lsp.buf.document_symbol()
-    end,
-    desc = 'LSP type definition',
-  })
-
-  -- goto workspace symbol
-  vim.api.nvim_set_keymap('n', 'gw', '', {
-    silent = true,
-    noremap = true,
-    callback = function()
-      vim.lsp.buf.workspace_symbol('')
-    end,
-    desc = 'LSP type definition',
-  })
-
-  -- vim.api.nvim_create_user_command('GotoReferences', vim.lsp.buf.references, {})
-  -- vim.api.nvim_create_user_command('GotoTypeDefinition', vim.lsp.buf.type_definition, {})
-
-  -- vim.api.nvim_create_user_command('GotoImplementation', vim.lsp.buf.implementation, {})
-  -- vim.api.nvim_create_user_command('LspSignature', vim.lsp.buf.signature_help, {})
-
-  -- hover
-  -- vim.opt.updatetime = 3000
-  -- vim.api.nvim_create_autocmd({ 'CursorHold' }, {
-  --   pattern = { '*.dart' },
-  --   callback = function()
-  --     local current_line = vim.api.nvim_get_current_line()
-  --     local pos = vim.api.nvim_win_get_cursor(0)
-  --     local current_char = string.sub(current_line, pos[2] + 1, pos[2] + 1)
-  --     if vim.fn.mode() == 'n' and current_char ~= ' ' then
-  --       vim.lsp.buf.hover()
-  --       -- local current_buffer = vim.api.nvim_get_current_buf()
-  --       -- local win_id, _ = plenary_popup.create(current_buffer, {
-  --       --   width = 60,
-  --       --   height = 30,
-  --       --   border = true,
-  --       --   title = 'hello',
-  --       --   should_enter = true,
-  --       --   padding = { 1, 1, 1, 1}
-  --       -- })
-
-  --       -- plenary_popup.move(win_id, {
-  --       --   line = pos[1],
-  --       --   col = pos[2],
-  --       -- })
-  --       -- vim.fn.complete(pos[2], {'hello', 'world'})
-  --       -- vim.lsp.buf.signature_help()
-  --     end
-  --   end
-  -- })
-
-  vim.api.nvim_create_user_command('LspFormat', function()
-    vim.lsp.buf.format({
-      formatting_options = {
-        async = true,
-      },
-    })
-  end, {})
   vim.api.nvim_set_keymap('n', '<C-A-l>', '', {
     silent = true,
     noremap = true,
@@ -292,19 +195,38 @@ lsp.setup = function()
     print(vim.inspect(vim.lsp.get_clients()))
   end, {})
 
+  local status_icons = function()
+    local current = vim.api.nvim_get_current_buf()
+    local diagnostics = vim.diagnostic.get(current)
+    if #diagnostics > 0 then
+      local bug = ''
+      for _=1,#diagnostics,1 do
+        bug = bug .. '🐁'
+      end
+      return bug
+    else
+      if vim.fn.mode() == 'n' then
+        return '🐕'
+      elseif vim.fn.mode() == 'i' then
+        return '🐧'
+      elseif vim.fn.mode() == 's' then
+        return '🐇'
+      end
+      return '🐘'
+    end
+  end
 
-  require('lualine').setup {
+  require('lualine').setup({
     options = {
       theme = 'onedark',
       section_separators = { '◗', '◖' },
       component_separators = { '►', '◄' }
     },
     sections = {
-      lualine_c = { 'filename', "require'lsp-status'.status()" },
-      lualine_x = { "require'lsp-status'.status()", 'encoding', 'fileformat', 'filetype' },
+      lualine_c = { 'filename', status_icons,  'require("lsp-status").status()' },
+      lualine_x = { 'encoding', 'fileformat', 'filetype' },
     },
-  }
-
+  })
 end
 
 return lsp
