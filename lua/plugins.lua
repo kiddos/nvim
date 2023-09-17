@@ -65,22 +65,12 @@ local M = packer.startup(function()
 
   -- git
   use {
-    'tpope/vim-fugitive',
-    cmd = {'Git', 'Gread', 'Gwrite', 'GDelete', 'Ggrep', 'GMove', 'GBrowse', 'Gcommit'}
-  }
-  use {
     'airblade/vim-gitgutter',
     cmd = {'GitGutterToggle'}
   }
   use {
     'f-person/git-blame.nvim',
     cmd = {'GitBlameToggle'}
-  }
-  use {
-    'lewis6991/gitsigns.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim'
-    }
   }
 
   -- tmux
@@ -113,6 +103,9 @@ local M = packer.startup(function()
   use {
     'kylechui/nvim-surround',
     tag = 'v2.1.1',
+    config = function()
+      require('nvim-surround').setup({})
+    end
   }
   use 'mattn/emmet-vim'
   use 'mhinz/vim-startify'
@@ -131,7 +124,6 @@ local M = packer.startup(function()
     }
   }
 
-
   -- language specific
   use {
     'iamcco/markdown-preview.nvim',
@@ -139,15 +131,6 @@ local M = packer.startup(function()
     ft = {'markdown'},
     cmd = 'MarkdownPreview',
   }
-  -- dart
-  -- use {
-  --   'akinsho/flutter-tools.nvim',
-  --   tag = 'v1.3.0',
-  --   requires = {
-  --     'nvim-lua/plenary.nvim',
-  --     'stevearc/dressing.nvim',
-  --   },
-  -- }
 
   if packer_bootstrap then
     packer.sync()
