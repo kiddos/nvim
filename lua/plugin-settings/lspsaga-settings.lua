@@ -55,7 +55,7 @@ M.setup = function()
 
   register_command('Lspsaga hover_doc', '<Leader>hover_doc', 'HoverDoc', 'Hover ✨')
   register_command('Lspsaga code_action', '<Leader>code', 'Code', 'Code Action ⚡⚡⚡')
-  register_command('Lspsaga rename', '<Leader>rename', 'Rename', 'Rename ✍ ')
+  register_command('Lspsaga rename', '<Leader>rename', 'RenameSymbol', 'Rename ✍ ')
   register_command('Lspsaga show_cursor_diagnostics', '<Leader>cursor_diag', 'CurrentDiagnostics', 'Cursor Diagnostic 💩')
   register_command('Lspsaga finder imp', '<Leader>implementation', 'GotoImplementation', 'Goto Implementation 🐻')
   register_command('Lspsaga goto_definition', '<Leader>gotod', 'GotoDefinition', 'Goto Definition 🐣')

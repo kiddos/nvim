@@ -28,10 +28,6 @@ local M = packer.startup(function()
     end
   }
   use {
-    'gfanto/fzf-lsp.nvim',
-    requires = {'nvim-lua/plenary.nvim'}
-  }
-  use {
     'ojroques/nvim-lspfuzzy',
     requires = {
       {'junegunn/fzf'},

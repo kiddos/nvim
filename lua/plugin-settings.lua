@@ -34,17 +34,6 @@ settings.setup = function()
   -- emmet
   vim.api.nvim_set_var('user_emmet_togglecomment_key', '<C-y>#')
 
-
-  -- flutter
-  -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-  -- capabilities.textDocument.completion.completionItem.snippetSupport = false
-  -- require('flutter-tools').setup({
-  --   lsp = {
-  --     capabilities = capabilities,
-  --   }
-  -- })
-
-
   -- fzf
   local rg_options = {
     '--column',
@@ -165,26 +154,6 @@ settings.setup = function()
       },
     },
   })
-
-  -- clang-format
-  vim.api.nvim_set_var('clang_format#code_style', 'google')
-  vim.api.nvim_set_var('clang_format#filetype_style_options', {
-    cpp = {
-      ['Standard'] = 'C++17',
-      ['ColumnLimit'] = 80,
-    },
-    javascript = {
-      ['ColumnLimit'] = 80,
-    },
-  })
-
-
-  -- vim-autopep8
-  vim.api.nvim_set_var('autopep8_indent_size', 2)
-  vim.api.nvim_set_var('autopep8_disable_show_diff', 0)
-  vim.api.nvim_set_var('autopep8_max_line_length', 80)
-  -- vim.g.autopep8_ignore="W291,W391,E111,E113,E114,E121,E125,E127,E128,E221,E225,E226,E231,E302,E303,W391,E501,E701,F401"
-
 
   -- wilder.nvim
   local wilder = require('wilder')
