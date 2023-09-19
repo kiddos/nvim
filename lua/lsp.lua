@@ -157,22 +157,22 @@ lsp.setup = function()
 
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
-    text = '✖ ',
+    text = '💥',
     texthl = 'DiagnosticSignError',
     numhl = 'DiagnosticError'
   })
   vim.fn.sign_define('DiagnosticSignWarn', {
-    text = '⚠ ',
+    text = '💩',
     texthl = 'DiagnosticSignWarn',
     numhl = 'DiagnosticWarn',
   })
   vim.fn.sign_define('DiagnosticSignInfo', {
-    text = 'ⓘ ',
+    text = '💨',
     texthl = 'DiagnosticSignInfo',
     numhl = 'DiagnosticInfo',
   })
   vim.fn.sign_define('DiagnosticSignHint', {
-    text = '🗒',
+    text = '💤',
     texthl = 'DiagnosticSignHint',
     numhl = 'DiagnosticHint',
   })
@@ -200,8 +200,17 @@ lsp.setup = function()
     local diagnostics = vim.diagnostic.get(current)
     if #diagnostics > 0 then
       local bug = ''
-      for _=1,#diagnostics,1 do
-        bug = bug .. '🐁'
+      for i=1,#diagnostics,1 do
+        local severity = diagnostics[i].severity
+        if severity == vim.diagnostic.severity.ERROR then
+          bug = bug .. '🐁'
+        elseif severity == vim.diagnostic.severity.WARN then
+          bug = bug .. '🐀'
+        elseif severity == vim.diagnostic.severity.INFO then
+          bug = bug .. '🐭'
+        elseif severity == vim.diagnostic.severity.HINT then
+          bug = bug .. '🐹'
+        end
       end
       return bug
     else
