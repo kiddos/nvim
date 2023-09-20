@@ -20,6 +20,7 @@ function dump(o)
 end
 
 context.completion = {
+  enabled = true,
   timer = vim.uv.new_timer(),
   lsp = {
     result = nil,
@@ -474,10 +475,10 @@ context.trigger_signature = vim.schedule_wrap(function()
     local bufnr = vim.api.nvim_get_current_buf()
     local params = vim.lsp.util.make_position_params()
     context.signature.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params,
-    function(result)
-      context.signature.lsp.result = result
-      context.show_signature_window()
-    end)
+      function(result)
+        context.signature.lsp.result = result
+        context.show_signature_window()
+      end)
   end
 end)
 
@@ -495,6 +496,9 @@ context.stop_signature = function()
 end
 
 M.auto_complete = function()
+  if not context.completion.enabled then
+    return
+  end
   context.trigger_completion()
 end
 
@@ -616,6 +620,10 @@ M.setup = function(opts)
     noremap = true,
     callback = M.auto_complete,
   })
+
+  vim.api.nvim_create_user_command('CompletionToggle', function()
+    context.completion.enabled = not context.completion.enabled
+  end, {})
 end
 
 return M
