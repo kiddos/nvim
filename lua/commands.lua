@@ -4,16 +4,16 @@ local context = {
 }
 
 local ALTERNATE_EXTENSIONS = {
-  c = {'h'},
-  cpp = {'h', 'hpp'},
-  cc = {'h', 'hpp'},
-  h = {'cpp', 'cc', 'c'},
-  hpp = {'cpp', 'cc'},
-  html = {'css'},
-  css = {'html', 'js'},
-  js = {'css'},
-  jsx = {'css'},
-  ts = {'html'},
+  c = { 'h' },
+  cpp = { 'h', 'hpp' },
+  cc = { 'h', 'hpp' },
+  h = { 'cpp', 'cc', 'c' },
+  hpp = { 'cpp', 'cc' },
+  html = { 'css' },
+  css = { 'html', 'js' },
+  js = { 'css' },
+  jsx = { 'css' },
+  ts = { 'html' },
 }
 
 commands.typo_command = function()
@@ -47,7 +47,7 @@ commands.semicolon = function()
       'objcpp',
     },
     callback = function()
-      vim.api.nvim_buf_set_keymap(0, 'n', ';', '$a;', {noremap = true});
+      vim.api.nvim_buf_set_keymap(0, 'n', ';', '$a;', { noremap = true });
     end,
   })
 end
@@ -131,7 +131,7 @@ end
 commands.reattach_current_buf_lsp = function()
   -- re-attach lsp servers
   local current_buf = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_clients({bufnr = current_buf})
+  local clients = vim.lsp.get_clients({ bufnr = current_buf })
   for _, client in pairs(clients) do
     vim.lsp.buf_detach_client(current_buf, client.id)
     vim.lsp.buf_attach_client(current_buf, client.id)
@@ -164,7 +164,7 @@ commands.rename = function(opts)
   commands.reattach_current_buf_lsp()
   vim.api.nvim_command('redraw')
 
-  print('Rename file to ' .. name)
+  print('🦉🦉🦉  Rename file to ' .. name)
 end
 
 commands.move = function(opts)
@@ -179,7 +179,7 @@ commands.move = function(opts)
   commands.reattach_current_buf_lsp()
   vim.api.nvim_command('redraw')
 
-  print('Move file to ' .. dirname)
+  print('🦫🦫🦫 Move file to ' .. dirname)
 end
 
 commands.remove = function()
@@ -187,7 +187,7 @@ commands.remove = function()
   local result = vim.fn.confirm('Remove the file (' .. current_path .. ') ?', '&Yes\n&No', 1)
   if result == 1 then
     local current_buf = vim.api.nvim_get_current_buf()
-    local clients = vim.lsp.get_clients({bufnr = current_buf})
+    local clients = vim.lsp.get_clients({ bufnr = current_buf })
     for _, client in pairs(clients) do
       vim.lsp.buf_detach_client(current_buf, client.id)
     end
@@ -195,7 +195,7 @@ commands.remove = function()
     vim.api.nvim_command('BufferClose')
     vim.fn.delete(current_path)
     vim.api.nvim_command('redraw')
-    print('File (' .. current_path .. ') deleted.')
+    print('🦨🦨🦨 File (' .. current_path .. ') deleted.')
   end
 end
 
@@ -203,6 +203,7 @@ commands.mkdir = function(opts)
   local dirname = opts.args
   vim.fn.mkdir(dirname, 'p')
   vim.api.nvim_command('redraw')
+  print('🦭🦭🦭 Directory created : ' .. dirname)
 end
 
 commands.chmod = function(opts)
@@ -270,12 +271,6 @@ commands.setup = function()
       refresh_nerdtree()
     end, {})
 
-  vim.api.nvim_create_user_command('Remove',
-    function()
-      commands.remove()
-      refresh_nerdtree()
-    end, {})
-
   vim.api.nvim_create_user_command('Mkdir',
     function(opts)
       commands.mkdir(opts)
@@ -295,8 +290,12 @@ commands.setup = function()
 
   vim.api.nvim_create_user_command('SqlFormat',
     function()
-      vim.cmd('%!sqlformat --reindent --keywords upper --identifiers lower -')
+      vim.api.nvim_command('%!sqlformat --reindent --keywords upper --identifiers lower -')
     end, {})
+
+  vim.api.nvim_create_user_command('CountLines', function()
+    vim.api.nvim_command('!git ls-files | xargs wc -l')
+  end, {})
 end
 
 return commands
