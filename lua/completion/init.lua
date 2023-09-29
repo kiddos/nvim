@@ -6,19 +6,6 @@ local config = require('completion.config')
 local lru = require('completion.lru')
 local snippet = require('completion.snippet')
 
-function dump(o)
-  if type(o) == 'table' then
-    local s = '{ '
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then k = '"' .. k .. '"' end
-      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-    end
-    return s .. '} '
-  else
-    return tostring(o)
-  end
-end
-
 context.completion = {
   enabled = true,
   timer = vim.uv.new_timer(),
@@ -232,13 +219,11 @@ context.get_completion_info_text = function(event, callback)
 
   local completed_item_source = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'source' })
   if completed_item_source ~= 'lsp' then
-    callback(nil)
     return
   end
 
   local lsp_completion_item = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'completion_item' })
   if not lsp_completion_item then
-    callback(nil)
     return
   end
 
@@ -248,19 +233,6 @@ context.get_completion_info_text = function(event, callback)
     callback(vim.lsp.util.trim_empty_lines(lines))
     return
   end
-
-  local current_buffer = vim.api.nvim_get_current_buf()
-
-  vim.lsp.buf_request_all(current_buffer, 'completionItem/resolve', lsp_completion_item, function(result)
-    util.process_lsp_response(result, function(response)
-      if not response.documentation and not response.detail then
-        callback(nil)
-        return
-      end
-      local res = vim.lsp.util.convert_input_to_markdown_lines(response.documentation or response.detail)
-      callback(vim.lsp.util.trim_empty_lines(res))
-    end)
-  end)
 end
 
 context.get_info_window_options = function(event)
