@@ -128,12 +128,19 @@ commands.alternate_file = function()
   vim.api.nvim_command(':e ' .. alternate_file)
 end
 
-commands.reattach_current_buf_lsp = function()
-  -- re-attach lsp servers
+commands.detach_current_buf_lsp = function()
   local current_buf = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = current_buf })
   for _, client in pairs(clients) do
     vim.lsp.buf_detach_client(current_buf, client.id)
+    vim.lsp.buf_attach_client(current_buf, client.id)
+  end
+  return clients
+end
+
+commands.attach_current_buf_lsp = function(clients)
+  local current_buf = vim.api.nvim_get_current_buf()
+  for _, client in pairs(clients) do
     vim.lsp.buf_attach_client(current_buf, client.id)
   end
 end
@@ -146,6 +153,8 @@ commands.rename = function(opts)
   if current_filename == name then
     return
   end
+
+  local clients = commands.detach_current_buf_lsp()
 
   local current_path = vim.fn.expand('%:p')
   local current_dir = vim.fn.expand('%:h')
@@ -161,7 +170,7 @@ commands.rename = function(opts)
   vim.api.nvim_command('write!')
   vim.fn.delete(current_path)
 
-  commands.reattach_current_buf_lsp()
+  commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
   print('🦉🦉🦉  Rename file to ' .. name)
@@ -171,12 +180,15 @@ commands.move = function(opts)
   local current_path = vim.fn.expand('%:p')
   local dirname = opts.args
   local filename = vim.fn.expand('%:t')
+
+  local clients = commands.detach_current_buf_lsp()
+
   vim.fn.mkdir(dirname, 'p')
   vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
   vim.api.nvim_command('write!')
   vim.fn.delete(current_path)
 
-  commands.reattach_current_buf_lsp()
+  commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
   print('🦫🦫🦫 Move file to ' .. dirname)

@@ -2,10 +2,9 @@ local M = {}
 
 M.setup = function()
   local lspfuzzy = require('lspfuzzy')
-  lspfuzzy.setup{
+  lspfuzzy.setup({
     save_last = true,
-  }
-
+  })
   vim.api.nvim_set_keymap('n', '<Leader><Leader>d', '', {
     noremap = true,
     silent = false,

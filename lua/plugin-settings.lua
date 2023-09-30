@@ -48,6 +48,39 @@ settings.setup = function()
   vim.api.nvim_create_user_command('Rg', 'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
   vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
 
+  local register_fzf_menu = function(fzf_command, menu)
+    vim.api.nvim_command('nnoremenu FZF.' .. menu:gsub(' ', '\\ ') .. ' :' .. fzf_command .. '<CR>')
+  end
+
+  register_fzf_menu('GFiles', 'Git files 🦜')
+  register_fzf_menu('Buffers', 'Open buffers 🦥')
+  register_fzf_menu('Colors', 'Color scheme 🎨')
+  register_fzf_menu('Ag', 'ag search 🦆')
+  register_fzf_menu('Rg', 'rg search 🧸')
+  register_fzf_menu('Lines', 'Find in loadded buffers 🦄🦄🦄')
+  register_fzf_menu('Tags', 'Tags in the project 🦏')
+  register_fzf_menu('Changes', 'Changelist across open buffers 🦅')
+  register_fzf_menu('Marks', 'Marks 🦋')
+  register_fzf_menu('Jumps', 'Jumps 🦗')
+  register_fzf_menu('Windows', 'Windows ')
+  register_fzf_menu('History', 'History 🐓')
+  register_fzf_menu('Snippets', 'Snippets 🦭🦭🦭')
+  register_fzf_menu('Commits', 'Git Commits 🦣🦣')
+  register_fzf_menu('Commands', 'Commands 🦩')
+  register_fzf_menu('Helptags', 'Help tags 🦎')
+  register_fzf_menu('Filetypes', 'File types 🦘')
+
+  vim.api.nvim_set_keymap('n', '<M-n>', '', {
+    expr = true,
+    noremap = true,
+    silent = true,
+    callback = function()
+      if vim.fn.pumvisible() == 0 then
+        vim.api.nvim_command('popup FZF')
+      end
+    end
+  })
+
 
   -- vim-startify
   vim.api.nvim_set_var('startify_list_order', {

@@ -2,6 +2,7 @@ local M = {}
 
 M.setup = function()
   local saga = require('lspsaga')
+
   saga.setup({
     request_timeout = 16000,
     ui = {
@@ -46,27 +47,31 @@ M.setup = function()
         end
       })
     end
-    vim.api.nvim_create_user_command(command, function()
-      vim.defer_fn(function()
-        vim.api.nvim_command(saga_command)
-      end, 0)
-    end, {})
+    if command and command ~= '' then
+      vim.api.nvim_create_user_command(command, function()
+        vim.defer_fn(function()
+          vim.api.nvim_command(saga_command)
+        end, 0)
+      end, {})
+    end
 
-    vim.api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. command .. '<CR>')
+    vim.api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. saga_command .. '<CR>')
   end
 
-  register_command('Lspsaga hover_doc', nil, 'HoverDoc', 'Hover ✨')
+  register_command('Lspsaga hover_doc', nil, nil, 'Hover ✨')
   register_command('Lspsaga code_action', nil, 'Code', 'Code Action ⚡⚡⚡')
-  register_command('Lspsaga rename', '<Leader>rename', 'RenameSymbol', 'Rename ✍ ')
-  register_command('Lspsaga show_cursor_diagnostics', nil, 'CurrentDiagnostics', 'Cursor Diagnostic 💩')
-  register_command('Lspsaga finder imp', nil, 'GotoImplementation', 'Goto Implementation 🐻')
-  register_command('Lspsaga goto_definition', nil, 'GotoDefinition', 'Goto Definition 🐣')
-  register_command('Lspsaga goto_type_definition', nil, 'GotoTypeDefinition', 'Goto Type Definition 🐥')
-  register_command('Lspsaga peek_definition', nil, 'PeekDefinition', 'Peek Definition 🐦')
-  register_command('Lspsaga incoming_calls', nil, 'IncomingCall', 'Incoming Call 🐉')
-  register_command('Lspsaga outgoing_calls', nil, 'OutgoingCall', 'Outgoing Call 🐬')
-  register_command('Lspsaga term_toggle', nil, 'OpenTerminal', 'Open Terminal 🌌 ')
-  register_command('Lspsaga finder', nil, 'Finder', 'Finder ⭐ ')
+  register_command('Lspsaga rename', '<Leader>rename', nil, 'Rename ✍ ')
+  register_command('Lspsaga show_cursor_diagnostics', nil, nil, 'Cursor Diagnostic 💩')
+  register_command('Lspsaga finder imp', nil, nil, 'Goto Implementation 🐻')
+  register_command('Lspsaga goto_definition', nil, nil, 'Goto Definition 🐣')
+  register_command('Lspsaga goto_type_definition', nil, nil, 'Goto Type Definition 🐥')
+  register_command('Lspsaga peek_definition', nil, nil, 'Peek Definition 🐦')
+  register_command('Lspsaga incoming_calls', nil, nil, 'Incoming Call 🐉')
+  register_command('Lspsaga outgoing_calls', nil, nil, 'Outgoing Call 🐬')
+  register_command('Lspsaga term_toggle', nil, nil, 'Open Terminal 🌌 ')
+  register_command('Lspsaga finder', nil, nil, 'Finder ⭐ ')
+
+
 
   local register_popup_keymap = function(key)
     vim.api.nvim_set_keymap('n', key, '', {
@@ -82,7 +87,7 @@ M.setup = function()
   end
 
   register_popup_keymap('<C-n>')
-  -- register_popup_keymap('<C-Space>')
+  register_popup_keymap('<C-Space>')
 
 
   local register_toggle_key = function(key, command)
@@ -98,6 +103,7 @@ M.setup = function()
 
   register_toggle_key('<F4>', 'outline')
   register_toggle_key('<F5>', 'winbar_toggle')
+
 end
 
 return M

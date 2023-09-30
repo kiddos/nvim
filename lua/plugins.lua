@@ -25,7 +25,7 @@ local M = packer.startup(function()
     after = 'nvim-lspconfig',
     config = function()
       require('plugin-settings/lspsaga-settings').setup()
-    end
+    end,
   }
   use {
     'ojroques/nvim-lspfuzzy',
@@ -33,7 +33,9 @@ local M = packer.startup(function()
       {'junegunn/fzf'},
       {'junegunn/fzf.vim'},  -- to enable preview (optional)
     },
-    config = require('plugin-settings/lspfuzzy').setup,
+    config = function()
+      require('plugin-settings/lspfuzzy').setup()
+    end,
   }
 
   -- treesitter
