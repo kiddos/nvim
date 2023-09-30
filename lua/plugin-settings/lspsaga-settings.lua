@@ -37,34 +37,36 @@ M.setup = function()
   vim.api.nvim_set_var('mapleader', ',')
 
   local register_command = function(saga_command, binding, command, menu)
-    vim.api.nvim_set_keymap('n', binding, '', {
-      noremap = true,
-      silent = true,
-      callback = function()
-        vim.api.nvim_command(saga_command)
-      end
-    })
+    if binding and binding ~= '' then
+      vim.api.nvim_set_keymap('n', binding, '', {
+        noremap = true,
+        silent = true,
+        callback = function()
+          vim.api.nvim_command(saga_command)
+        end
+      })
+    end
     vim.api.nvim_create_user_command(command, function()
       vim.defer_fn(function()
         vim.api.nvim_command(saga_command)
       end, 0)
     end, {})
 
-    vim.api.nvim_command('nnoremenu LspSaga.' .. menu:gsub(' ', '\\ ') .. ' :' .. command .. '<CR>')
+    vim.api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. command .. '<CR>')
   end
 
-  register_command('Lspsaga hover_doc', '<Leader>hover_doc', 'HoverDoc', 'Hover ✨')
-  register_command('Lspsaga code_action', '<Leader>code', 'Code', 'Code Action ⚡⚡⚡')
+  register_command('Lspsaga hover_doc', nil, 'HoverDoc', 'Hover ✨')
+  register_command('Lspsaga code_action', nil, 'Code', 'Code Action ⚡⚡⚡')
   register_command('Lspsaga rename', '<Leader>rename', 'RenameSymbol', 'Rename ✍ ')
-  register_command('Lspsaga show_cursor_diagnostics', '<Leader>cursor_diag', 'CurrentDiagnostics', 'Cursor Diagnostic 💩')
-  register_command('Lspsaga finder imp', '<Leader>implementation', 'GotoImplementation', 'Goto Implementation 🐻')
-  register_command('Lspsaga goto_definition', '<Leader>gotod', 'GotoDefinition', 'Goto Definition 🐣')
-  register_command('Lspsaga goto_type_definition', '<Leader>gotot', 'GotoTypeDefinition', 'Goto Type Definition 🐥')
-  register_command('Lspsaga peek_definition', '<Leader>peekdef', 'PeekDefinition', 'Peek Definition 🐦')
-  register_command('Lspsaga incoming_calls', '<Leader>incoming', 'IncomingCall', 'Incoming Call 🐉')
-  register_command('Lspsaga outgoing_calls', '<Leader>outgoing', 'OutgoingCall', 'Outgoing Call 🐬')
-  register_command('Lspsaga term_toggle', '<Leader>terminal', 'OpenTerminal', 'Open Terminal 🌌 ')
-  register_command('Lspsaga finder', '<Leader>find', 'Finder', 'Finder ⭐ ')
+  register_command('Lspsaga show_cursor_diagnostics', nil, 'CurrentDiagnostics', 'Cursor Diagnostic 💩')
+  register_command('Lspsaga finder imp', nil, 'GotoImplementation', 'Goto Implementation 🐻')
+  register_command('Lspsaga goto_definition', nil, 'GotoDefinition', 'Goto Definition 🐣')
+  register_command('Lspsaga goto_type_definition', nil, 'GotoTypeDefinition', 'Goto Type Definition 🐥')
+  register_command('Lspsaga peek_definition', nil, 'PeekDefinition', 'Peek Definition 🐦')
+  register_command('Lspsaga incoming_calls', nil, 'IncomingCall', 'Incoming Call 🐉')
+  register_command('Lspsaga outgoing_calls', nil, 'OutgoingCall', 'Outgoing Call 🐬')
+  register_command('Lspsaga term_toggle', nil, 'OpenTerminal', 'Open Terminal 🌌 ')
+  register_command('Lspsaga finder', nil, 'Finder', 'Finder ⭐ ')
 
   local register_popup_keymap = function(key)
     vim.api.nvim_set_keymap('n', key, '', {
@@ -73,14 +75,14 @@ M.setup = function()
       silent = true,
       callback = function()
         if vim.fn.pumvisible() == 0 then
-          vim.api.nvim_command('popup LspSaga')
+          vim.api.nvim_command('popup LSP')
         end
       end
     })
   end
 
   register_popup_keymap('<C-n>')
-  register_popup_keymap('<C-Space>')
+  -- register_popup_keymap('<C-Space>')
 
 
   local register_toggle_key = function(key, command)
