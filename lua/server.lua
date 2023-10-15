@@ -17,7 +17,7 @@ end
 M.start_codellama_instruct_server = function()
   vim.api.nvim_exec(
   [[
-  silent exec ':!python3 ~/.config/nvim/scripts/ml_server.py --model ~/models/ggml/codellama/codellama-7b-instruct.Q4_0.gguf --port 60002 --prompt_type=instruct 1> /dev/null &'
+  silent exec ':!python3 ~/.config/nvim/scripts/ml_server.py --model ~/models/ggml/codellama/codellama-7b-instruct.Q2_K.gguf --port 60002 --prompt_type=instruct 1> /dev/null &'
   ]], false)
 end
 
