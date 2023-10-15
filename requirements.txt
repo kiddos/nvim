@@ -2,3 +2,5 @@ pynput
 psutil
 google-cloud-translate
 grpcio-tools
+python-lsp-server[all]
+langchain

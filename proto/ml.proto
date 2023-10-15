@@ -2,26 +2,38 @@ syntax = "proto3";
 
 package model;
 
-message DocumentRequest {
+message Code {
   string language = 1;
-  int32 num_response = 2;
-  string code = 3;
+  string code = 2;
+  int32 start = 3;
+  int32 end = 4;
 }
 
-message DocumentResponse {
-  repeated string doc = 1;
+message Instruction {
+  string language = 1;
+  string instruction = 2;
 }
 
-message CommitRequest {
-  string model_name = 1;
-  int32 num_response = 2;
+message CodeCompletion {
+  repeated string completions = 1;
 }
 
-message CommitResponse {
-  repeated string commit_msgs = 1;
+message Implementation {
+  repeated string implementations = 1;
+}
+
+message Example {
+  repeated string examples = 1;
+}
+
+message Comment {
+  string comment = 1;
 }
 
 service ML {
-  rpc GenerateDocument(DocumentRequest) returns (DocumentResponse) {}
-  rpc GenerateCommit(CommitRequest) returns (CommitResponse) {}
+  rpc GetCodeCompletion(Code) returns (CodeCompletion) {}
+  rpc GenerateComment(Code) returns (Comment) {}
+  rpc GenerateImplementation(Instruction) returns (Implementation) {}
+  rpc GenerateTest(Code) returns (Implementation) {}
+  rpc GenerateExample(Code) returns (Example) {}
 }

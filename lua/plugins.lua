@@ -94,7 +94,8 @@ local M = packer.startup(function()
   use 'scrooloose/nerdcommenter' -- comments
   use {
     'prettier/vim-prettier',
-    run = 'yarn install',
+    run = 'yarn install --frozen-lock-file --production',
+    tag = '1.0.0',
     -- ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact'},
     cmd = 'Prettier',
   }
