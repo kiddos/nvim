@@ -145,53 +145,154 @@ commands.attach_current_buf_lsp = function(clients)
   end
 end
 
--- linux commands binding
-commands.rename = function(opts)
-  local name = opts.args
+commands.table_get = function (t, id)
+  if type(id) ~= 'table' then return commands.table_get(t, { id }) end
+  local success, res = true, t
+  for _, i in ipairs(id) do
+    success, res = pcall(function() return res[i] end)
+    if not success or res == nil then return end
+  end
+  return res
+end
 
+
+commands.debug = function(o, ind)
+  if type(o) == 'table' then
+    local s = '{\n'
+    for i = 1,ind do
+      s = s .. ' '
+    end
+    for k, v in pairs(o) do
+      if type(k) ~= 'number' then k = '"' .. k .. '"' end
+      s = s .. '[' .. k .. '] = ' .. commands.debug(v, ind+1) .. ','
+    end
+    s = s .. '\n'
+    return s .. '}\n'
+  else
+    return tostring(o)
+  end
+end
+
+commands.find_client_with_supported_method = function(method)
+  local buf = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = buf })
+  if vim.tbl_isempty(clients) then
+    return nil
+  end
+
+  for _, c in pairs(clients) do
+    if c.supports_method(method) then
+      return c
+    end
+  end
+  return nil
+end
+
+-- linux commands binding
+commands.rename = function(new_filename)
   local current_filename = vim.fn.expand('%:t')
-  if current_filename == name then
+  if current_filename == new_filename then
     return
   end
 
-  local clients = commands.detach_current_buf_lsp()
+  -- local clients = commands.detach_current_buf_lsp()
 
-  local current_path = vim.fn.expand('%:p')
+  -- create directory
+  local input_dir = vim.fn.fnamemodify(new_filename, ':h')
   local current_dir = vim.fn.expand('%:h')
-  local input_dir = vim.fn.fnamemodify(name, ':h')
-
   local dirname = current_dir
   if input_dir ~= '' then
     dirname = dirname .. '/' .. input_dir
   end
-  local filename = vim.fn.fnamemodify(name, ':t')
   vim.fn.mkdir(dirname, 'p')
+
+  -- move the file
+  local filename = vim.fn.fnamemodify(new_filename, ':t')
   vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
   vim.api.nvim_command('write!')
+
+  -- delete the old file
+  local current_path = vim.fn.expand('%:p')
   vim.fn.delete(current_path)
 
-  commands.attach_current_buf_lsp(clients)
+  -- commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
-  print('🦉🦉🦉  Rename file to ' .. name)
+  print('🦉🦉🦉  Rename file to ' .. new_filename)
 end
 
-commands.move = function(opts)
+commands.lsp_rename_request = function(params, callback)
+  local client = commands.find_client_with_supported_method('workspace/willRenameFiles')
+  if client == nil then
+    callback()
+    return
+  end
+
+  local handler = function(err, result, _, _)
+    if err then
+      print('🐞🐞🐞 error occur while renaming')
+      return
+    end
+    if result ~= nil and type(result) == 'table' then
+      callback()
+      vim.lsp.util.apply_workspace_edit(result, 'utf-8')
+    end
+  end
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  client.request('workspace/willRenameFiles', params, handler, bufnr)
+end
+
+commands.lsp_rename_file = function(new_filename)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local new_filepath = vim.fn.expand('%:p:h') .. '/' .. new_filename
+  local new_uri = vim.uri_from_fname(new_filepath)
+  local old_uri = vim.uri_from_bufnr(bufnr)
+  local rename_file = {
+    ['oldUri'] = old_uri,
+    ['newUri'] = new_uri,
+  }
+  local params = {
+    files = {rename_file}
+  }
+  commands.lsp_rename_request(params, function()
+    commands.rename(new_filename)
+  end)
+end
+
+commands.move = function(directory)
   local current_path = vim.fn.expand('%:p')
-  local dirname = opts.args
   local filename = vim.fn.expand('%:t')
 
-  local clients = commands.detach_current_buf_lsp()
+  -- local clients = commands.detach_current_buf_lsp()
 
-  vim.fn.mkdir(dirname, 'p')
-  vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
+  vim.fn.mkdir(directory, 'p')
+  vim.api.nvim_command('file ' .. directory .. '/' .. filename)
   vim.api.nvim_command('write!')
   vim.fn.delete(current_path)
 
-  commands.attach_current_buf_lsp(clients)
+  -- commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
-  print('🦫🦫🦫 Move file to ' .. dirname)
+  print('🦫🦫🦫 Move file to ' .. directory)
+end
+
+commands.lsp_move_file = function(directory)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.fn.expand('%:t')
+  local new_filepath = vim.fn.getcwd() .. '/' .. directory .. '/' .. filename
+  local new_uri = vim.uri_from_fname(new_filepath)
+  local old_uri = vim.uri_from_bufnr(bufnr)
+  local rename_file = {
+    ['oldUri'] = old_uri,
+    ['newUri'] = new_uri,
+  }
+  local params = {
+    files = {rename_file}
+  }
+  commands.lsp_rename_request(params, function()
+    commands.move(directory)
+  end)
 end
 
 commands.remove = function()
@@ -267,13 +368,15 @@ commands.setup = function()
 
   vim.api.nvim_create_user_command('Rename',
     function(opts)
-      commands.rename(opts)
+      commands.lsp_rename_file(opts.args)
+      -- commands.rename(opts)
       refresh_nerdtree()
     end, { nargs = 1, complete = 'buffer' })
 
   vim.api.nvim_create_user_command('Move',
     function(opts)
-      commands.move(opts)
+      commands.lsp_move_file(opts.args)
+      -- commands.move(opts)
       refresh_nerdtree()
     end, { nargs = 1, complete = 'file' })
 
