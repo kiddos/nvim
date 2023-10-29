@@ -77,7 +77,7 @@ class MLPlugin(object):
 
   def log(self, message, history=True):
     try:
-      self.nvim.request('nvim_echo', [[message]], history)
+      self.nvim.request('nvim_echo', [[message]], history, {})
     except Exception:
       pass
 

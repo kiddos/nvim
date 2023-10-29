@@ -114,20 +114,21 @@ options.apply = function()
   -- python
   vim.api.nvim_set_var('python_recommended_style', 0)
 
-  local set_indenting = function(filetypes, tabstop, softtabstop, shiftwidth)
+  local set_indenting = function(filetypes, tabstop, softtabstop, shiftwidth, expandtab)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = filetypes,
       callback = function()
         vim.api.nvim_set_option_value('tabstop', tabstop, { scope = 'local' })
         vim.api.nvim_set_option_value('softtabstop', softtabstop, { scope = 'local' })
         vim.api.nvim_set_option_value('shiftwidth', shiftwidth, { scope = 'local' })
+        vim.api.nvim_set_option_value('expandtab', expandtab, { scope = 'local' })
       end
     })
   end
 
-  set_indenting({ 'java' }, 4, 4, 4)
-  set_indenting({ 'make' }, 4, 4, 4)
-  set_indenting({ 'snippets' }, 4, 4, 4)
+  set_indenting({ 'java' }, 4, 4, 4, true)
+  set_indenting({ 'make' }, 4, 4, 4, false)
+  set_indenting({ 'snippets' }, 4, 4, 4, false)
 end
 
 return options
