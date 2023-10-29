@@ -1,8 +1,8 @@
 local ensure_packer = function()
   local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
   if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
     vim.cmd [[packadd packer.nvim]]
     return true
   end
@@ -30,8 +30,8 @@ local M = packer.startup(function()
   use {
     'ojroques/nvim-lspfuzzy',
     requires = {
-      {'junegunn/fzf'},
-      {'junegunn/fzf.vim'},  -- to enable preview (optional)
+      { 'junegunn/fzf' },
+      { 'junegunn/fzf.vim' }, -- to enable preview (optional)
     },
     config = function()
       require('plugin-settings/lspfuzzy').setup()
@@ -49,26 +49,21 @@ local M = packer.startup(function()
   use {
     'romgrk/barbar.nvim',
     tag = 'v1.7.0',
-    requires = {'kyazdani42/nvim-web-devicons'},
+    requires = { 'kyazdani42/nvim-web-devicons' },
     config = require('plugin-settings/bufferline').setup,
   }
 
   -- color scheme
-  use {
-    'kiddos/malokai.vim',
-    config = function()
-      vim.cmd.colorscheme('malokai')
-    end
-  }
+  use 'kiddos/malokai.vim'
 
   -- git
   use {
     'airblade/vim-gitgutter',
-    cmd = {'GitGutterToggle'}
+    cmd = { 'GitGutterToggle' }
   }
   use {
     'f-person/git-blame.nvim',
-    cmd = {'GitBlameToggle'}
+    cmd = { 'GitBlameToggle' }
   }
 
   -- tmux
@@ -76,7 +71,7 @@ local M = packer.startup(function()
   use 'benmills/vimux'
   use {
     'edkolev/tmuxline.vim',
-    requires = {'vim-airline/vim-airline', 'vim-airline/vim-airline-themes'}
+    requires = { 'vim-airline/vim-airline', 'vim-airline/vim-airline-themes' }
   }
 
   -- utility
@@ -84,12 +79,12 @@ local M = packer.startup(function()
   -- status line
   use 'hoob3rt/lualine.nvim'
   use 'kyazdani42/nvim-web-devicons' -- icons
-  use 'gelguy/wilder.nvim' -- wild menu
+  use 'gelguy/wilder.nvim'           -- wild menu
   -- file browser
   use {
     'scrooloose/nerdtree',
-    cmd = {'NERDTreeToggle'},
-    requires = {'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons'},
+    cmd = { 'NERDTreeToggle' },
+    requires = { 'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons' },
   }
   use 'scrooloose/nerdcommenter' -- comments
   use {
@@ -110,7 +105,7 @@ local M = packer.startup(function()
   use 'mhinz/vim-startify'
   use {
     'junegunn/fzf.vim',
-    requires = {'junegunn/fzf'},
+    requires = { 'junegunn/fzf' },
     run = ':call fzf#install()',
   }
   use 'dcampos/nvim-snippy'
@@ -127,7 +122,7 @@ local M = packer.startup(function()
   use {
     'iamcco/markdown-preview.nvim',
     run = 'cd app && yarn install',
-    ft = {'markdown'},
+    ft = { 'markdown' },
     cmd = 'MarkdownPreview',
   }
 

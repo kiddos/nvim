@@ -1,6 +1,9 @@
 local settings = {}
 
 settings.setup = function()
+  -- color scheme
+  vim.cmd.colorscheme('malokai')
+
   -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
   vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})

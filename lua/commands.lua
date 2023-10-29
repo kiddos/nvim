@@ -16,7 +16,7 @@ local ALTERNATE_EXTENSIONS = {
   ts = { 'html' },
 }
 
-commands.typo_command = function()
+commands.set_typo_commands = function()
   vim.api.nvim_create_user_command('WQ', 'wq', {})
   vim.api.nvim_create_user_command('Wq', 'wq', {})
   vim.api.nvim_create_user_command('W', 'w', {})
@@ -25,7 +25,7 @@ commands.typo_command = function()
   vim.api.nvim_create_user_command('QA', 'qa', {})
 end
 
-commands.semicolon = function()
+commands.set_semicolon_commands = function()
   vim.api.nvim_create_autocmd('FileType', {
     pattern = {
       'c',
@@ -52,7 +52,7 @@ commands.semicolon = function()
   })
 end
 
-commands.compile = function()
+commands.set_compile_commands = function()
   local register_command = function(filetype, command)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = filetype,
@@ -83,21 +83,40 @@ commands.compile = function()
   register_command({ 'dart' }, '!flutter test')
 end
 
-commands.unhighlight_trailing_space = function()
+commands.toggle_highlight_trailing_space = function()
   if context.highlight_group ~= nil then
     vim.fn.matchdelete(context.highlight_group)
+    print('💦💦💦 Disable highlight trailing space')
+    context.highlight_group = nil
+  else
+    context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\v(\s+$)|( +\ze\t)]])
+    -- context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\s\+$]])
+    print('🔥🔥🔥 Highlight trailing space')
   end
-end
-
-commands.highlight_trailing_space = function()
-  context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\v(\s+$)|( +\ze\t)]])
-  -- context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\s\+$]])
 end
 
 commands.trim_trailing_space = function()
   vim.cmd([[keeppatterns %s/\s\+$//e]])
 end
 
+commands.set_trim_space_commands = function()
+  vim.api.nvim_set_hl(0, 'TrailingSpace', {
+    bg = '#D70000',
+    fg = '#D70000',
+    ctermfg = 160,
+    ctermbg = 160,
+  })
+
+  vim.api.nvim_create_user_command('HighlightTrailingSpace', commands.toggle_highlight_trailing_space, {})
+  vim.api.nvim_set_var('mapleader', ',')
+  vim.api.nvim_set_keymap('n', '<F4>', '', {
+    silent = true,
+    noremap = true,
+    callback = commands.toggle_highlight_trailing_space,
+    desc = 'Highlight trailing space',
+  })
+  vim.api.nvim_create_user_command('TrimSpace', commands.trim_trailing_space, {})
+end
 
 commands.alternate_file = function()
   local current_path = vim.fn.expand('%:p')
@@ -155,24 +174,6 @@ commands.table_get = function (t, id)
   return res
 end
 
-
-commands.debug = function(o, ind)
-  if type(o) == 'table' then
-    local s = '{\n'
-    for i = 1,ind do
-      s = s .. ' '
-    end
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then k = '"' .. k .. '"' end
-      s = s .. '[' .. k .. '] = ' .. commands.debug(v, ind+1) .. ','
-    end
-    s = s .. '\n'
-    return s .. '}\n'
-  else
-    return tostring(o)
-  end
-end
-
 commands.find_client_with_supported_method = function(method)
   local buf = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = buf })
@@ -195,8 +196,6 @@ commands.rename = function(new_filename)
     return
   end
 
-  -- local clients = commands.detach_current_buf_lsp()
-
   -- create directory
   local input_dir = vim.fn.fnamemodify(new_filename, ':h')
   local current_dir = vim.fn.expand('%:h')
@@ -206,16 +205,16 @@ commands.rename = function(new_filename)
   end
   vim.fn.mkdir(dirname, 'p')
 
+  local old_path = vim.fn.expand('%:p')
+
   -- move the file
   local filename = vim.fn.fnamemodify(new_filename, ':t')
-  vim.api.nvim_command('file ' .. dirname .. '/' .. filename)
+  vim.api.nvim_command('file! ' .. dirname .. '/' .. filename)
   vim.api.nvim_command('write!')
 
   -- delete the old file
-  local current_path = vim.fn.expand('%:p')
-  vim.fn.delete(current_path)
+  vim.fn.delete(old_path)
 
-  -- commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
   print('🦉🦉🦉  Rename file to ' .. new_filename)
@@ -234,8 +233,8 @@ commands.lsp_rename_request = function(params, callback)
       return
     end
     if result ~= nil and type(result) == 'table' then
-      callback()
       vim.lsp.util.apply_workspace_edit(result, 'utf-8')
+      callback()
     end
   end
 
@@ -264,14 +263,11 @@ commands.move = function(directory)
   local current_path = vim.fn.expand('%:p')
   local filename = vim.fn.expand('%:t')
 
-  -- local clients = commands.detach_current_buf_lsp()
-
   vim.fn.mkdir(directory, 'p')
-  vim.api.nvim_command('file ' .. directory .. '/' .. filename)
+  vim.api.nvim_command('file! ' .. directory .. '/' .. filename)
   vim.api.nvim_command('write!')
   vim.fn.delete(current_path)
 
-  -- commands.attach_current_buf_lsp(clients)
   vim.api.nvim_command('redraw')
 
   print('🦫🦫🦫 Move file to ' .. directory)
@@ -295,7 +291,7 @@ commands.lsp_move_file = function(directory)
   end)
 end
 
-commands.remove = function()
+commands.remove = function(_)
   local current_path = vim.fn.expand('%:p')
   local result = vim.fn.confirm('Remove the file (' .. current_path .. ') ?', '&Yes\n&No', 1)
   if result == 1 then
@@ -336,22 +332,12 @@ end
 
 
 commands.setup = function()
-  commands.typo_command()
-  commands.semicolon()
-  commands.compile()
+  commands.set_typo_commands()
+  commands.set_semicolon_commands()
+  commands.set_compile_commands()
+  commands.set_trim_space_commands()
 
-  vim.api.nvim_command('hi TrailingSpace guibg=#D70000 guibg=#D70000 ctermbg=160 ctermfg=160')
-  vim.api.nvim_create_user_command('HighlightTrailingSpace', commands.highlight_trailing_space, {})
-  vim.api.nvim_set_var('mapleader', ',')
-  vim.api.nvim_set_keymap('n', '<Leader><Space><Space><Space>', '', {
-    silent = true,
-    noremap = true,
-    callback = commands.highlight_trailing_space,
-    desc = 'Highlight trailing space',
-  })
-  vim.api.nvim_create_user_command('TrimSpace', commands.trim_trailing_space, {})
-  -- vim.defer_fn(commands.highlight_trailing_space, 100)
-
+  -- alternate
   vim.api.nvim_create_user_command('A', commands.alternate_file, {})
   vim.api.nvim_set_keymap('n', '<Leader><Leader>a', '', {
     silent = true,
@@ -360,48 +346,17 @@ commands.setup = function()
     desc = 'Alternate file',
   })
 
-  local refresh_nerdtree = function()
-    if vim.fn.exists(':NERDTreeRefreshRoot') == 1 then
-      vim.api.nvim_command('NERDTreeRefreshRoot')
+  -- unix commands + lsp
+  vim.api.nvim_create_user_command('Rename', commands.lsp_rename_file, { nargs = 1, complete = 'file' })
+  vim.api.nvim_create_user_command('Move', commands.lsp_move_file, { nargs = 1, complete = 'file' })
+  vim.api.nvim_create_user_command('Remove', commands.remove, {})
+  vim.api.nvim_create_user_command('Mkdir', commands.mkdir, { nargs = 1, complete = 'file' })
+  vim.api.nvim_create_user_command('Chmod', commands.chmod, {
+    nargs = 1,
+    complete = function()
+      return { '+x', '777', '664' }
     end
-  end
-
-  vim.api.nvim_create_user_command('Rename',
-    function(opts)
-      commands.lsp_rename_file(opts.args)
-      -- commands.rename(opts)
-      refresh_nerdtree()
-    end, { nargs = 1, complete = 'buffer' })
-
-  vim.api.nvim_create_user_command('Move',
-    function(opts)
-      commands.lsp_move_file(opts.args)
-      -- commands.move(opts)
-      refresh_nerdtree()
-    end, { nargs = 1, complete = 'file' })
-
-  vim.api.nvim_create_user_command('Remove',
-    function()
-      commands.remove()
-      refresh_nerdtree()
-    end, {})
-
-  vim.api.nvim_create_user_command('Mkdir',
-    function(opts)
-      commands.mkdir(opts)
-      refresh_nerdtree()
-    end, { nargs = 1, complete = 'file' })
-
-  vim.api.nvim_create_user_command('Chmod',
-    function(opts)
-      commands.chmod(opts)
-      refresh_nerdtree()
-    end, {
-      nargs = 1,
-      complete = function()
-        return { '+x', '777', '664' }
-      end
-    })
+  })
 
   vim.api.nvim_create_user_command('SqlFormat',
     function()

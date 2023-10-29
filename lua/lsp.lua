@@ -23,12 +23,12 @@ lsp.setup = function()
 
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
-  local clangd = 'clangd'
+  local clangd = '/usr/bin/clangd'
   if file_exists('/usr/bin/clangd-14') then
-    clangd = 'clangd-14'
+    clangd = '/usr/bin/clangd-14'
   end
 
-  if file_exists('/usr/bin/' .. clangd) then
+  if file_exists(clangd) then
     lspconfig.clangd.setup {
       cmd = { clangd, '--background-index', '--header-insertion=never' },
       handlers = clangd_handler,
