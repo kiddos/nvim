@@ -147,6 +147,16 @@ commands.alternate_file = function()
   vim.api.nvim_command(':e ' .. alternate_file)
 end
 
+commands.set_alternate_commands = function()
+  vim.api.nvim_create_user_command('A', commands.alternate_file, {})
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', '', {
+    silent = true,
+    noremap = true,
+    callback = commands.alternate_file,
+    desc = 'Alternate file',
+  })
+end
+
 commands.detach_current_buf_lsp = function()
   local current_buf = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = current_buf })
@@ -164,7 +174,7 @@ commands.attach_current_buf_lsp = function(clients)
   end
 end
 
-commands.table_get = function (t, id)
+commands.table_get = function(t, id)
   if type(id) ~= 'table' then return commands.table_get(t, { id }) end
   local success, res = true, t
   for _, i in ipairs(id) do
@@ -252,7 +262,7 @@ commands.lsp_rename_file = function(new_filename)
     ['newUri'] = new_uri,
   }
   local params = {
-    files = {rename_file}
+    files = { rename_file }
   }
   commands.lsp_rename_request(params, function()
     commands.rename(new_filename)
@@ -284,7 +294,7 @@ commands.lsp_move_file = function(directory)
     ['newUri'] = new_uri,
   }
   local params = {
-    files = {rename_file}
+    files = { rename_file }
   }
   commands.lsp_rename_request(params, function()
     commands.move(directory)
@@ -330,42 +340,47 @@ commands.chmod = function(opts)
   end
 end
 
+commands.set_unix_commands = function()
+  vim.api.nvim_create_user_command('Rename', commands.lsp_rename_file, { nargs = 1, complete = 'file' })
+  vim.api.nvim_create_user_command('Move', commands.lsp_move_file, { nargs = 1, complete = 'file' })
+  vim.api.nvim_create_user_command('Remove', commands.remove, {})
+  vim.api.nvim_create_user_command('Mkdir', commands.mkdir, { nargs = 1, complete = 'file' })
+
+  local chmod_options = function()
+    return { '+x', '777', '664' }
+  end
+  vim.api.nvim_create_user_command('Chmod', commands.chmod, { nargs = 1, complete = chmod_options })
+end
+
+commands.set_tools_commands = function()
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'sql' },
+    callback = function()
+      local bufnr = vim.api.nvim_get_current_buf()
+      vim.api.nvim_buf_create_user_command(bufnr, 'SqlFormat',
+        function()
+          vim.api.nvim_command('%!sqlformat --reindent --keywords upper --identifiers lower -')
+        end, {})
+    end,
+  })
+
+  vim.api.nvim_create_user_command('CountLines', function()
+    vim.api.nvim_command('!git ls-files | xargs wc -l')
+  end, {})
+
+  vim.api.nvim_create_user_command('GWrite', function()
+    vim.api.nvim_command('!git add %')
+  end, {})
+end
+
 
 commands.setup = function()
   commands.set_typo_commands()
   commands.set_semicolon_commands()
   commands.set_compile_commands()
   commands.set_trim_space_commands()
-
-  -- alternate
-  vim.api.nvim_create_user_command('A', commands.alternate_file, {})
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', '', {
-    silent = true,
-    noremap = true,
-    callback = commands.alternate_file,
-    desc = 'Alternate file',
-  })
-
-  -- unix commands + lsp
-  vim.api.nvim_create_user_command('Rename', commands.lsp_rename_file, { nargs = 1, complete = 'file' })
-  vim.api.nvim_create_user_command('Move', commands.lsp_move_file, { nargs = 1, complete = 'file' })
-  vim.api.nvim_create_user_command('Remove', commands.remove, {})
-  vim.api.nvim_create_user_command('Mkdir', commands.mkdir, { nargs = 1, complete = 'file' })
-  vim.api.nvim_create_user_command('Chmod', commands.chmod, {
-    nargs = 1,
-    complete = function()
-      return { '+x', '777', '664' }
-    end
-  })
-
-  vim.api.nvim_create_user_command('SqlFormat',
-    function()
-      vim.api.nvim_command('%!sqlformat --reindent --keywords upper --identifiers lower -')
-    end, {})
-
-  vim.api.nvim_create_user_command('CountLines', function()
-    vim.api.nvim_command('!git ls-files | xargs wc -l')
-  end, {})
+  commands.set_alternate_commands()
+  commands.set_unix_commands()
 end
 
 return commands
