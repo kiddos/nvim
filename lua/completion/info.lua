@@ -75,18 +75,18 @@ M.get_info_window_options = function(event)
 end
 
 M.show_info = util.debounce(function(info_text, event)
+  if vim.fn.pumvisible() ~= 1 or vim.fn.mode() ~= 'i' then
+    return
+  end
+
   vim.lsp.util.stylize_markdown(context.lsp.buffer, info_text, {
     max_width = 60,
     width = 60,
     separator = '=======================',
   })
-
   local options = M.get_info_window_options(event)
-  if vim.fn.pumvisible() ~= 1 or vim.fn.mode() ~= 'i' then
-    return
-  end
   util.open_action_window(context.lsp, options)
-end, 100)
+end, config.info.delay)
 
 M.trigger_info = function(event)
   util.create_buffer(context.lsp, 'completion-info')
