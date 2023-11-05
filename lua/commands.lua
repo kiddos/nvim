@@ -252,7 +252,8 @@ commands.lsp_rename_request = function(params, callback)
   client.request('workspace/willRenameFiles', params, handler, bufnr)
 end
 
-commands.lsp_rename_file = function(new_filename)
+commands.lsp_rename_file = function(opts)
+  local new_filename = opts.args
   local bufnr = vim.api.nvim_get_current_buf()
   local new_filepath = vim.fn.expand('%:p:h') .. '/' .. new_filename
   local new_uri = vim.uri_from_fname(new_filepath)
@@ -283,7 +284,8 @@ commands.move = function(directory)
   print('🦫🦫🦫 Move file to ' .. directory)
 end
 
-commands.lsp_move_file = function(directory)
+commands.lsp_move_file = function(opts)
+  local directory = opts.args
   local bufnr = vim.api.nvim_get_current_buf()
   local filename = vim.fn.expand('%:t')
   local new_filepath = vim.fn.getcwd() .. '/' .. directory .. '/' .. filename
