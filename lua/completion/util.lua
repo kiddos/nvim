@@ -2,6 +2,20 @@ local config = require('completion.config')
 
 local util = {}
 
+util.has_lsp_capability = function(bufnr, capability)
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  if vim.tbl_isempty(clients) then
+    return false
+  end
+
+  for _, c in pairs(clients) do
+    if util.table_get(c, { 'server_capabilities', capability }) then
+      return true
+    end
+  end
+  return false
+end
+
 util.trim_long_text = function(text, width)
   if not text then
     text = ''
@@ -396,42 +410,35 @@ util.scan_directory = function(dirname)
   return items
 end
 
-util.debounce = function(callback, timer, timeout)
-  local state = 0
-  local f = function(params)
-    local handler = vim.schedule_wrap(function()
-      if state ~= 0 then
-        state = 0
-        callback(params)
-      end
-    end)
-
-    if state == 0 then
-      state = 1
-      timer:start(timeout, 0, handler)
-    elseif state == 1 then
-      timer:stop()
-      timer:start(timeout, 0, handler)
+util.debounce = function(callback, timeout)
+  local timer = nil
+  local f = function(...)
+    local t = {...}
+    local handler = function()
+      callback(unpack(t))
     end
-  end
 
+    if timer ~= nil then
+      timer:stop()
+    end
+    timer = vim.defer_fn(handler, timeout)
+  end
   return f
 end
 
 util.throttle = function(callback, timeout)
-  local last_called = -1
-  local f = function(params)
-    local current_time = vim.uv.now()
-    if current_time - last_called < timeout then
+  local timer = nil
+  local f = function(...)
+    local t = {...}
+    if timer ~= nil then
       return
     end
 
-    last_called = vim.uv.now()
-    vim.defer_fn(function()
-      callback(params)
-    end, 0)
+    timer = vim.defer_fn(function()
+      callback(unpack(t))
+      timer = nil
+    end, timeout)
   end
-
   return f
 end
 
