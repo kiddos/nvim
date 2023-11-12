@@ -371,7 +371,7 @@ commands.set_tools_commands = function()
   end, {})
 
   vim.api.nvim_create_user_command('GWrite', function()
-    vim.api.nvim_command('!git add %')
+    vim.api.nvim_command('silent !git add %')
   end, {})
 end
 
@@ -383,6 +383,7 @@ commands.setup = function()
   commands.set_trim_space_commands()
   commands.set_alternate_commands()
   commands.set_unix_commands()
+  commands.set_tools_commands()
 end
 
 return commands
