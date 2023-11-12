@@ -75,13 +75,52 @@ M.prepare_buffer_completion = util.throttle(function()
   context.snippet.result = snippet.load_snippets()
 end, config.completion.delay)
 
+M.word_emb = function(s)
+  local counts = {}
+  for i = 1, 256 do
+    counts[i] = 0
+  end
+  for i = 1, #s do
+    local c = string.byte(s, i)
+    if c >= 1 and c <= 256 then
+      counts[c] = counts[c] +  1
+    end
+  end
+  for i = 1, 256 do
+    counts[i] = counts[i] / 256.0
+  end
+  return counts
+end
+
+M.cosine_similarity = function(e1, e2)
+  local x = 0
+  for i = 1, 256 do
+    x = x + e1[i] * e2[i]
+  end
+  return x
+end
+
+M.filter_lsp_result = function(items, base, threshold)
+  local emb = M.word_emb(base)
+  return vim.tbl_filter(function(item)
+    -- if item.kind == 15 then
+    --   return false
+    -- end
+
+    local word = util.get_completion_word(item)
+    local e2 = M.word_emb(word)
+    local c = M.cosine_similarity(emb, e2)
+    return vim.startswith(word, base) or c >= threshold
+  end, items)
+end
+
 M.prepare_completion_item = function(base_word)
   local result = {}
   if context.lsp.result then
     result = util.process_lsp_response(context.lsp.result, function(response, client_id)
       local items = util.table_get(response, { 'items' }) or response
       if type(items) ~= 'table' then return {} end
-      items = util.filter_lsp_result(items, base_word)
+      items = M.filter_lsp_result(items, base_word, 0.8)
       util.sort_lsp_result(items)
       return util.lsp_completion_response_items_to_complete_items(items, client_id)
     end)

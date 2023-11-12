@@ -102,12 +102,6 @@ util.get_completion_word = function(item)
   return util.table_get(item, { 'textEdit', 'newText' }) or item.insertText or item.label or ''
 end
 
-util.filter_lsp_result = function(items, base)
-  return vim.tbl_filter(function(item)
-    return vim.startswith(util.get_completion_word(item), base) and item.kind ~= 15
-  end, items)
-end
-
 util.sort_lsp_result = function(items)
   table.sort(items, function(a, b) return (a.sortText or a.label) < (b.sortText or b.label) end)
   return items

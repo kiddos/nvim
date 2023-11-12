@@ -8,17 +8,17 @@ local config = {
     special_chars = { '{', ':', ';', '(', '[', ',', ')', ']', '+', '-', '*', '/', '%', '!', '&', '|' },
     -- special_chars = {},
     cr_mapping = nil,
-    delay = 100,
+    delay = 200,
   },
   info = {
     max_width = 120,
     max_height = 30,
-    delay = 200,
+    delay = 500,
   },
   signature = {
     max_width = 120,
     max_height = 30,
-    delay = 200,
+    delay = 500,
   }
 }
 

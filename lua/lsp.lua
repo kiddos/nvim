@@ -164,25 +164,17 @@ lsp.setup = function()
   if file_exists(dart_path) then
     lspconfig.dartls.setup {
       cmd = { dart_path, 'language-server', '--protocol=lsp' },
-      handlers = {
-        ['window/showMessage'] = function(err, result, ctx, config)
-          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
-            title = 'LSP',
-            timeout = 300,
-          })
-        end,
-        ['window/showMessageRequest'] = function(err, result, ctx, config)
-          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
-            title = 'LSP',
-            timeout = 300,
-          })
-        end,
-        ['window/logMessage'] = function(err, result, ctx, config)
-          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
-            title = 'LSP',
-            timeout = 300,
-          })
-        end,
+      init_options = {
+        closingLabels = false,
+        flutterOutline = false,
+        onlyAnalyzeProjectsWithOpenFiles = true,
+        outline = false,
+        suggestFromUnimportedLibraries = true
+      },
+      settings = {
+        completeFunctionCalls = true,
+        showTodos = true,
+        enableSnippets = false,
       }
     }
   end

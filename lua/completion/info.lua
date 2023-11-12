@@ -16,8 +16,10 @@ M.get_completion_info_text = function(event, callback)
   local completed_item = util.table_get(event, { 'completed_item' }) or {}
   local text = completed_item.info or ''
   if not util.is_whitespace(text) then
-    local lines = vim.lsp.util.convert_input_to_markdown_lines(text)
-    callback(lines)
+    vim.defer_fn(function()
+      local lines = vim.lsp.util.convert_input_to_markdown_lines(text)
+      callback(lines)
+    end, 0)
     return
   end
 
@@ -33,8 +35,10 @@ M.get_completion_info_text = function(event, callback)
 
   local doc = lsp_completion_item.documentation
   if doc then
-    local lines = vim.lsp.util.convert_input_to_markdown_lines(doc)
-    callback(lines)
+    vim.defer_fn(function()
+      local lines = vim.lsp.util.convert_input_to_markdown_lines(doc)
+      callback(lines)
+    end, 0)
     return
   end
 end
@@ -79,11 +83,7 @@ M.show_info = util.debounce(function(info_text, event)
     return
   end
 
-  vim.lsp.util.stylize_markdown(context.lsp.buffer, info_text, {
-    max_width = 60,
-    width = 60,
-    separator = '=======================',
-  })
+  vim.lsp.util.stylize_markdown(context.lsp.buffer, info_text, {})
   local options = M.get_info_window_options(event)
   util.open_action_window(context.lsp, options)
 end, config.info.delay)
