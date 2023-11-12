@@ -207,7 +207,7 @@ lsp.setup = function()
         elseif severity == vim.diagnostic.severity.WARN then
           bug = bug .. '🐀'
         elseif severity == vim.diagnostic.severity.INFO then
-          bug = bug .. '🐭'
+          bug = bug .. '🐺'
         elseif severity == vim.diagnostic.severity.HINT then
           bug = bug .. '🐹'
         end
