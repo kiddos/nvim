@@ -96,7 +96,9 @@ treesitter_config.apply = function()
       'vim'
     },
     callback = function()
-      vim.api.nvim_set_option_value('foldenable', false, { scope = 'local' })
+      vim.api.nvim_set_option_value('foldcolumn', 'auto', { scope = 'local' })
+      vim.api.nvim_set_option_value('foldlevel', 100, { scope = 'local' })
+      vim.api.nvim_set_option_value('foldlevelstart', -1, { scope = 'local' })
       vim.api.nvim_set_option_value('foldmethod', 'expr', { scope = 'local' })
       vim.api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', { scope = 'local' })
     end
