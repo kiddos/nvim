@@ -87,6 +87,14 @@ class MLPlugin(object):
 ```
 """
 
+  def prepare_flutter_function_prompt(self, content):
+    return f"""Write unit test for the following flutter function:
+
+```dart
+{content}
+```
+"""
+
   def prepare_cpp_prompt(self, content):
     return f"""Write unit test using gtest for the following cpp code:
 
@@ -170,6 +178,30 @@ class MLPlugin(object):
       self.create_test_file(code)
     else:
       self.log('🦔 🦔 🦔 prompt not ready yet...')
+
+  def create_flutter_widget_test_file(self, content):
+    filepath = self.nvim.funcs.expand('%')
+    filename = os.path.basename(filepath)
+    n = filename.split('.')
+    filename = '.'.join(n[:-1])
+    test_filepath = os.path.join('test', filename + '_test.dart')
+    self.nvim.command('e ' + test_filepath)
+    buffer = self.nvim.current.buffer
+    buffer.append(content.split('\n'), 0)
+
+  def flutter_gen(self, r, prepare_prompt):
+    selected_code = self.prepare_code_request(r)
+    prompt = prepare_prompt(selected_code)
+    code = self.send_request(prompt)
+    self.create_flutter_widget_test_file(code)
+
+  @command('FlutterWidgetTest', nargs='*', range='')
+  def gen_flutter_widget_test(self, args, r):
+    self.flutter_gen(r, self.prepare_flutter_widget_prompt)
+
+  @command('FlutterFunctionTest', nargs='*', range='')
+  def gen_flutter_function_test(self, args, r):
+    self.flutter_gen(r, self.prepare_flutter_function_prompt)
 
   def prepare_code_request(self, r):
     buf = self.nvim.current.buffer
