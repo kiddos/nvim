@@ -108,8 +108,16 @@ options.apply = function()
   vim.api.nvim_set_option_value('copyindent', true, {})
 
   vim.api.nvim_set_option_value('cindent', true, {})
-  vim.api.nvim_set_option_value('cinoptions', 'w1,>1s,:1s,g1,m1,+2s,N-s', {})
-  -- vim.api.nvim_set_option_value(0, 'cinoptions', '(1s,>1s,:1s,g1,m1,+2s')
+  vim.api.nvim_set_option_value('cinoptions', '(1s,>1s,:1s,g1,m1,+2s', {})
+
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'c', 'cpp', 'rust', 'arduino', 'cuda' },
+    callback = function()
+      vim.api.nvim_set_option_value('cindent', true, {})
+      vim.api.nvim_set_option_value('cinoptions', 'w1,>1s,:1s,g1,m1,+2s,N-s', {})
+      -- vim.api.nvim_set_option_value('cinoptions', '(1s,>1s,:1s,g1,m1,+2s', {})
+    end
+  })
 
   -- python
   vim.api.nvim_set_var('python_recommended_style', 0)
