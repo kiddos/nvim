@@ -84,14 +84,18 @@ commands.set_compile_commands = function()
 end
 
 commands.toggle_highlight_trailing_space = function()
+  local opts = {
+    title = 'Highlight Trailing space',
+    timeout = 300,
+  }
   if context.highlight_group ~= nil then
     vim.fn.matchdelete(context.highlight_group)
-    print('💦💦💦 Disable highlight trailing space')
+    vim.notify('💦💦💦 Disable highlight trailing space', vim.log.levels.INFO, opts)
     context.highlight_group = nil
   else
     context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\v(\s+$)|( +\ze\t)]])
     -- context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\s\+$]])
-    print('🔥🔥🔥 Highlight trailing space')
+    vim.notify('🔥🔥🔥 Highlight trailing space', vim.log.levels.INFO, opts)
   end
 end
 
@@ -227,7 +231,10 @@ commands.rename = function(new_filename)
 
   vim.api.nvim_command('redraw')
 
-  print('🦉🦉🦉  Rename file to ' .. new_filename)
+  vim.notify('🦉🦉🦉  Rename file to ' .. new_filename, vim.log.levels.INFO, {
+    title = 'Rename',
+    timeout = 500,
+  })
 end
 
 commands.lsp_rename_request = function(params, callback)
@@ -239,7 +246,11 @@ commands.lsp_rename_request = function(params, callback)
 
   local handler = function(err, result, _, _)
     if err then
-      print('🐞🐞🐞 error occur while renaming')
+      vim.notify('🐞🐞🐞 error occur while renaming', vim.log.levels.ERROR, {
+        title = 'Rename',
+        timeout = 500,
+      })
+      callback()
       return
     end
     if result ~= nil and type(result) == 'table' then
@@ -281,7 +292,10 @@ commands.move = function(directory)
 
   vim.api.nvim_command('redraw')
 
-  print('🦫🦫🦫 Move file to ' .. directory)
+  vim.notify('Move file to ' .. directory, vim.log.levels.INFO, {
+    title = 'Move File',
+    timeout = 500,
+  })
 end
 
 commands.lsp_move_file = function(opts)
@@ -316,7 +330,10 @@ commands.remove = function(_)
     vim.api.nvim_command('BufferClose')
     vim.fn.delete(current_path)
     vim.api.nvim_command('redraw')
-    print('🦨🦨🦨 File (' .. current_path .. ') deleted.')
+    vim.notify('🦨🦨🦨 File (' .. current_path .. ') deleted.', vim.log.levels.INFO, {
+      title = 'Remove File',
+      timeout = 500,
+    })
   end
 end
 
@@ -324,7 +341,10 @@ commands.mkdir = function(opts)
   local dirname = opts.args
   vim.fn.mkdir(dirname, 'p')
   vim.api.nvim_command('redraw')
-  print('🦭🦭🦭 Directory created : ' .. dirname)
+  vim.notify('Directory created: ' .. dirname, vim.log.levels.INFO, {
+    title = 'Mkdir',
+    timeout = 500,
+  })
 end
 
 commands.chmod = function(opts)

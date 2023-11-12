@@ -204,6 +204,13 @@ settings.setup = function()
 
   -- translate
   require('translate').setup()
+
+  local notify = require('notify')
+  notify.setup({
+    max_width = 60,
+    timeout = 1000,
+  })
+  vim.notify = notify
 end
 
 return settings

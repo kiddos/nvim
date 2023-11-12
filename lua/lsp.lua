@@ -13,6 +13,40 @@ lsp.setup = function()
     severity_sort = true,
   })
 
+  local message_handler = function(err, result, ctx, config)
+    if not err then
+      local message_type = result.type
+      local message = result.message
+      local log_level = vim.log.levels.INFO
+      if message_type == 1 then
+        log_level = vim.log.levels.ERROR
+      elseif message_type == 2 then
+        log_level = vim.log.levels.WARN
+      elseif message_type == 3 then
+        log_level = vim.log.levels.INFO
+      elseif message_type == 4 then
+        log_level = vim.log.levels.INFO
+      elseif message_type == 5 then
+        log_level = vim.log.levels.TRACE
+      end
+      vim.notify_once(message, log_level, {
+        title = 'LSP',
+        timeout = 1000,
+      })
+    end
+  end
+
+  lspconfig.util.default_config = vim.tbl_extend(
+    "force",
+    lspconfig.util.default_config,
+    {
+      handlers = {
+        ['window/showMessage'] = message_handler,
+        -- ['window/logMessage'] = message_handler,
+      }
+    }
+  )
+
   -- setting lsp
   lsp_status.register_progress()
 
@@ -130,6 +164,26 @@ lsp.setup = function()
   if file_exists(dart_path) then
     lspconfig.dartls.setup {
       cmd = { dart_path, 'language-server', '--protocol=lsp' },
+      handlers = {
+        ['window/showMessage'] = function(err, result, ctx, config)
+          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
+            title = 'LSP',
+            timeout = 300,
+          })
+        end,
+        ['window/showMessageRequest'] = function(err, result, ctx, config)
+          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
+            title = 'LSP',
+            timeout = 300,
+          })
+        end,
+        ['window/logMessage'] = function(err, result, ctx, config)
+          vim.notify(vim.inspect(result), vim.log.levels.INFO, {
+            title = 'LSP',
+            timeout = 300,
+          })
+        end,
+      }
     }
   end
 
