@@ -58,8 +58,8 @@ M.setup = function()
     vim.api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. saga_command .. '<CR>')
   end
 
-  register_command('Lspsaga hover_doc', nil, nil, 'Hover ✨')
-  register_command('Lspsaga code_action', nil, 'Code', 'Code Action ⚡⚡⚡')
+  register_command('Lspsaga finder', nil, nil, 'Finder 🐶')
+  register_command('Lspsaga code_action', nil, 'Code', 'Code Action 🍀')
   register_command('Lspsaga rename', '<Leader>rename', nil, 'Rename ✍ ')
   register_command('Lspsaga show_cursor_diagnostics', nil, nil, 'Cursor Diagnostic 💩')
   register_command('Lspsaga finder imp', nil, nil, 'Goto Implementation 🐻')
@@ -69,7 +69,7 @@ M.setup = function()
   register_command('Lspsaga incoming_calls', nil, nil, 'Incoming Call 🐉')
   register_command('Lspsaga outgoing_calls', nil, nil, 'Outgoing Call 🐬')
   register_command('Lspsaga term_toggle', nil, nil, 'Open Terminal 🌌 ')
-  register_command('Lspsaga finder', nil, nil, 'Finder ⭐ ')
+  register_command('Lspsaga hover_doc', nil, nil, 'Hover 🌸')
 
 
 

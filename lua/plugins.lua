@@ -117,6 +117,13 @@ local M = packer.startup(function()
       'luasec',
     }
   }
+  use {
+    'NvChad/nvim-colorizer.lua',
+    config = function()
+      require 'colorizer'.setup({})
+    end
+  }
+  use 'rcarriga/nvim-notify'
 
   -- language specific
   use {

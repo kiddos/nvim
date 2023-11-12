@@ -3,6 +3,7 @@ local settings = {}
 settings.setup = function()
   -- color scheme
   vim.cmd.colorscheme('malokai')
+  vim.api.nvim_set_option_value('termguicolors', true, {})
 
   -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
