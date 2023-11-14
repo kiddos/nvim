@@ -15,6 +15,10 @@ M.setup = function()
       diagnostic = '🐞',
       incoming = '➡',
       outgoing = '⬅',
+      title = true,
+    },
+    beacon = {
+      enable = false,
     },
     lightbulb = {
       enable = false,
