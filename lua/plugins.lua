@@ -69,10 +69,6 @@ local M = packer.startup(function()
   -- tmux
   use 'christoomey/vim-tmux-navigator'
   use 'benmills/vimux'
-  use {
-    'edkolev/tmuxline.vim',
-    requires = { 'vim-airline/vim-airline', 'vim-airline/vim-airline-themes' }
-  }
 
   -- utility
   use 'windwp/nvim-autopairs' -- auto pairs
