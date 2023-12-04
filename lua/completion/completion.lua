@@ -9,7 +9,7 @@ local snippet = require('completion.snippet')
 
 local context = {
   lsp = {
-    result = nil,
+    result = {},
     cancel_func = nil,
   },
   buffer = {
@@ -75,42 +75,28 @@ M.prepare_buffer_completion = util.throttle(function()
   context.snippet.result = snippet.load_snippets()
 end, config.completion.delay)
 
-M.word_emb = function(s)
-  local counts = {}
-  for i = 1, 256 do
-    counts[i] = 0
-  end
-  for i = 1, #s do
-    local c = string.byte(s, i)
-    if c >= 1 and c <= 256 then
-      counts[c] = counts[c] +  1
+M.is_subseq = function(word1, word2)
+  local j = 1
+  for i = 1, #word2 do
+    if string.byte(word2, i) == string.byte(word1, j) then
+      j = j + 1
+    end
+
+    if j == #word1 + 1 then
+      return true
     end
   end
-  for i = 1, 256 do
-    counts[i] = counts[i] / 256.0
-  end
-  return counts
+  return false
 end
 
-M.cosine_similarity = function(e1, e2)
-  local x = 0
-  for i = 1, 256 do
-    x = x + e1[i] * e2[i]
-  end
-  return x
-end
-
-M.filter_lsp_result = function(items, base, threshold)
-  local emb = M.word_emb(base)
+M.filter_lsp_result = function(items, base)
   return vim.tbl_filter(function(item)
     -- if item.kind == 15 then
     --   return false
     -- end
 
     local word = util.get_completion_word(item)
-    local e2 = M.word_emb(word)
-    local c = M.cosine_similarity(emb, e2)
-    return vim.startswith(word, base) or c >= threshold
+    return M.is_subseq(base, word)
   end, items)
 end
 
@@ -120,17 +106,22 @@ M.prepare_completion_item = function(base_word)
     result = util.process_lsp_response(context.lsp.result, function(response, client_id)
       local items = util.table_get(response, { 'items' }) or response
       if type(items) ~= 'table' then return {} end
-      items = M.filter_lsp_result(items, base_word, 0.8)
-      util.sort_lsp_result(items)
+
+      items = M.filter_lsp_result(items, base_word)
       return util.lsp_completion_response_items_to_complete_items(items, client_id)
     end)
+    util.sort_completion_result(result, base_word)
   end
 
   if context.file.result then
+    local filtered = {}
     for _, item in pairs(context.file.result) do
-      if vim.startswith(item.word, base_word) then
-        table.insert(result, item)
+      if M.is_subseq(base_word, item.word) then
+        table.insert(filtered, item)
       end
+    end
+    for _, item in pairs(filtered) do
+      table.insert(result, item)
     end
   end
 
@@ -144,11 +135,16 @@ M.prepare_completion_item = function(base_word)
 
   local current_buf = vim.api.nvim_get_current_buf()
   if context.buffer.result[current_buf] then
-    local items = util.buffer_result_to_complete_items(context.buffer.result[current_buf], base_word)
+    local items = util.buffer_result_to_complete_items(context.buffer.result[current_buf])
+    local filtered = {}
     for _, item in pairs(items) do
-      if vim.startswith(item.word, base_word) then
-        table.insert(result, item)
+      if M.is_subseq(base_word, item.word) then
+        table.insert(filtered, item)
       end
+    end
+    util.sort_completion_result(filtered, base_word)
+    for _, item in pairs(filtered) do
+      table.insert(result, item)
     end
   end
 
@@ -182,13 +178,94 @@ M.show_completion = function()
   end
 end
 
+M.find_lsp_result_start = function(list)
+  if not list then
+    return -1
+  end
+
+  for _, item in pairs(list) do
+    if not item.err then
+      local items = util.table_get(item, { 'result', 'items'})
+      if items then
+        for _, completion_item in pairs(items) do
+          local start = util.table_get(completion_item, { 'textEdit', 'range', 'start' })
+          if start then
+            return start
+          end
+        end
+      end
+    end
+  end
+
+  return -1
+end
+
+M.find_lsp_completion_item_and_replce = function(results, item)
+  if not item.sortText then
+    return
+  end
+
+  for _, entry in pairs(results) do
+    if not entry.err then
+      local items = util.table_get(entry, { 'result', 'items' })
+      if items then
+        local found = false
+        for idx, completion_item in pairs(items) do
+          local sort_text = util.table_get(completion_item, { 'sortText' })
+          if sort_text == item.sortText then
+            items[idx] = item
+            found = true
+            break
+          end
+        end
+
+        if not found then
+          vim.list_extend(items, item)
+        end
+      end
+    end
+  end
+end
+
+M.append_lsp_result = function(results, new_results)
+  for _, entry in pairs(new_results) do
+    if not entry.err then
+      local items = util.table_get(entry, { 'result', 'items' })
+      if items then
+        for _, item in pairs(items) do
+          M.find_lsp_completion_item_and_replce(results, item)
+        end
+      end
+    end
+  end
+end
+
 M.trigger_completion = util.debounce(function(bufnr)
   M.scan_paths()
 
+  local params = vim.lsp.util.make_position_params()
+
   if util.has_lsp_capability(bufnr, 'completionProvider') then
-    local params = vim.lsp.util.make_position_params()
+    if context.lsp.cancel_func then
+      context.lsp.cancel_func()
+    end
     context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(result)
-      context.lsp.result = result
+      if vim.tbl_isempty(context.lsp.result) then
+        context.lsp.result = result
+      else
+        local s1 = M.find_lsp_result_start(result)
+        local s2 = M.find_lsp_result_start(context.lsp.result)
+        if s1 == s2 then
+          M.append_lsp_result(context.lsp.result, result)
+        else
+          context.lsp.result = result
+        end
+      end
+
+      -- print(#result[1].result.items)
+      -- if #result[1].result.items > 0 then
+      --   print(vim.inspect(result[1].result.items[1]))
+      -- end
       M.show_completion()
     end)
   else
@@ -222,7 +299,7 @@ M.stop_completion = function()
   end
   context.lsp.cancel_func = nil
 
-  context.lsp.result = nil
+  context.lsp.result = {}
   context.file.result = nil
   context.snippet.result = nil
 end

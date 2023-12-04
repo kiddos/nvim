@@ -69,7 +69,9 @@ util.get_completion_start = function()
   local line = vim.api.nvim_get_current_line()
   local line_to_cursor = line:sub(1, pos[2])
   local start = -1
-  for _, client in pairs(vim.lsp.buf_get_clients()) do
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr });
+  for _, client in pairs(clients) do
     local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
     if triggers then
       for _, trigger_char in pairs(triggers) do
@@ -102,8 +104,42 @@ util.get_completion_word = function(item)
   return util.table_get(item, { 'textEdit', 'newText' }) or item.insertText or item.label or ''
 end
 
-util.sort_lsp_result = function(items)
-  table.sort(items, function(a, b) return (a.sortText or a.label) < (b.sortText or b.label) end)
+util.word_emb = function(s)
+  local counts = {}
+  for i = 1, 256 do
+    counts[i] = 0
+  end
+  for i = 1, #s do
+    local c = string.byte(s, i)
+    if c >= 1 and c <= 256 then
+      counts[c] = counts[c] + 1
+    end
+  end
+  for i = 1, 256 do
+    counts[i] = counts[i] / #s
+  end
+  return counts
+end
+
+util.cosine_similarity = function(e1, e2)
+  local x = 0
+  for i = 1, 256 do
+    x = x + e1[i] * e2[i]
+  end
+  return x
+end
+
+util.sort_completion_result = function(items, base)
+  local base_emb = util.word_emb(base)
+  for _, item in pairs(items) do
+    local word = item.word
+    local e = util.word_emb(word)
+    item.cos_similarity = util.cosine_similarity(e, base_emb)
+  end
+
+  table.sort(items, function(a, b)
+    return a.cos_similarity > b.cos_similarity
+  end)
   return items
 end
 
@@ -142,21 +178,19 @@ util.lsp_completion_response_items_to_complete_items = function(items, client_id
   return res
 end
 
-util.buffer_result_to_complete_items = function(words, base)
+util.buffer_result_to_complete_items = function(words)
   local res = {}
   for word, _ in pairs(words) do
-    if vim.startswith(word, base) then
-      table.insert(res, {
-        word = word,
-        abbr = word,
-        kind = '\u{1F5D2}',
-        menu = '',
-        info = word,
-        icase = 1,
-        dup = 1,
-        empty = 1,
-      })
-    end
+    table.insert(res, {
+      word = word,
+      abbr = word,
+      kind = '\u{1F5D2}',
+      menu = '',
+      info = word,
+      icase = 1,
+      dup = 1,
+      empty = 1,
+    })
   end
   return res
 end
@@ -407,7 +441,7 @@ end
 util.debounce = function(callback, timeout)
   local timer = nil
   local f = function(...)
-    local t = {...}
+    local t = { ... }
     local handler = function()
       callback(unpack(t))
     end
@@ -423,7 +457,7 @@ end
 util.throttle = function(callback, timeout)
   local timer = nil
   local f = function(...)
-    local t = {...}
+    local t = { ... }
     if timer ~= nil then
       return
     end

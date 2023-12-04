@@ -58,6 +58,7 @@ lsp.setup = function()
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
   local clangd = '/usr/bin/clangd'
+  -- local clangd = '/usr/bin/clangd-12'
   if file_exists('/usr/bin/clangd-14') then
     clangd = '/usr/bin/clangd-14'
   end
