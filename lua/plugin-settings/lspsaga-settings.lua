@@ -47,14 +47,14 @@ M.setup = function()
         noremap = true,
         silent = true,
         callback = function()
-          vim.api.nvim_command(saga_command)
+          pcall(function() vim.api.nvim_command(saga_command) end)
         end
       })
     end
     if command and command ~= '' then
       vim.api.nvim_create_user_command(command, function()
         vim.defer_fn(function()
-          vim.api.nvim_command(saga_command)
+          pcall(function() vim.api.nvim_command(saga_command) end)
         end, 0)
       end, {})
     end
@@ -100,7 +100,9 @@ M.setup = function()
       noremap = true,
       silent = true,
       callback = function()
-        vim.api.nvim_command('Lspsaga ' .. command)
+        vim.defer_fn(function()
+          pcall(function() vim.api.nvim_command('Lspsaga ' .. command) end)
+        end, 0)
       end
     })
   end

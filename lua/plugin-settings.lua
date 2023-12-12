@@ -85,25 +85,6 @@ settings.setup = function()
     end
   })
 
-
-  -- vim-startify
-  vim.api.nvim_set_var('startify_list_order', {
-    {'    Recently used files in current directory:'}, 'dir',
-    {'    Recently used files:'}, 'files',
-    {'    Bookmarks:'}, 'bookmarks',
-    {'    Sessions:'}, 'sessions',
-  })
-  vim.api.nvim_set_var('startify_files_number', 3)
-  vim.g.startify_bookmarks = {
-    {vimrc = '~/.vim/vimrc'},
-    {nvimrc = '~/.config/nvim/init.lua'}
-  }
-  -- vim.g.startify_custom_header = vim.api.nvim_eval("map(split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n'), '"   ". v:val') + ['']")
-  vim.g.startify_custom_header = vim.api.nvim_eval("split(system('fortune | cowsay -f $(ls /usr/share/cowsay/cows | shuf -n 1 | cut -d. -f1)'), '\n')")
-  vim.g.startify_change_to_dir = 1
-  vim.g.startify_change_to_vcs_root = 1
-  vim.g.startify_enable_special = 0
-
   -- snippy
   require('snippy').setup({
     mappings = {

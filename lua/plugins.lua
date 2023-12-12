@@ -92,13 +92,12 @@ local M = packer.startup(function()
   }
   use {
     'kylechui/nvim-surround',
-    tag = 'v2.1.1',
+    tag = 'v2.1.4',
     config = function()
       require('nvim-surround').setup({})
     end
   }
   use 'mattn/emmet-vim'
-  use 'mhinz/vim-startify'
   use {
     'junegunn/fzf.vim',
     requires = { 'junegunn/fzf' },
