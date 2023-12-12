@@ -134,11 +134,15 @@ util.sort_completion_result = function(items, base)
   for _, item in pairs(items) do
     local word = item.word
     local e = util.word_emb(word)
-    item.cos_similarity = util.cosine_similarity(e, base_emb)
+    local score = util.cosine_similarity(e, base_emb)
+    if vim.startswith(word, base) then
+      score = score + 1
+    end
+    item.score = score
   end
 
   table.sort(items, function(a, b)
-    return a.cos_similarity > b.cos_similarity
+    return a.score > b.score
   end)
   return items
 end
