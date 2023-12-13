@@ -200,40 +200,34 @@ M.find_lsp_result_start = function(list)
   return -1
 end
 
-M.find_lsp_completion_item_and_replce = function(results, item)
-  if not item.sortText then
-    return
-  end
-
+M.append_lsp_result = function(results, new_results)
+  local indices = {}
   for _, entry in pairs(results) do
     if not entry.err then
       local items = util.table_get(entry, { 'result', 'items' })
       if items then
-        local found = false
-        for idx, completion_item in pairs(items) do
-          local sort_text = util.table_get(completion_item, { 'sortText' })
-          if sort_text == item.sortText then
-            items[idx] = item
-            found = true
-            break
+        for idx, item in pairs(items) do
+          local sort_text = util.table_get(item, { 'sortText' })
+          if sort_text then
+            indices[sort_text] = idx
           end
-        end
-
-        if not found then
-          vim.list_extend(items, item)
         end
       end
     end
   end
-end
 
-M.append_lsp_result = function(results, new_results)
   for _, entry in pairs(new_results) do
     if not entry.err then
       local items = util.table_get(entry, { 'result', 'items' })
       if items then
         for _, item in pairs(items) do
-          M.find_lsp_completion_item_and_replce(results, item)
+          local sort_text = util.table_get(item, { 'sortText' })
+          if sort_text and indices[sort_text] then
+            local idx = indices[sort_text]
+            results[idx] = item
+          else
+            table.insert(results, item)
+          end
         end
       end
     end
@@ -250,26 +244,31 @@ M.trigger_completion = util.debounce(function(bufnr)
       context.lsp.cancel_func()
     end
     context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(result)
-      if vim.tbl_isempty(context.lsp.result) then
-        context.lsp.result = result
-      else
-        local s1 = M.find_lsp_result_start(result)
-        local s2 = M.find_lsp_result_start(context.lsp.result)
-        if s1 == s2 then
-          M.append_lsp_result(context.lsp.result, result)
-        else
+      vim.defer_fn(function()
+        -- context.lsp.result = result
+        if vim.tbl_isempty(context.lsp.result) then
           context.lsp.result = result
+        else
+          local s1 = M.find_lsp_result_start(result)
+          local s2 = M.find_lsp_result_start(context.lsp.result)
+          if s1 == s2 then
+            M.append_lsp_result(context.lsp.result, result)
+          else
+            context.lsp.result = result
+          end
         end
-      end
 
-      -- print(#result[1].result.items)
-      -- if #result[1].result.items > 0 then
-      --   print(vim.inspect(result[1].result.items[1]))
-      -- end
-      M.show_completion()
+        -- print(#result[1].result.items)
+        -- if #result[1].result.items > 0 then
+        --   print(vim.inspect(result[1].result.items[1]))
+        -- end
+        M.show_completion()
+      end, 0)
     end)
   else
-    M.show_completion()
+    vim.defer_fn(function()
+      M.show_completion()
+    end, 0)
   end
 end, config.completion.delay)
 
