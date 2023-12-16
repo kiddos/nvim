@@ -55,7 +55,7 @@ commands.set_semicolon_commands = function()
 end
 
 commands.set_compile_commands = function()
-  local register_command = function(filetype, command)
+  local register_command = function(filetype, key, command)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = filetype,
       callback = function()
@@ -66,23 +66,25 @@ commands.set_compile_commands = function()
           desc = 'compile code',
         })
 
-        vim.api.nvim_buf_set_keymap(current, 'n', '<C-F9>', '', {
-          silent = true,
-          noremap = true,
-          desc = 'compile code',
-          callback = function()
-            vim.api.nvim_command(command)
-          end
-        })
+        local modes = { 'n', 'i' }
+        for _, mode in pairs(modes) do
+          vim.api.nvim_buf_set_keymap(current, mode, key, '', {
+            silent = true,
+            noremap = true,
+            desc = 'compile code',
+            callback = function()
+              vim.api.nvim_command(command)
+            end
+          })
+        end
       end,
     })
   end
 
-  register_command({ 'c', 'cpp' }, '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r')
-  register_command({ 'rust' }, '!rustc %')
-  register_command({ 'cuda' }, '!nvcc % -o %:r &')
-  register_command({ 'java' }, '!javac % &')
-  register_command({ 'dart' }, '!flutter test')
+  register_command({ 'c', 'cpp' }, '<F33>', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r &')
+  register_command({ 'rust' }, '<F33>', '!rustc % &')
+  register_command({ 'cuda' }, '<F33>', '!nvcc % -o %:r &')
+  register_command({ 'java' }, '<F33>', '!javac % &')
 end
 
 commands.toggle_highlight_trailing_space = function()
