@@ -23,9 +23,7 @@ local M = packer.startup(function()
   use {
     'nvimdev/lspsaga.nvim',
     after = 'nvim-lspconfig',
-    config = function()
-      require('plugin-settings/lspsaga-settings').setup()
-    end,
+    config = require('plugin-settings/lspsaga-settings').setup
   }
   use {
     'ojroques/nvim-lspfuzzy',
@@ -33,10 +31,9 @@ local M = packer.startup(function()
       { 'junegunn/fzf' },
       { 'junegunn/fzf.vim' }, -- to enable preview (optional)
     },
-    config = function()
-      require('plugin-settings/lspfuzzy').setup()
-    end,
+    config = require('plugin-settings/lspfuzzy').setup
   }
+  use 'folke/trouble.nvim'
 
   -- treesitter
   use {
@@ -78,9 +75,8 @@ local M = packer.startup(function()
   use 'gelguy/wilder.nvim'           -- wild menu
   -- file browser
   use {
-    'scrooloose/nerdtree',
-    cmd = { 'NERDTreeToggle' },
-    requires = { 'Xuyuanp/nerdtree-git-plugin', 'ryanoasis/vim-devicons' },
+    'nvim-tree/nvim-tree.lua',
+    requires = { 'nvim-tree/nvim-web-devicons' },
   }
   use 'scrooloose/nerdcommenter' -- comments
   use {
@@ -93,9 +89,6 @@ local M = packer.startup(function()
   use {
     'kylechui/nvim-surround',
     tag = 'v2.1.4',
-    config = function()
-      require('nvim-surround').setup({})
-    end
   }
   use 'mattn/emmet-vim'
   use {
@@ -112,12 +105,7 @@ local M = packer.startup(function()
       'luasec',
     }
   }
-  use {
-    'NvChad/nvim-colorizer.lua',
-    config = function()
-      require 'colorizer'.setup({})
-    end
-  }
+  use 'NvChad/nvim-colorizer.lua'
   use 'rcarriga/nvim-notify'
 
   -- language specific

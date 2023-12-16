@@ -5,34 +5,36 @@ settings.setup = function()
   vim.cmd.colorscheme('malokai')
   vim.api.nvim_set_option_value('termguicolors', true, {})
 
+  require('colorizer').setup()
+
   -- git
   vim.api.nvim_set_var('gitgutter_enabled', false)
-  vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', {noremap=true, silent=true})
+  vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', { noremap = true, silent = true })
 
   vim.api.nvim_set_var('gitblame_enabled', false)
-  vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', {noremap=true, silent=true})
+  vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', { noremap = true, silent = true })
+
+  require("nvim-tree").setup()
+  local tree_api = require('nvim-tree.api').tree
+  local modes = { 'n', 'i' }
+  for _, mode in pairs(modes) do
+    vim.api.nvim_set_keymap(mode, '<F1>', '', {
+      noremap = true,
+      silent = true,
+      callback = function()
+        tree_api.toggle()
+      end
+    })
+  end
 
 
-  -- NerdTree
-  vim.api.nvim_set_var('NERDSpaceDelims', true)
-  vim.api.nvim_set_var('NERDCompactSexyComs', true)
-  vim.api.nvim_set_var('NERDDefaultAlign', 'left')
-  vim.api.nvim_set_var('NERDCustomDelimiters ', {
-    c = {left='//'},
-    arduino = {left='//'},
-    vim = {left='"'},
-    conf = {left='#'},
-    prototxt = {left='#'}
-  })
-  vim.api.nvim_set_keymap('n', '<F1>', ':NERDTreeToggle .<CR>', {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', '<F1>', '<Esc>:NERDTreeToggle .<CR>', {noremap=true, silent=true})
-
+  require('nvim-surround').setup({})
 
   -- A
   vim.api.nvim_set_var('mapleader', ',')
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', {silent=true})
+  vim.api.nvim_set_keymap('n', '<Leader><Leader>a', ':A<CR>', { silent = true })
 
 
   -- emmet
@@ -49,8 +51,9 @@ settings.setup = function()
     '-g \'!{**/node_modules,**/.git}\'',
   }
   local rg_command = 'rg ' .. table.concat(rg_options, ' ') .. ' -- '
-  vim.api.nvim_create_user_command('Rg', 'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
-  vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', {noremap=true, silent=true})
+  vim.api.nvim_create_user_command('Rg',
+    'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
+  vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', { noremap = true, silent = true })
 
   local register_fzf_menu = function(fzf_command, menu)
     vim.api.nvim_command('nnoremenu FZF.' .. menu:gsub(' ', '\\ ') .. ' :' .. fzf_command .. '<CR>')
@@ -97,12 +100,12 @@ settings.setup = function()
 
   -- wilder.nvim
   local wilder = require('wilder')
-  wilder.setup({modes = {':', '/', '?'}})
+  wilder.setup({ modes = { ':', '/', '?' } })
 
   wilder.set_option('renderer', wilder.popupmenu_renderer({
     highlighter = wilder.basic_highlighter(),
-    left = {' ', wilder.popupmenu_devicons()},
-    right = {' ', wilder.popupmenu_scrollbar()},
+    left = { ' ', wilder.popupmenu_devicons() },
+    right = { ' ', wilder.popupmenu_scrollbar() },
   }))
 
   -- translate
