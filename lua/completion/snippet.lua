@@ -1,7 +1,7 @@
 local M = {}
 
 local util = require('completion.util')
-local config = require('completion.config')
+local config = require('completion.config').get_config()
 
 M.load_snippets = function()
   local patterns = {

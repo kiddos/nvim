@@ -5,15 +5,8 @@ local completion = require('completion.completion')
 local signature = require('completion.signature')
 local info = require('completion.info')
 
-M.apply_options = function(opts)
-  opts = opts or {}
-  if opts.cr_mapping ~= nil then
-    config.completion.cr_mapping = opts.cr_mapping
-  end
-end
-
 M.setup = function(opts)
-  M.apply_options(opts)
+  config.merge_option(opts)
 
   completion.setup()
   signature.setup()
@@ -28,10 +21,6 @@ M.setup = function(opts)
   vim.api.nvim_set_option_value('complete', '.,w,b,u,U,t,k', {})
   -- do not show XXX completion (YYY)
   vim.api.nvim_set_option_value('shortmess', vim.api.nvim_get_option_value('shortmess', {}) .. 'c', {})
-
-  -- vim.api.nvim_create_user_command('CompletionToggle', function()
-  --   context.completion.enabled = not context.completion.enabled
-  -- end, {})
 end
 
 return M

@@ -1,3 +1,5 @@
+local M = {}
+
 local config = {
   completion = {
     abbr_max_len = 60,
@@ -6,7 +8,6 @@ local config = {
     buffer_reindex_line_range = 500,
     buffer_lru_size = 6000,
     special_chars = { '{', ':', ';', '(', '[', ',', ')', ']', '+', '-', '*', '/', '%', '!', '&', '|' },
-    -- special_chars = {},
     cr_mapping = nil,
     delay = 200,
   },
@@ -22,4 +23,12 @@ local config = {
   }
 }
 
-return config
+M.merge_option = function(opt)
+  config = vim.tbl_extend('force', config, opt)
+end
+
+M.get_config = function()
+  return config
+end
+
+return M

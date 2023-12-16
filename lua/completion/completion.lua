@@ -2,7 +2,7 @@ local M = {}
 
 local uv = vim.uv or vim.loop
 
-local config = require('completion.config')
+local config = require('completion.config').get_config()
 local lru = require('completion.lru')
 local util = require('completion.util')
 local snippet = require('completion.snippet')
@@ -251,7 +251,7 @@ M.trigger_completion = util.debounce(function(bufnr)
         else
           local s1 = M.find_lsp_result_start(result)
           local s2 = M.find_lsp_result_start(context.lsp.result)
-          if s1 == s2 then
+          if #context.lsp.result > 0 and s1 == s2 then
             M.append_lsp_result(context.lsp.result, result)
           else
             context.lsp.result = result
@@ -347,6 +347,10 @@ M.setup = function()
     noremap = true,
     callback = M.auto_complete,
   })
+
+  vim.api.nvim_create_user_command('CompletionToggle', function()
+    context.completion.enabled = not context.completion.enabled
+  end, {})
 end
 
 return M

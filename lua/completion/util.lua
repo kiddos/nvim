@@ -1,6 +1,7 @@
-local config = require('completion.config')
+local config = require('completion.config').get_config()
 
 local util = {}
+local uv = vim.uv or vim.loop
 
 util.has_lsp_capability = function(bufnr, capability)
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
@@ -34,15 +35,6 @@ util.table_get = function(t, id)
     if not success or res == nil then return end
   end
   return res
-end
-
-util.in_table = function(t, key)
-  for _, value in pairs(t) do
-    if value == key then
-      return true
-    end
-  end
-  return false
 end
 
 util.find_last = function(s, pattern)
@@ -90,12 +82,44 @@ util.get_completion_start = function()
   return start
 end
 
+util.is_completion_item = function(item)
+  if not item then
+    return false
+  end
+
+  if type(item) ~= 'table' then
+    return false
+  end
+
+  if not item.label or type(item.label) ~= 'string' then
+    return false
+  end
+
+  return true
+end
+
 util.process_lsp_response = function(request_result, processor)
-  if not request_result then return {} end
+  if not request_result then
+    return {}
+  end
+
+  if type(request_result) ~= 'table' then
+    return {}
+  end
+
+  if #request_result == 0 then
+    return {}
+  end
+
+  if util.is_completion_item(request_result[1]) then
+    return processor(request_result, 1)
+  end
 
   local res = {}
-  for client_id, item in pairs(request_result) do
-    if not item.err and item.result then vim.list_extend(res, processor(item.result, client_id) or {}) end
+  for client_id, handler_result in pairs(request_result) do
+    if not handler_result.err and handler_result.result then
+      vim.list_extend(res, processor(handler_result.result, client_id) or {})
+    end
   end
   return res
 end
@@ -147,31 +171,42 @@ util.sort_completion_result = function(items, base)
   return items
 end
 
+util.get_documentation = function(completion_item)
+  -- documentation could be string | MarkupContent
+  local doc = util.table_get(completion_item, { 'documentation' })
+  if not doc then
+    return ''
+  end
+
+  if type(doc) == 'string' then
+    return doc
+  end
+
+  if type(doc) == 'table' then
+    return util.table_get(doc, { 'value' })
+  end
+
+  return ''
+end
+
 util.lsp_completion_response_items_to_complete_items = function(items, client_id)
   if vim.tbl_count(items) == 0 then return {} end
 
   local res = {}
-  local docs, info
-  for _, item in pairs(items) do
-    -- Documentation info
-    docs = item.documentation
-    info = util.table_get(docs, { 'value' })
-    if not info and type(docs) == 'string' then info = docs end
-    info = info or ''
-
+  for _, completion_item in pairs(items) do
     table.insert(res, {
-      word = util.get_completion_word(item),
-      abbr = util.trim_long_text(item.label, config.completion.abbr_max_len),
-      kind = vim.lsp.protocol.CompletionItemKind[item.kind] or 'Unknown',
-      menu = util.trim_long_text(item.detail or '', config.completion.menu_max_len),
-      info = info,
+      word = util.get_completion_word(completion_item),
+      abbr = util.trim_long_text(completion_item.label, config.completion.abbr_max_len),
+      kind = vim.lsp.protocol.CompletionItemKind[completion_item.kind] or 'Unknown',
+      menu = util.trim_long_text(completion_item.detail or '', config.completion.menu_max_len),
+      info = util.get_documentation(completion_item),
       icase = 1,
       dup = 1,
       empty = 1,
       user_data = {
         nvim = {
           lsp = {
-            completion_item = item,
+            completion_item = completion_item,
             source = 'lsp',
             client_id = client_id,
           }
@@ -229,15 +264,16 @@ util.get_left_non_space_char = function()
 end
 
 util.is_lsp_trigger = function(char, type)
-  local triggers
   local providers = {
     completion = 'completionProvider',
     signature = 'signatureHelpProvider',
   }
 
-  for _, client in pairs(vim.lsp.buf_get_clients()) do
-    triggers = util.table_get(client, { 'server_capabilities', providers[type], 'triggerCharacters' })
-    if vim.tbl_contains(triggers or {}, char) then
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  for _, client in pairs(clients) do
+    local triggers = util.table_get(client, { 'server_capabilities', providers[type], 'triggerCharacters' }) or {}
+    if vim.tbl_contains(triggers, char) then
       return true
     end
   end
@@ -279,9 +315,10 @@ util.open_action_window = function(container, opts)
     util.close_action_window(container)
   end
 
-  container.window = vim.api.nvim_open_win(container.buffer, false, opts)
-  vim.api.nvim_win_set_option(container.window, 'linebreak', true)
-  vim.api.nvim_win_set_option(container.window, 'breakindent', false)
+  local win = vim.api.nvim_open_win(container.buffer, false, opts)
+  vim.api.nvim_set_option_value('linebreak', true, { win = win })
+  vim.api.nvim_set_option_value('breakindent', false, { win = win })
+  container.window = win
 end
 
 util.close_action_window = function(container)
@@ -366,7 +403,7 @@ util.get_current_dirname = function()
 end
 
 util.scan_directory = function(dirname)
-  local fs, err = vim.uv.fs_scandir(dirname)
+  local fs, err = uv.fs_scandir(dirname)
   if err then
     return nil
   end
@@ -374,7 +411,7 @@ util.scan_directory = function(dirname)
   local items = {}
 
   while true do
-    local name, type, e = vim.uv.fs_scandir_next(fs)
+    local name, type, e = uv.fs_scandir_next(fs)
     if e then
       return items
     end
@@ -399,7 +436,7 @@ util.scan_directory = function(dirname)
           empty = 1,
         })
       elseif type == 'link' then
-        local stat = vim.uv.fs_stat(dirname .. '/' .. name)
+        local stat = uv.fs_stat(dirname .. '/' .. name)
         if stat then
           if stat.type == 'directory' then
             table.insert(items, {
@@ -473,19 +510,5 @@ util.throttle = function(callback, timeout)
   end
   return f
 end
-
-util.debug = function(o)
-  if type(o) == 'table' then
-    local s = '{ '
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then k = '"' .. k .. '"' end
-      s = s .. '[' .. k .. '] = ' .. util.debug(v) .. ','
-    end
-    return s .. '} '
-  else
-    return tostring(o)
-  end
-end
-
 
 return util

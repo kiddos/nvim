@@ -1,6 +1,6 @@
 local M = {}
 
-local config = require('completion.config')
+local config = require('completion.config').get_config()
 local util = require('completion.util')
 
 local context = {
