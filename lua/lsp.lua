@@ -1,5 +1,6 @@
 local lspconfig = require('lspconfig')
 local lsp_status = require('lsp-status')
+local uv = vim.uv or vim.loop
 -- local plenary_popup = require('plenary.popup')
 
 local lsp = {}
@@ -51,7 +52,7 @@ lsp.setup = function()
   lsp_status.register_progress()
 
   local function file_exists(filename)
-    local stat = vim.uv.fs_stat(filename)
+    local stat = uv.fs_stat(filename)
     return stat and stat.type or false
   end
 
@@ -139,20 +140,29 @@ lsp.setup = function()
   lspconfig.rust_analyzer.setup {}
 
   -- lua
-  local lua_lsp_path = vim.uv.os_homedir() .. '/.local/lsp/lua-language-server'
+  local lua_lsp_path = uv.os_homedir() .. '/.local/lsp/lua-language-server'
   local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
   if file_exists(lua_lsp_binary) then
     lspconfig.lua_ls.setup {
       cmd = { lua_lsp_binary },
+      on_init = function(client)
+        client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+        return true
+      end,
       settings = {
         Lua = {
           diagnostics = {
             globals = { 'vim', 'use', 'use_rocks' }
           },
+          runtime = {
+            -- Tell the language server which version of Lua you're using
+            -- (most likely LuaJIT in the case of Neovim)
+            version = 'LuaJIT'
+          },
           workspace = {
+            checkThirdParty = false,
             library = {
-              [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-              [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
+              vim.env.VIMRUNTIME
             }
           }
         }
@@ -161,7 +171,7 @@ lsp.setup = function()
   end
 
   -- dart
-  local dart_path = vim.uv.os_homedir() .. '/flutter/bin/dart'
+  local dart_path = uv.os_homedir() .. '/flutter/bin/dart'
   if file_exists(dart_path) then
     lspconfig.dartls.setup {
       cmd = { dart_path, 'language-server', '--protocol=lsp' },
@@ -186,21 +196,29 @@ lsp.setup = function()
   -- R
   lspconfig.r_language_server.setup {}
 
+  -- glsl
+  local glslls_path = uv.os_homedir() .. '/.local/lsp/glsl-language-server/build/glslls'
+  if file_exists(glslls_path) then
+    lspconfig.glslls.setup {
+      cmd = { glslls_path, '--stdin' },
+    }
+  end
+
   -- lspkind plugin
   local lspkind = require('lspkind')
   lspkind.init()
 
 
   local npairs = require('nvim-autopairs')
-  npairs.setup({
+  npairs.setup {
     -- map_cr = true,
-  })
+  }
 
   -- completion
   local completion = require('completion')
-  completion.setup({
+  completion.setup {
     cr_mapping = npairs.autopairs_cr
-  })
+  }
 
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
@@ -247,7 +265,7 @@ lsp.setup = function()
     local diagnostics = vim.diagnostic.get(current)
     if #diagnostics > 0 then
       local bug = ''
-      for i=1,#diagnostics,1 do
+      for i = 1, #diagnostics, 1 do
         local severity = diagnostics[i].severity
         if severity == vim.diagnostic.severity.ERROR then
           bug = bug .. '🐁'
@@ -272,17 +290,17 @@ lsp.setup = function()
     end
   end
 
-  require('lualine').setup({
+  require('lualine').setup {
     options = {
       theme = 'onedark',
       section_separators = { '◗', '◖' },
       component_separators = { '►', '◄' }
     },
     sections = {
-      lualine_c = { 'filename', status_icons,  'require("lsp-status").status()' },
+      lualine_c = { 'filename', status_icons, 'require("lsp-status").status()' },
       lualine_x = { 'encoding', 'fileformat', 'filetype' },
     },
-  })
+  }
 end
 
 return lsp

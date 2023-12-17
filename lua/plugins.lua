@@ -107,6 +107,7 @@ local M = packer.startup(function()
   }
   use 'NvChad/nvim-colorizer.lua'
   use 'rcarriga/nvim-notify'
+  use 'David-Kunz/gen.nvim'
 
   -- language specific
   use {
@@ -115,6 +116,7 @@ local M = packer.startup(function()
     ft = { 'markdown' },
     cmd = 'MarkdownPreview',
   }
+  use 'tikhomirov/vim-glsl'
 
   if packer_bootstrap then
     packer.sync()

@@ -117,6 +117,29 @@ settings.setup = function()
     timeout = 1000,
   })
   vim.notify = notify
+
+  require('gen').setup({
+    model = 'mistral:cpu',
+    init = function(_) end,
+    show_model = true,
+    prompts = {
+      Summarize = { prompt = 'What does the following code do?\n```$filetype\n$text\n```\n' },
+      Unit_Test = { prompt = 'Write unit test for the following code\n```$filetype\n$text\n```\n' },
+      Review_Code = { prompt = 'Review the following code and make concise suggestions:\n```$filetype\n$text\n```', },
+      Enhance_Code = {
+        prompt =
+        "Enhance the following code, only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
+        replace = true,
+        extract = "```$filetype\n(.-)```",
+      },
+      Change_Code = {
+        prompt =
+        "Regarding the following code, $input, only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
+        replace = true,
+        extract = "```$filetype\n(.-)```",
+      },
+    }
+  })
 end
 
 return settings
