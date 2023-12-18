@@ -28,6 +28,98 @@ snippet codeforce
 		}
 		return 0;
 	}
+snippet mint
+	i64 power(i64 x, i64 n, i64 mod) {
+		i64 ans = 1;
+		while (n > 0) {
+			if (n % 2 == 1) {
+				ans *= x;
+				ans %= mod;
+			}
+
+			n >>= 1;
+			x = x * x;
+			x %= mod;
+		}
+		return ans;
+	}
+
+	template <int MOD>
+	class ModInt {
+	 public:
+		ModInt() : val_(0) {}
+
+		ModInt(i64 x) : val_(x % MOD) {}
+
+		ModInt(const ModInt& m) { val_ = m.val_; }
+
+		ModInt(ModInt&& m) { val_ = m.val_; }
+
+		constexpr ModInt& operator=(const ModInt& rhs) {
+			val_ = rhs.val_;
+			return *this;
+		}
+
+		constexpr ModInt& operator=(ModInt&& rhs) {
+			val_ = rhs.val_;
+			return *this;
+		}
+
+		constexpr ModInt& operator+=(const ModInt& rhs) {
+			val_ = (val_ + rhs.val_) % MOD;
+			return *this;
+		}
+
+		constexpr ModInt& operator-=(const ModInt& rhs) {
+			val_ = (val_ - rhs.val_ + MOD) % MOD;
+			return *this;
+		}
+
+		constexpr ModInt& operator*=(const ModInt& rhs) {
+			val_ = (1LL * val_ * rhs.val_) % MOD;
+			return *this;
+		}
+
+		constexpr ModInt inv() const {
+			i64 val = power(val_, MOD - 2, MOD);
+			return ModInt(val);
+		}
+
+		constexpr ModInt& operator/=(const ModInt& rhs) { return *this *= rhs.inv(); }
+
+		explicit constexpr operator int() const { return val_; }
+
+		friend constexpr ModInt operator+(const ModInt& lhs, const ModInt& rhs) {
+			ModInt ans = lhs;
+			ans += rhs;
+			return ans;
+		}
+
+		friend constexpr ModInt operator-(const ModInt& lhs, const ModInt& rhs) {
+			ModInt ans = lhs;
+			ans -= rhs;
+			return ans;
+		}
+
+		friend constexpr ModInt operator*(const ModInt& lhs, const ModInt& rhs) {
+			ModInt ans = lhs;
+			ans *= rhs;
+			return ans;
+		}
+
+		friend constexpr ModInt operator/(const ModInt& lhs, const ModInt& rhs) {
+			ModInt ans = lhs;
+			ans /= rhs;
+			return ans;
+		}
+
+		friend constexpr ostream& operator<<(ostream& os, const ModInt& x) {
+			return os << x.val_;
+		}
+
+	 private:
+		unsigned int val_;
+	};
 ##
 ## namespace
 snippet namespace
