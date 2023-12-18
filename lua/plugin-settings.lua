@@ -118,8 +118,13 @@ settings.setup = function()
   })
   vim.notify = notify
 
+  local model_name = os.getenv('OLLAMA_MODEL')
+  if not model_name or #model_name == 0 then
+    model_name = 'codellama:7b-instruct'
+  end
+
   require('gen').setup({
-    model = 'mistral:cpu',
+    model = model_name,
     init = function(_) end,
     show_model = true,
     prompts = {
@@ -138,6 +143,10 @@ settings.setup = function()
         replace = true,
         extract = "```$filetype\n(.-)```",
       },
+      Translate_Code = {
+        prompt =
+        "Translate the following code into $input:\n```$filetype\n$text\n```",
+      }
     }
   })
 end

@@ -81,8 +81,8 @@ commands.set_compile_commands = function()
     })
   end
 
-  register_command({ 'c', 'cpp' }, '<F33>', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r &')
-  register_command({ 'rust' }, '<F33>', '!rustc % &')
+  register_command({ 'c', 'cpp' }, '<F33>', '!clang++ % -Wall -Wextra -std=c++20 -fsanitize=address -O1 -g -o %:r')
+  register_command({ 'rust' }, '<F33>', '!rustc %')
   register_command({ 'cuda' }, '<F33>', '!nvcc % -o %:r &')
   register_command({ 'java' }, '<F33>', '!javac % &')
 end

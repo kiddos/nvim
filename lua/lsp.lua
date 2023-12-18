@@ -217,7 +217,7 @@ lsp.setup = function()
   -- completion
   local completion = require('completion')
   completion.setup {
-    cr_mapping = npairs.autopairs_cr
+    cr_mapping = npairs.autopairs_cr,
   }
 
   -- sign
