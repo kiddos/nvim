@@ -1,12 +1,12 @@
 local M = {}
 
-local config = require('completion.config')
-local completion = require('completion.completion')
-local signature = require('completion.signature')
-local info = require('completion.info')
-
 M.setup = function(opts)
+  local config = require('completion.config')
   config.merge_option(opts)
+
+  local completion = require('completion.completion')
+  local signature = require('completion.signature')
+  local info = require('completion.info')
 
   completion.setup()
   signature.setup()

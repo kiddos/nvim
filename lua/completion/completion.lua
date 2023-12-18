@@ -273,7 +273,8 @@ M.trigger_completion = util.debounce(function(bufnr)
 end, config.completion.delay)
 
 M.confirm_completion = function()
-  local cr = config.completion.cr_mapping ~= nil and config.completion.cr_mapping()
+  print(config.cr_mapping)
+  local cr = config.cr_mapping ~= nil and config.cr_mapping()
       or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 
   if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then

@@ -8,7 +8,6 @@ local config = {
     buffer_reindex_line_range = 500,
     buffer_lru_size = 6000,
     special_chars = { '{', ':', ';', '(', '[', ',', ')', ']', '+', '-', '*', '/', '%', '!', '&', '|' },
-    cr_mapping = nil,
     delay = 200,
   },
   info = {
@@ -20,7 +19,8 @@ local config = {
     max_width = 120,
     max_height = 30,
     delay = 500,
-  }
+  },
+  cr_mapping = nil,
 }
 
 M.merge_option = function(opt)
