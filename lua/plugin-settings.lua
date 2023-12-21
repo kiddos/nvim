@@ -16,6 +16,8 @@ settings.setup = function()
   vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', { noremap = true, silent = true })
 
+  require('gitlinker').setup()
+
   require("nvim-tree").setup()
   local tree_api = require('nvim-tree.api').tree
   local modes = { 'n', 'i' }
@@ -127,6 +129,7 @@ settings.setup = function()
     model = model_name,
     init = function(_) end,
     show_model = true,
+    show_prompt = true,
     prompts = {
       Summarize = { prompt = 'What does the following code do?\n```$filetype\n$text\n```\n' },
       Unit_Test = { prompt = 'Write unit test for the following code\n```$filetype\n$text\n```\n' },
@@ -146,6 +149,10 @@ settings.setup = function()
       Translate_Code = {
         prompt =
         "Translate the following code into $input:\n```$filetype\n$text\n```",
+      },
+      Ask_Anything = {
+        prompt =
+        "$input:\n```$filetype\n$text\n```",
       }
     }
   })

@@ -62,6 +62,7 @@ local M = packer.startup(function()
     'f-person/git-blame.nvim',
     cmd = { 'GitBlameToggle' }
   }
+  use 'linrongbin16/gitlinker.nvim'
 
   -- tmux
   use 'christoomey/vim-tmux-navigator'
