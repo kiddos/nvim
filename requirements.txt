@@ -2,6 +2,7 @@ pynput
 psutil
 google-cloud-translate
 grpcio-tools
-python-lsp-server[all]
 langchain
 google-generativeai
+cmake-language-server
+python-lsp-server[all]
