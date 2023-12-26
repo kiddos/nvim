@@ -89,15 +89,62 @@ M.is_subseq = function(word1, word2)
   return false
 end
 
+M.get_completion_word = function(completion_item)
+  return util.table_get(completion_item, { 'textEdit', 'newText' }) or completion_item.insertText or completion_item.label or ''
+end
+
 M.filter_lsp_result = function(items, base)
   return vim.tbl_filter(function(item)
     -- if item.kind == 15 then
     --   return false
     -- end
 
-    local word = util.get_completion_word(item)
+    local word = M.get_completion_word(item)
     return M.is_subseq(base, word)
   end, items)
+end
+
+M.remove_prefix = function(word,  before_cursor)
+  local i = 1
+  local j = #before_cursor
+  while i <= #word and j >= 1 and string.sub(word, i, 1) == string.sub(before_cursor, j, j) do
+    j = j - 1
+    i = i + 1
+  end
+  return string.sub(word, i)
+end
+
+M.lsp_completion_response_items_to_complete_items = function(items, client_id)
+  if vim.tbl_count(items) == 0 then return {} end
+
+  local res = {}
+  local current_line = vim.api.nvim_get_current_line()
+  local before_cursor = string.sub(current_line, 1, vim.fn.col('.') - 1)
+  for _, completion_item in pairs(items) do
+    local word = M.get_completion_word(completion_item)
+    word = M.remove_prefix(word, before_cursor)
+
+    table.insert(res, {
+      word = word,
+      abbr = util.trim_long_text(completion_item.label, config.completion.abbr_max_len),
+      kind = vim.lsp.protocol.CompletionItemKind[completion_item.kind] or 'Unknown',
+      menu = util.trim_long_text(completion_item.detail or '', config.completion.menu_max_len),
+      info = util.get_documentation(completion_item),
+      icase = 1,
+      dup = 1,
+      empty = 1,
+      user_data = {
+        nvim = {
+          lsp = {
+            completion_item = completion_item,
+            source = 'lsp',
+            client_id = client_id,
+          }
+        }
+      },
+    })
+  end
+  return res
 end
 
 M.prepare_completion_item = function(base_word)
@@ -108,7 +155,7 @@ M.prepare_completion_item = function(base_word)
       if type(items) ~= 'table' then return {} end
 
       items = M.filter_lsp_result(items, base_word)
-      return util.lsp_completion_response_items_to_complete_items(items, client_id)
+      return M.lsp_completion_response_items_to_complete_items(items, client_id)
     end)
     util.sort_completion_result(result, base_word)
   end
@@ -259,9 +306,9 @@ M.trigger_completion = util.debounce(function(bufnr)
         end
 
         -- print(#result[1].result.items)
-        -- if #result[1].result.items > 0 then
-        --   print(vim.inspect(result[1].result.items[1]))
-        -- end
+         --if #result[1].result.items > 0 then
+           --print(vim.inspect(result[1].result.items[1]))
+         --end
         M.show_completion()
       end, 0)
     end)
@@ -273,7 +320,6 @@ M.trigger_completion = util.debounce(function(bufnr)
 end, config.completion.delay)
 
 M.confirm_completion = function()
-  print(config.cr_mapping)
   local cr = config.cr_mapping ~= nil and config.cr_mapping()
       or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 

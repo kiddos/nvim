@@ -124,10 +124,6 @@ util.process_lsp_response = function(request_result, processor)
   return res
 end
 
-util.get_completion_word = function(item)
-  return util.table_get(item, { 'textEdit', 'newText' }) or item.insertText or item.label or ''
-end
-
 util.word_emb = function(s)
   local counts = {}
   for i = 1, 256 do
@@ -187,34 +183,6 @@ util.get_documentation = function(completion_item)
   end
 
   return ''
-end
-
-util.lsp_completion_response_items_to_complete_items = function(items, client_id)
-  if vim.tbl_count(items) == 0 then return {} end
-
-  local res = {}
-  for _, completion_item in pairs(items) do
-    table.insert(res, {
-      word = util.get_completion_word(completion_item),
-      abbr = util.trim_long_text(completion_item.label, config.completion.abbr_max_len),
-      kind = vim.lsp.protocol.CompletionItemKind[completion_item.kind] or 'Unknown',
-      menu = util.trim_long_text(completion_item.detail or '', config.completion.menu_max_len),
-      info = util.get_documentation(completion_item),
-      icase = 1,
-      dup = 1,
-      empty = 1,
-      user_data = {
-        nvim = {
-          lsp = {
-            completion_item = completion_item,
-            source = 'lsp',
-            client_id = client_id,
-          }
-        }
-      },
-    })
-  end
-  return res
 end
 
 util.buffer_result_to_complete_items = function(words)
