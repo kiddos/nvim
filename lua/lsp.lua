@@ -59,14 +59,16 @@ lsp.setup = function()
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
   local clangd = '/usr/bin/clangd'
-  -- local clangd = '/usr/bin/clangd-12'
-  if file_exists('/usr/bin/clangd-14') then
-    clangd = '/usr/bin/clangd-14'
-  end
-
   if file_exists(clangd) then
+    local idf = os.getenv('IDF_PATH')
+    local cmd = { clangd, '--background-index', '--header-insertion=never' }
+    if idf and #idf > 0 then
+      local query_driver = '--query-driver=' ..
+          uv.os_homedir() .. '/.espressif/tools/xtensa-esp32-elf/*/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc'
+      table.insert(cmd, query_driver)
+    end
     lspconfig.clangd.setup {
-      cmd = { clangd, '--background-index', '--header-insertion=never' },
+      cmd = cmd,
       handlers = clangd_handler,
       filetypes = { 'c', 'cpp', 'cuda' },
       init_options = {
@@ -80,13 +82,24 @@ lsp.setup = function()
 
   lspconfig.eslint.setup {}
 
+  local snyk_token = os.getenv('SNYK_TOKEN')
+  if snyk_token and #snyk_token > 0 then
+    lspconfig.snyk_ls.setup {
+      init_options = {
+        token = snyk_token
+      }
+    }
+  end
+
   -- css
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   lspconfig.cssls.setup {
     capabilities = capabilities,
-    filetypes = { 'css', 'scss', 'less', 'html', 'webmacro' }
+    filetypes = { 'css', 'sass', 'scss', 'less', 'html', 'webmacro' }
   }
+
+  lspconfig.cssmodules_ls.setup {}
 
   -- html
   lspconfig.html.setup {
