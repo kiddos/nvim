@@ -118,11 +118,11 @@ M.lsp_completion_response_items_to_complete_items = function(items, client_id)
   if vim.tbl_count(items) == 0 then return {} end
 
   local res = {}
-  local current_line = vim.api.nvim_get_current_line()
-  local before_cursor = string.sub(current_line, 1, vim.fn.col('.') - 1)
+  --local current_line = vim.api.nvim_get_current_line()
+  --local before_cursor = string.sub(current_line, 1, vim.fn.col('.') - 1)
   for _, completion_item in pairs(items) do
     local word = M.get_completion_word(completion_item)
-    word = M.remove_prefix(word, before_cursor)
+    --word = M.remove_prefix(word, before_cursor)
 
     table.insert(res, {
       word = word,
@@ -147,10 +147,29 @@ M.lsp_completion_response_items_to_complete_items = function(items, client_id)
   return res
 end
 
+M.process_lsp_response = function(request_result, processor)
+  if not request_result then
+    return {}
+  end
+
+  if type(request_result) ~= 'table' then
+    return {}
+  end
+
+  local res = {}
+  for client_id, handler_result in pairs(request_result) do
+    if not handler_result.err and handler_result.result then
+      vim.list_extend(res, processor(handler_result.result, client_id) or {})
+    end
+  end
+  return res
+end
+
+
 M.prepare_completion_item = function(base_word)
   local result = {}
   if context.lsp.result then
-    result = util.process_lsp_response(context.lsp.result, function(response, client_id)
+    result = M.process_lsp_response(context.lsp.result, function(response, client_id)
       local items = util.table_get(response, { 'items' }) or response
       if type(items) ~= 'table' then return {} end
 
@@ -305,7 +324,7 @@ M.trigger_completion = util.debounce(function(bufnr)
           end
         end
 
-        -- print(#result[1].result.items)
+         --print(#result[1].result.items)
          --if #result[1].result.items > 0 then
            --print(vim.inspect(result[1].result.items[1]))
          --end
@@ -323,7 +342,22 @@ M.confirm_completion = function()
   local cr = config.cr_mapping ~= nil and config.cr_mapping()
       or vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 
-  if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'selected' }).selected ~= -1 then
+  local info = vim.fn.complete_info({ 'selected', 'items' })
+  --local items = info.items
+  local index = info.selected
+  if vim.fn.pumvisible() ~= 0 and index ~= -1 then
+    --local selected = items[index + 1]
+    --local textEdit = util.table_get(selected, { 'user_data', 'nvim', 'lsp', 'completion_item', 'textEdit' })
+    --if textEdit then
+      --local key = vim.api.nvim_replace_termcodes('<C-E>', true, true, true)
+      --vim.api.nvim_feedkeys(key, 'i', false)
+      --vim.defer_fn(function()
+        --local bufnr = vim.api.nvim_get_current_buf()
+        --vim.lsp.util.apply_text_edits({ textEdit }, bufnr, 'utf-8')
+      --end, 100)
+      --return
+    --end
+
     local char = util.get_left_char()
     if context.special_chars[char] ~= nil then
       return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr

@@ -88,8 +88,46 @@ M.process_signature_response = function(response)
   return { { label = signature_label, hl_range = hl_range } }
 end
 
+M.is_completion_item = function(item)
+  if not item then
+    return false
+  end
+
+  if type(item) ~= 'table' then
+    return false
+  end
+
+  if not item.label or type(item.label) ~= 'string' then
+    return false
+  end
+
+  return true
+end
+
+M.process_lsp_response = function(request_result, processor)
+  if not request_result then
+    return {}
+  end
+
+  if type(request_result) ~= 'table' then
+    return {}
+  end
+
+  if M.is_completion_item(request_result[1]) then
+    return processor(request_result, 1)
+  end
+
+  local res = {}
+  for client_id, handler_result in pairs(request_result) do
+    if not handler_result.err and handler_result.result then
+      vim.list_extend(res, processor(handler_result.result, client_id) or {})
+    end
+  end
+  return res
+end
+
 M.get_signature_lines = function()
-  local signature_data = util.process_lsp_response(context.lsp.result, M.process_signature_response)
+  local signature_data = M.process_lsp_response(context.lsp.result, M.process_signature_response)
   local lines, hl_ranges = {}, {}
   for _, t in pairs(signature_data) do
     -- `t` is allowed to be an empty table (in which case nothing is added) or

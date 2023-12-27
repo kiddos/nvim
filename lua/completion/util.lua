@@ -82,48 +82,6 @@ util.get_completion_start = function()
   return start
 end
 
-util.is_completion_item = function(item)
-  if not item then
-    return false
-  end
-
-  if type(item) ~= 'table' then
-    return false
-  end
-
-  if not item.label or type(item.label) ~= 'string' then
-    return false
-  end
-
-  return true
-end
-
-util.process_lsp_response = function(request_result, processor)
-  if not request_result then
-    return {}
-  end
-
-  if type(request_result) ~= 'table' then
-    return {}
-  end
-
-  if #request_result == 0 then
-    return {}
-  end
-
-  if util.is_completion_item(request_result[1]) then
-    return processor(request_result, 1)
-  end
-
-  local res = {}
-  for client_id, handler_result in pairs(request_result) do
-    if not handler_result.err and handler_result.result then
-      vim.list_extend(res, processor(handler_result.result, client_id) or {})
-    end
-  end
-  return res
-end
-
 util.word_emb = function(s)
   local counts = {}
   for i = 1, 256 do
