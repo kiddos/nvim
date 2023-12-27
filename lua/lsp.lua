@@ -86,7 +86,13 @@ lsp.setup = function()
   if snyk_token and #snyk_token > 0 then
     lspconfig.snyk_ls.setup {
       init_options = {
-        token = snyk_token
+        integrationName = 'nvim',
+        token = snyk_token,
+        activateSnykCodeQuality = 'true',
+        trustedFolders = {
+          uv.os_homedir() .. '/projects',
+          uv.os_homedir() .. '/programming',
+        },
       }
     }
   end
