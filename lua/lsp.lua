@@ -90,6 +90,7 @@ lsp.setup = function()
         token = snyk_token,
         activateSnykCodeQuality = 'true',
         trustedFolders = {
+          uv.os_homedir() .. '/.config',
           uv.os_homedir() .. '/projects',
           uv.os_homedir() .. '/programming',
         },

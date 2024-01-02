@@ -1,7 +1,3 @@
---
---  Author: Joseph Yu
---
-
 require('plugins')
 require('plugin-settings').setup()
 require('lsp').setup()
