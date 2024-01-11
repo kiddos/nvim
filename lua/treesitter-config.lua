@@ -23,6 +23,7 @@ treesitter_config.apply = function()
       'ruby',
       'verilog',
       'vim',
+      'vimdoc',
 
       'proto',
       'glsl',

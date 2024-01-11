@@ -35,12 +35,14 @@ local M = packer.startup(function()
   }
   use 'folke/trouble.nvim'
 
+  use "nvim-lua/plenary.nvim"
+
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',
-    tag = 'v0.9.1',
     run = ':TSUpdate',
   }
+  use 'nvim-treesitter/playground'
 
   -- tabline
   use {
