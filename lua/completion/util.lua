@@ -1,5 +1,3 @@
-local config = require('completion.config').get_config()
-
 local util = {}
 local uv = vim.uv or vim.loop
 
@@ -38,16 +36,21 @@ util.table_get = function(t, id)
 end
 
 util.find_last = function(s, pattern)
+  if not s or not pattern then
+    return nil
+  end
+
   local last_index = nil
   local p = 0
   while true do
-    p = string.find(s, pattern, p + 1, true)
-    if p then
-      if type(p) == 'table' then
-        last_index = p[1]
-        p = p[1]
+    local p2 = string.find(s, pattern, p + 1, true)
+    if p2 then
+      if type(p2) == 'table' then
+        last_index = p2[1]
+        p = p2[1]
       else
-        last_index = p
+        last_index = p2
+        p = p2
       end
     else
       break
@@ -145,11 +148,14 @@ end
 
 util.buffer_result_to_complete_items = function(words)
   local res = {}
+  local symbols = { '\u{1F9F8}', '\u{1F994}', '\u{1F9A6}', '\u{1F407}' }
+
   for word, _ in pairs(words) do
+    local index = math.random(#symbols)
     table.insert(res, {
       word = word,
       abbr = word,
-      kind = '\u{1F5D2}',
+      kind = symbols[index],
       menu = '',
       info = word,
       icase = 1,
