@@ -1,3 +1,5 @@
+local uv = vim.uv or vim.loop
+
 local M = {}
 
 local safetySettings = {
@@ -20,20 +22,59 @@ local safetySettings = {
 }
 
 M.setup = function()
-  local gemini = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-    local system_prompt = 'Explain the following code\nprovide the answer in Markdown\n'
-    if filetype == 'dart' then
-      system_prompt = 'The following is a flutter widget.\nWrite unit test for this widget\n'
+  local register_menu = function(name, command_name, menu, system_prompt)
+    local gemini = function()
+      M.show_response(name, system_prompt)
     end
-    M.show_response(system_prompt)
+
+    vim.api.nvim_create_user_command(command_name, gemini, {
+      force = true,
+      desc = 'Google Gemini',
+    })
+
+    vim.api.nvim_command('nnoremenu Gemini.' .. menu:gsub(' ', '\\ ') .. ' :' .. command_name .. '<CR>')
   end
 
-  vim.api.nvim_create_user_command('Gemini', gemini, {
-    force = true,
-    desc = 'Google Gemini',
-  })
+  local prompts = {
+    {
+      name = 'Unit Test Generation',
+      command_name = 'GeminiUnitTest',
+      menu = 'Unit Test 🚀',
+      prompt = 'Write unit tests for the following code\n',
+    },
+    {
+      name = 'Code Review',
+      command_name = 'GeminiCodeReview',
+      menu = 'Code Review 📜',
+      prompt = 'Do a thorough code review for the following code.\nProvide detail explaination and sincere comments.\n',
+    },
+    {
+      name = 'Code Explain',
+      command_name = 'GeminiCodeExplain',
+      menu = 'Code Explain 👻',
+      prompt = 'Explain the following code\nprovide the answer in Markdown\n',
+    },
+  }
+
+  for _, item in pairs(prompts) do
+    register_menu(item.name, item.command_name, item.menu, item.prompt)
+  end
+
+  local register_keymap = function(mode, keymap)
+    vim.api.nvim_set_keymap(mode, keymap, '', {
+      expr = true,
+      noremap = true,
+      silent = true,
+      callback = function()
+        if vim.fn.pumvisible() == 0 then
+          vim.api.nvim_command('popup Gemini')
+        end
+      end
+    })
+  end
+
+  register_keymap('i', '<C-o>')
+  register_keymap('n', '<C-o>')
 end
 
 M.gemini_api = function(api_key, text)
@@ -89,24 +130,56 @@ M.prepare_code_prompt = function(prompt, bufnr)
   return prompt .. '\n\n' .. code_markdown
 end
 
-M.show_response = function(system_prompt)
+M.show_generating = function(bufnr)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { 'Generating...' })
+  vim.api.nvim_command('redraw')
+  --local texts = { '', '.', '..', '...' }
+  --local index = 1
+  --local timer = uv.new_timer()
+  --timer:start(0, 300, function()
+    --local display = 'Generating' .. texts[index]
+    --index = index + 1
+    --if index > #texts then
+      --index = 1
+    --end
+
+    --vim.defer_fn(function()
+      --vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { display })
+      --vim.api.nvim_command('redraw')
+    --end, 10)
+  --end)
+  --return timer
+end
+
+M.async_call = function(callback)
+  local async
+  async = uv.new_async(function()
+    callback()
+    async:close()
+  end)
+  async:send()
+end
+
+M.show_response = function(name, system_prompt)
   local api_key = os.getenv('GEMINI_API_KEY')
   local current = vim.api.nvim_get_current_buf()
-  local _, bufnr = M.open_window()
-  vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, { 'Generating...' })
+  local _, bufnr = M.open_window(name)
+  M.show_generating(bufnr)
   vim.api.nvim_set_option_value('filetype', 'markdown', { buf = bufnr })
 
   local prompt = M.prepare_code_prompt(system_prompt, current)
-  vim.defer_fn(function()
+  M.async_call(function()
     local text = M.gemini_api(api_key, prompt)
     if text then
-      local lines = vim.split(text, '\n')
-      vim.api.nvim_buf_set_lines(bufnr, 0, #lines, false, lines)
+      vim.defer_fn(function()
+        local lines = vim.split(text, '\n')
+        vim.api.nvim_buf_set_lines(bufnr, 0, #lines, false, lines)
+      end, 0)
     end
-  end, 0)
+  end)
 end
 
-M.open_window = function()
+M.open_window = function(title)
   local padding = { 10, 3 }
   local width = vim.api.nvim_win_get_width(0) - padding[1] * 2
   local height = vim.api.nvim_win_get_height(0) - padding[2] * 2
@@ -114,13 +187,14 @@ M.open_window = function()
   local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
 
   local win_id = popup.create({}, {
-    title = "Gemini",
+    title = 'Gemini - ' .. title,
     minwidth = width,
     minheight = height,
     borderchars = borderchars,
   })
   local bufnr = vim.api.nvim_win_get_buf(win_id)
   vim.api.nvim_set_option_value('ft', 'markdown', { buf = bufnr })
+  vim.api.nvim_set_option_value('wrap', true, {  win = win_id })
   vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-q>", "<cmd>lua CloseMenu()<CR>", { silent = false })
 
   function CloseMenu()
