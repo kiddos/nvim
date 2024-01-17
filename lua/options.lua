@@ -1,6 +1,6 @@
 local options = {}
 
-options.apply = function()
+options.setup = function()
   -- File type setting
   local set_filetype = function(pattern, filetype)
     vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
