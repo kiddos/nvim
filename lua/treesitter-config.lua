@@ -82,6 +82,7 @@ M.setup = function()
       vim.api.nvim_set_option_value('foldlevelstart', -1, { scope = 'local' })
       vim.api.nvim_set_option_value('foldmethod', 'expr', { scope = 'local' })
       vim.api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', { scope = 'local' })
+      vim.api.nvim_set_option_value('foldtext', 'vim.treesitter.foldtext()', { scope = 'local' })
     end
   })
 
