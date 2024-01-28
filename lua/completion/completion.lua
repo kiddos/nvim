@@ -347,32 +347,34 @@ M.confirm_completion = function()
   local index = info.selected
   if vim.fn.pumvisible() ~= 0 and index ~= -1 then
     local selected = items[index + 1]
-    local text_edit = util.table_get(selected, { 'user_data', 'nvim', 'lsp', 'completion_item', 'textEdit' })
-    if text_edit then
-      local key = vim.api.nvim_replace_termcodes('<C-E>', true, true, true)
-      vim.api.nvim_feedkeys(key, 'i', false)
-      vim.defer_fn(function()
-        if vim.fn.pumvisible() ~= 0 then
-          return
-        end
-
-        local bufnr = vim.api.nvim_get_current_buf()
-        vim.lsp.util.apply_text_edits({ text_edit }, bufnr, 'utf-8')
-
-        local text = util.table_get(text_edit, { 'newText' })
-        local row = util.table_get(text_edit, { 'range', 'end', 'line' })
-        local col = util.table_get(text_edit, { 'range', 'end', 'character' })
-        if text and row and col then
-          vim.api.nvim_win_set_cursor(0, { row + 1, col + #text })
-        end
-      end, 100)
-      return
-    end
-
     local char = util.get_left_char()
+    -- TODO
+    -- make this more robust
     if context.special_chars[char] ~= nil then
       return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr
     else
+      local text_edit = util.table_get(selected, { 'user_data', 'nvim', 'lsp', 'completion_item', 'textEdit' })
+      if text_edit then
+        local key = vim.api.nvim_replace_termcodes('<C-E>', true, true, true)
+        vim.api.nvim_feedkeys(key, 'i', false)
+        vim.defer_fn(function()
+          if vim.fn.pumvisible() ~= 0 then
+            return
+          end
+
+          local bufnr = vim.api.nvim_get_current_buf()
+          vim.lsp.util.apply_text_edits({ text_edit }, bufnr, 'utf-8')
+
+          local text = util.table_get(text_edit, { 'newText' })
+          local row = util.table_get(text_edit, { 'range', 'end', 'line' })
+          local col = util.table_get(text_edit, { 'range', 'end', 'character' })
+          if text and row and col then
+            vim.api.nvim_win_set_cursor(0, { row + 1, col + #text })
+          end
+        end, 100)
+        return
+      end
+
       return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
     end
   else
