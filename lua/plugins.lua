@@ -41,10 +41,6 @@ M.setup = function()
       build = ':TSUpdate',
       config = require('treesitter-config').setup,
     },
-    {
-      'nvim-treesitter/playground',
-      cmd = 'TSPlaygroundToggle',
-    },
 
 
     -- colorscheme
@@ -271,13 +267,10 @@ M.setup = function()
     },
     'farmergreg/vim-lastplace',
     {
-      'kiddos/translate.nvim',
-      rocks = {
-        'lua-cjson',
-        'luasec',
-      },
+      'kiddos/google-translate.nvim',
+      build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
       config = function()
-        require('translate').setup()
+        require('google-translate').setup()
       end,
     },
 
@@ -285,11 +278,20 @@ M.setup = function()
     -- language specific
     {
       'iamcco/markdown-preview.nvim',
-      build = 'cd app && yarn install',
+      build = 'cd app && ./install.sh',
       ft = { 'markdown' },
       cmd = 'MarkdownPreview',
     },
     'tikhomirov/vim-glsl',
+
+    -- AI
+    {
+      'kiddos/gemini.nvim',
+      build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
+      config = function()
+        require('gemini').setup()
+      end
+    }
   }
 
   local options = {

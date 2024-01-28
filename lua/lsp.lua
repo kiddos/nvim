@@ -91,6 +91,7 @@ lsp.setup = function()
         activateSnykCodeQuality = 'true',
         trustedFolders = {
           uv.os_homedir() .. '/.config',
+          uv.os_homedir() .. '/.local',
           uv.os_homedir() .. '/projects',
           uv.os_homedir() .. '/programming',
         },
@@ -116,6 +117,7 @@ lsp.setup = function()
 
   -- python
   lspconfig.pylsp.setup {
+    handlers = lsp_status.extensions.pyls_ms.setup(),
     settings = {
       pylsp = {
         plugins = {
@@ -317,8 +319,20 @@ lsp.setup = function()
       component_separators = { '►', '◄' }
     },
     sections = {
-      lualine_c = { 'filename', status_icons, 'require("lsp-status").status()' },
-      lualine_x = { 'encoding', 'fileformat', 'filetype' },
+      lualine_c = {
+        'filename',
+        status_icons,
+        'require("lsp-status").status()',
+      },
+      lualine_x = {
+        {
+          'nvim_treesitter#statusline',
+          type = 'vim_fun'
+        },
+        'encoding',
+        'fileformat',
+        'filetype'
+      },
     },
   }
 end
