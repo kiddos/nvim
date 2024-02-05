@@ -366,8 +366,8 @@ M.confirm_completion = function()
           vim.lsp.util.apply_text_edits({ text_edit }, bufnr, 'utf-8')
 
           local text = util.table_get(text_edit, { 'newText' })
-          local row = util.table_get(text_edit, { 'range', 'end', 'line' })
-          local col = util.table_get(text_edit, { 'range', 'end', 'character' })
+          local row = util.table_get(text_edit, { 'range', 'start', 'line' })
+          local col = util.table_get(text_edit, { 'range', 'start', 'character' })
           if text and row and col then
             vim.api.nvim_win_set_cursor(0, { row + 1, col + #text })
           end
