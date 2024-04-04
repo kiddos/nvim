@@ -7,7 +7,10 @@ snippet read_int
 snippet read_vec
 	fn read_vec<T: FromStr>() -> Vec<T> where <T as FromStr>::Err: Debug {
 		let mut s = String::new();
-		io::stdin().read_line(&mut s).unwrap();
+		stdin().read_line(&mut s).unwrap();
+		if s.is_empty() {
+			return Vec::new();
+		}
 		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
 	}
 snippet read_str
@@ -30,6 +33,9 @@ snippet codeforce
 	fn read_vec<T: FromStr>() -> Vec<T> where <T as FromStr>::Err: Debug {
 		let mut s = String::new();
 		stdin().read_line(&mut s).unwrap();
+		if s.is_empty() {
+			return Vec::new();
+		}
 		s.split(" ").map(|x| x.trim().parse().expect("invalid input")).collect()
 	}
 
