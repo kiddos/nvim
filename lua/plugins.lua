@@ -70,20 +70,6 @@ M.setup = function()
     },
     -- status line
     'hoob3rt/lualine.nvim',
-    {
-      'gelguy/wilder.nvim',
-      build = ':UpdateRemotePlugins',
-      config = function()
-        local wilder = require('wilder')
-        wilder.setup({ modes = { ':', '/', '?' } })
-
-        wilder.set_option('renderer', wilder.popupmenu_renderer({
-          highlighter = wilder.basic_highlighter(),
-          left = { ' ', wilder.popupmenu_devicons() },
-          right = { ' ', wilder.popupmenu_scrollbar() },
-        }))
-      end,
-    },
     -- file browser
     {
       'nvim-tree/nvim-tree.lua',
@@ -116,6 +102,35 @@ M.setup = function()
         vim.notify = notify
       end,
     },
+    {
+      'kevinhwang91/nvim-hlslens',
+      config = function()
+        require('hlslens').setup()
+        local kopts = { noremap = true, silent = true }
+        vim.api.nvim_set_keymap('n', 'n',
+          [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+          kopts)
+        vim.api.nvim_set_keymap('n', 'N',
+          [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+          kopts)
+        vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+        vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+        vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+        vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+
+        vim.api.nvim_set_keymap('n', '<Leader>h', '<Cmd>noh<CR>', kopts)
+      end,
+    },
+    {
+      'nvimdev/dashboard-nvim',
+      event = 'VimEnter',
+      config = function()
+        require('dashboard').setup {
+          -- config
+        }
+      end,
+      dependencies = { { 'nvim-tree/nvim-web-devicons' } }
+    },
 
     -- git
     {
@@ -138,17 +153,25 @@ M.setup = function()
         vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', { noremap = true, silent = true })
       end,
     },
-    {
-      'linrongbin16/gitlinker.nvim',
-      cmd = 'GitLink',
-      config = function()
-        require('gitlinker').setup()
-      end,
-    },
 
     -- tmux
-    'christoomey/vim-tmux-navigator',
-    'benmills/vimux',
+    {
+      "christoomey/vim-tmux-navigator",
+      cmd = {
+        "TmuxNavigateLeft",
+        "TmuxNavigateDown",
+        "TmuxNavigateUp",
+        "TmuxNavigateRight",
+        "TmuxNavigatePrevious",
+      },
+      keys = {
+        { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+        { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+        { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+        { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+        { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+      },
+    },
 
     -- fzf
     {
@@ -205,9 +228,6 @@ M.setup = function()
       end,
     },
 
-    -- helper function
-    'nvim-lua/plenary.nvim',
-
     -- utility
     'windwp/nvim-autopairs',
     {
@@ -223,6 +243,7 @@ M.setup = function()
         local ft = require('Comment.ft')
         ft.webmacro = '## %s'
 
+        vim.api.nvim_set_var('mapleader', ',')
         vim.api.nvim_set_keymap('n', '<leader>cc', '<Plug>(comment_toggle_linewise_current)', {})
         vim.api.nvim_set_keymap('n', '<leader>cu', '<Plug>(comment_toggle_linewise_current)', {})
         vim.api.nvim_set_keymap('v', '<leader>cc', '<Plug>(comment_toggle_linewise_visual)', {})
@@ -240,7 +261,7 @@ M.setup = function()
     },
     {
       'kylechui/nvim-surround',
-      tag = 'v2.1.4',
+      tag = 'v2.1.6',
       config = function()
         require('nvim-surround').setup({})
       end,
@@ -288,6 +309,7 @@ M.setup = function()
     {
       'kiddos/gemini.nvim',
       build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
+      dependencies = { { 'nvim-lua/plenary.nvim' } },
       config = function()
         require('gemini').setup()
       end
