@@ -38,6 +38,7 @@ M.setup = function()
     -- treesitter
     {
       'nvim-treesitter/nvim-treesitter',
+      lazy = false,
       build = ':TSUpdate',
       config = require('treesitter-config').setup,
     },
@@ -56,6 +57,7 @@ M.setup = function()
     -- coloring
     {
       'NvChad/nvim-colorizer.lua',
+      ft = { 'css', 'javascript' },
       config = function()
         require('colorizer').setup()
       end,
@@ -64,12 +66,16 @@ M.setup = function()
     -- tabline
     {
       'romgrk/barbar.nvim',
+      event = 'VimEnter',
       tag = 'v1.7.0',
       dependencies = { 'kyazdani42/nvim-web-devicons' },
       config = require('bufferline-config').setup,
     },
     -- status line
-    'hoob3rt/lualine.nvim',
+    {
+      'hoob3rt/lualine.nvim',
+      event = 'VimEnter',
+    },
     -- file browser
     {
       'nvim-tree/nvim-tree.lua',
@@ -93,6 +99,7 @@ M.setup = function()
     -- notification
     {
       'rcarriga/nvim-notify',
+      lazy = false,
       config = function()
         local notify = require('notify')
         notify.setup({
@@ -104,6 +111,7 @@ M.setup = function()
     },
     {
       'kevinhwang91/nvim-hlslens',
+      event = 'VimEnter',
       config = function()
         require('hlslens').setup()
         local kopts = { noremap = true, silent = true }
@@ -176,6 +184,7 @@ M.setup = function()
     -- fzf
     {
       'junegunn/fzf.vim',
+      cmd = { 'Rg', 'Ag', 'FZF' },
       dependencies = { 'junegunn/fzf' },
       build = ':call fzf#install()',
       config = function()
@@ -229,9 +238,13 @@ M.setup = function()
     },
 
     -- utility
-    'windwp/nvim-autopairs',
+    {
+      'windwp/nvim-autopairs',
+      event = 'InsertEnter',
+    },
     {
       'numToStr/Comment.nvim',
+      event = 'InsertEnter',
       config = function()
         require('Comment').setup({
           mappings = {
@@ -261,6 +274,7 @@ M.setup = function()
     },
     {
       'kylechui/nvim-surround',
+      event = 'VimEnter',
       tag = 'v2.1.6',
       config = function()
         require('nvim-surround').setup({})
@@ -275,6 +289,7 @@ M.setup = function()
     },
     {
       'dcampos/nvim-snippy',
+      event = 'InsertEnter',
       config = function()
         require('snippy').setup({
           mappings = {
@@ -286,10 +301,14 @@ M.setup = function()
         })
       end,
     },
-    'farmergreg/vim-lastplace',
+    {
+      'farmergreg/vim-lastplace',
+      lazy = false,
+    },
     {
       'kiddos/google-translate.nvim',
       build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
+      cmd = { 'TranslateCN', 'TranslateTW', 'TranslateEN' },
       config = function()
         require('google-translate').setup()
       end,
@@ -303,7 +322,14 @@ M.setup = function()
       ft = { 'markdown' },
       cmd = 'MarkdownPreview',
     },
-    'tikhomirov/vim-glsl',
+    {
+      'tikhomirov/vim-glsl',
+      ft = 'glsl',
+    },
+    {
+      'slint-ui/vim-slint',
+      ft = 'slint',
+    },
 
     -- AI
     {
