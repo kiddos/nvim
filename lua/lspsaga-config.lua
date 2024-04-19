@@ -107,8 +107,8 @@ M.setup = function()
     })
   end
 
-  register_toggle_key('<F5>', 'outline')
-  register_toggle_key('<F6>', 'winbar_toggle')
+  register_toggle_key('<F7>', 'outline')
+  register_toggle_key('<F8>', 'winbar_toggle')
 end
 
 return M

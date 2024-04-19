@@ -1,9 +1,30 @@
 local lspconfig = require('lspconfig')
 local lsp_status = require('lsp-status')
 local uv = vim.uv or vim.loop
--- local plenary_popup = require('plenary.popup')
 
 local lsp = {}
+
+lsp.setup_inlay_hint = function()
+  local inlay_hints = false
+  local set_inlay_hints_keys = function(mode)
+    vim.api.nvim_set_keymap(mode, '<F5>', '', {
+      silent = true,
+      noremap = true,
+      callback = function()
+        inlay_hints = not inlay_hints
+        vim.lsp.inlay_hint.enable(0, inlay_hints)
+        if inlay_hints then
+          vim.notify('Enable Inlay Hints')
+        else
+          vim.notify('Disable Inlay Hints', vim.log.levels.WARN)
+        end
+      end,
+    })
+  end
+
+  set_inlay_hints_keys('n')
+  set_inlay_hints_keys('i')
+end
 
 lsp.setup = function()
   vim.diagnostic.config({
@@ -244,7 +265,7 @@ lsp.setup = function()
 
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
-    text = '💥',
+    text = '🐞',
     texthl = 'DiagnosticSignError',
     numhl = 'DiagnosticError'
   })
@@ -254,12 +275,12 @@ lsp.setup = function()
     numhl = 'DiagnosticWarn',
   })
   vim.fn.sign_define('DiagnosticSignInfo', {
-    text = '💨',
+    text = '🤖',
     texthl = 'DiagnosticSignInfo',
     numhl = 'DiagnosticInfo',
   })
   vim.fn.sign_define('DiagnosticSignHint', {
-    text = '💤',
+    text = '🐾',
     texthl = 'DiagnosticSignHint',
     numhl = 'DiagnosticHint',
   })
@@ -335,6 +356,8 @@ lsp.setup = function()
       },
     },
   }
+
+  lsp.setup_inlay_hint()
 end
 
 return lsp

@@ -22,12 +22,25 @@ M.setup = function()
 
   local plugins = {
     -- lsp
-    'neovim/nvim-lspconfig',
-    'nvim-lua/lsp-status.nvim',
-    'onsails/lspkind-nvim',
-    'kosayoda/nvim-lightbulb',
+    {
+      'neovim/nvim-lspconfig',
+      lazy = false,
+    },
+    {
+      'nvim-lua/lsp-status.nvim',
+      lazy = false,
+    },
+    {
+      'onsails/lspkind-nvim',
+      lazy = false,
+    },
+    {
+      'kosayoda/nvim-lightbulb',
+      lazy = false,
+    },
     {
       'nvimdev/lspsaga.nvim',
+      lazy = false,
       config = require('lspsaga-config').setup
     },
     {
@@ -147,8 +160,20 @@ M.setup = function()
       keys = { '<F2>' },
       config = function()
         vim.api.nvim_set_var('gitgutter_enabled', false)
-        vim.api.nvim_set_keymap('n', '<F2>', ':GitGutterToggle<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('i', '<F2>', '<Esc>:GitGutterToggle<CR>', { noremap = true, silent = true })
+        local enabled = false
+        local callback = function()
+          if enabled then
+            enabled = false
+            vim.notify('Disable GitGutter 🥺', vim.log.levels.WARN)
+            vim.api.nvim_command('GitGutterDisable')
+          else
+            enabled = true
+            vim.notify('Enable GitGutter 🦈')
+            vim.api.nvim_command('GitGutterEnable')
+          end
+        end
+        vim.api.nvim_set_keymap('n', '<F2>', '', { noremap = true, silent = true, callback = callback })
+        vim.api.nvim_set_keymap('i', '<F2>', '', { noremap = true, silent = true, callback = callback })
       end
     },
     {
@@ -157,8 +182,20 @@ M.setup = function()
       keys = { '<F3>' },
       config = function()
         vim.api.nvim_set_var('gitblame_enabled', false)
-        vim.api.nvim_set_keymap('n', '<F3>', ':GitBlameToggle<CR>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('i', '<F3>', '<Esc>:GitBlameToggle<CR>', { noremap = true, silent = true })
+        local enabled = false
+        local callback = function()
+          if enabled then
+            enabled = false
+            vim.notify('Disable GitBlame 🥺', vim.log.levels.WARN)
+            vim.api.nvim_command('GitBlameDisable')
+          else
+            enabled = true
+            vim.notify('Enable GitBlame 🤨')
+            vim.api.nvim_command('GitBlameEnable')
+          end
+        end
+        vim.api.nvim_set_keymap('n', '<F3>', '', { noremap = true, silent = true, callback = callback })
+        vim.api.nvim_set_keymap('i', '<F3>', '', { noremap = true, silent = true, callback = callback })
       end,
     },
 

@@ -94,12 +94,12 @@ commands.toggle_highlight_trailing_space = function()
   }
   if context.highlight_group ~= nil then
     vim.fn.matchdelete(context.highlight_group)
-    vim.notify('💦💦💦 Disable highlight trailing space', vim.log.levels.INFO, opts)
+    vim.notify('Disable highlight trailing space 🌚', vim.log.levels.INFO, opts)
     context.highlight_group = nil
   else
     context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\v(\s+$)|( +\ze\t)]])
     -- context.highlight_group = vim.fn.matchadd('TrailingSpace', [[\s\+$]])
-    vim.notify('🔥🔥🔥 Highlight trailing space', vim.log.levels.INFO, opts)
+    vim.notify('Highlight trailing space 🌝', vim.log.levels.INFO, opts)
   end
 end
 
@@ -109,8 +109,8 @@ end
 
 commands.set_trim_space_commands = function()
   vim.api.nvim_set_hl(0, 'TrailingSpace', {
-    bg = '#D70000',
-    fg = '#D70000',
+    bg = '#864F4F',
+    fg = '#864F4F',
     ctermfg = 160,
     ctermbg = 160,
   })
