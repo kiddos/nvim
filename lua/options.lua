@@ -27,7 +27,7 @@ options.setup = function()
 
   -- Rendering setting
   -- more performant
-  vim.api.nvim_set_option_value('lazyredraw', true, {})
+  vim.api.nvim_set_option_value('lazyredraw', false, {})
   vim.api.nvim_set_option_value('redrawtime', 3000, {})
 
   -- Editing setting
