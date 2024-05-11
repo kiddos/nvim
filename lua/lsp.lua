@@ -167,7 +167,7 @@ lsp.setup = function()
           },
           pycodestyle = {
             -- convention = 'google',
-            ignore = { 'W391', 'E303', 'E501', 'E226', 'W504', 'E251', 'W503', 'E126' },
+            ignore = { 'W391', 'E303', 'E501', 'E226', 'W504', 'E251', 'W503', 'E126', 'E402' },
             indentSize = 2,
             maxLineLength = 120,
           }
