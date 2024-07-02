@@ -397,6 +397,10 @@ commands.set_tools_commands = function()
   vim.api.nvim_create_user_command('GWrite', function()
     vim.api.nvim_command('silent !git add %')
   end, {})
+
+  vim.api.nvim_create_user_command('XMLFormat', function()
+    vim.api.nvim_command('%!xmllint --format %')
+  end, {})
 end
 
 

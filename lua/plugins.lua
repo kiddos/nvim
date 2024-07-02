@@ -281,7 +281,7 @@ M.setup = function()
     },
     {
       'numToStr/Comment.nvim',
-      event = 'InsertEnter',
+      event = 'VimEnter',
       config = function()
         require('Comment').setup({
           mappings = {
@@ -312,7 +312,7 @@ M.setup = function()
     {
       'kylechui/nvim-surround',
       event = 'VimEnter',
-      tag = 'v2.1.6',
+      tag = 'v2.1.10',
       config = function()
         require('nvim-surround').setup({})
       end,
@@ -382,7 +382,12 @@ M.setup = function()
   local options = {
     ui = {
       border = 'rounded',
-    }
+    },
+    dev = {
+      path = '~/projects',
+      patterns = { 'kiddos' },
+      fallback = true,
+    },
   }
 
   local lazy = require('lazy')
