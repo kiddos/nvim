@@ -47,7 +47,6 @@ M.setup = function()
       'folke/trouble.nvim',
       cmd = 'Trouble',
     },
-
     -- treesitter
     {
       'nvim-treesitter/nvim-treesitter',
@@ -384,7 +383,7 @@ M.setup = function()
       border = 'rounded',
     },
     dev = {
-      path = '~/projects',
+      path = '~/projects/tools',
       patterns = { 'kiddos' },
       fallback = true,
     },
