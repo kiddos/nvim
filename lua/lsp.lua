@@ -77,17 +77,15 @@ lsp.setup = function()
     return stat and stat.type or false
   end
 
+  -- basecode lsp
+  lspconfig.basecodels.setup {}
+
+
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
   local clangd = '/usr/bin/clangd'
   if file_exists(clangd) then
-    local idf = os.getenv('IDF_PATH')
-    local cmd = { clangd, '--background-index', '--header-insertion=never' }
-    if idf and #idf > 0 then
-      local query_driver = '--query-driver=' ..
-          uv.os_homedir() .. '/.espressif/tools/xtensa-esp32-elf/*/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc'
-      table.insert(cmd, query_driver)
-    end
+    local cmd = { clangd, '--background-index', '--header-insertion=never', '--log=error', '--offset-encoding=utf-16' }
     lspconfig.clangd.setup {
       cmd = cmd,
       handlers = clangd_handler,

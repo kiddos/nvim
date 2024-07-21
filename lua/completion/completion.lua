@@ -3,57 +3,18 @@ local M = {}
 local uv = vim.uv or vim.loop
 
 local config = require('completion.config').get_config()
-local lru = require('completion.lru')
 local util = require('completion.util')
-local snippet = require('completion.snippet')
 
 local context = {
   lsp = {
     result = {},
     cancel_func = nil,
   },
-  buffer = {
-    cache = {},
-    result = {},
-  },
   file = {
-    result = nil,
-  },
-  snippet = {
     result = nil,
   },
   special_chars = {},
 }
-
-M.index_buffer = function()
-  local current_buf = vim.api.nvim_get_current_buf()
-  local num_lines = vim.api.nvim_buf_line_count(current_buf)
-  local current_line = vim.api.nvim__buf_stats(0).current_lnum
-  local lines = nil
-
-  if num_lines > config.completion.buffer_max_lines then
-    lines = vim.api.nvim_buf_get_lines(current_buf,
-      math.max(0, current_line - config.completion.buffer_reindex_line_range),
-      math.min(num_lines, current_line + config.completion.buffer_reindex_line_range), false)
-  else
-    lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, false)
-  end
-
-  if lines then
-    if not context.buffer.cache[current_buf] then
-      context.buffer.cache[current_buf] = lru.create_lru(config.completion.buffer_lru_size)
-    end
-
-    local current_cache = context.buffer.cache[current_buf]
-    for i = 1, #lines do
-      local words = util.get_words(lines[i])
-      for _, word in pairs(words) do
-        current_cache:add_data(word)
-      end
-    end
-    context.buffer.result[current_buf] = current_cache:get_keys()
-  end
-end
 
 M.scan_paths = function()
   local dirname = util.get_current_dirname()
@@ -69,11 +30,6 @@ M.scan_paths = function()
   local items = util.scan_directory(dirname)
   context.file.result = items
 end
-
-M.prepare_buffer_completion = util.throttle(function()
-  M.index_buffer()
-  context.snippet.result = snippet.load_snippets()
-end, config.completion.delay)
 
 M.is_subseq = function(word1, word2)
   local j = 1
@@ -191,37 +147,12 @@ M.prepare_completion_item = function(base_word)
     end
   end
 
-  if context.snippet.result then
-    for _, item in pairs(context.snippet.result) do
-      if vim.startswith(item.word, base_word) then
-        table.insert(result, item)
-      end
-    end
-  end
-
-  local current_buf = vim.api.nvim_get_current_buf()
-  if context.buffer.result[current_buf] then
-    local items = util.buffer_result_to_complete_items(context.buffer.result[current_buf])
-    local filtered = {}
-    for _, item in pairs(items) do
-      if M.is_subseq(base_word, item.word) then
-        table.insert(filtered, item)
-      end
-    end
-    util.sort_completion_result(filtered, base_word)
-    for _, item in pairs(filtered) do
-      table.insert(result, item)
-    end
-  end
-
   return result
 end
 
 M.find_completion_base_word = function()
   if context.lsp.result == nil and
-      context.buffer.result == nil and
-      context.file.result == nil and
-      context.snippet.result == nil then
+      context.file.result == nil then
     return nil
   else
     local start = util.get_completion_start()
@@ -382,10 +313,6 @@ M.confirm_completion = function()
   end
 end
 
-M.clear_cache = function(bufnr)
-  context.buffer.cache[bufnr] = nil
-end
-
 M.stop_completion = function()
   if context.lsp.cancel_func then
     pcall(context.lsp.cancel_func)
@@ -394,7 +321,6 @@ M.stop_completion = function()
 
   context.lsp.result = {}
   context.file.result = nil
-  context.snippet.result = nil
 end
 
 M.auto_complete = function()
@@ -414,22 +340,9 @@ M.setup = function()
 
   vim.api.nvim_create_autocmd({ 'InsertLeavePre' }, {
     callback = function()
-      M.prepare_buffer_completion()
       M.stop_completion()
     end
   })
-
-  vim.api.nvim_create_autocmd({ 'VimEnter' }, {
-    callback = M.prepare_buffer_completion,
-  })
-
-  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
-    callback = function()
-      local bufnr = vim.api.nvim_get_current_buf()
-      M.clear_cache(bufnr)
-    end
-  })
-
 
   vim.api.nvim_set_keymap('i', '<CR>', '', {
     expr = true,
