@@ -45,6 +45,7 @@ M.setup = function()
     },
     {
       'folke/trouble.nvim',
+      opts = {},
       cmd = 'Trouble',
     },
     -- treesitter
