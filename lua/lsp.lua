@@ -5,15 +5,14 @@ local uv = vim.uv or vim.loop
 local lsp = {}
 
 lsp.setup_inlay_hint = function()
-  local inlay_hints = false
   local set_inlay_hints_keys = function(mode)
     vim.api.nvim_set_keymap(mode, '<F5>', '', {
       silent = true,
       noremap = true,
       callback = function()
-        inlay_hints = not inlay_hints
-        vim.lsp.inlay_hint.enable(0, inlay_hints)
-        if inlay_hints then
+        local enable = not vim.lsp.inlay_hint.is_enabled()
+        vim.lsp.inlay_hint.enable(enable)
+        if enable then
           vim.notify('Enable Inlay Hints')
         else
           vim.notify('Disable Inlay Hints', vim.log.levels.WARN)
@@ -102,6 +101,7 @@ lsp.setup = function()
   lspconfig.eslint.setup {}
 
   local snyk_token = os.getenv('SNYK_TOKEN')
+  print(snyk_token)
   if snyk_token and #snyk_token > 0 then
     lspconfig.snyk_ls.setup {
       init_options = {

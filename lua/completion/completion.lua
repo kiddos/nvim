@@ -1,7 +1,5 @@
 local M = {}
 
-local uv = vim.uv or vim.loop
-
 local config = require('completion.config').get_config()
 local util = require('completion.util')
 
@@ -10,26 +8,8 @@ local context = {
     result = {},
     cancel_func = nil,
   },
-  file = {
-    result = nil,
-  },
   special_chars = {},
 }
-
-M.scan_paths = function()
-  local dirname = util.get_current_dirname()
-  if not dirname then
-    return
-  end
-
-  local stat = uv.fs_stat(dirname)
-  if not stat then
-    return
-  end
-
-  local items = util.scan_directory(dirname)
-  context.file.result = items
-end
 
 M.is_subseq = function(word1, word2)
   local j = 1
@@ -134,25 +114,11 @@ M.prepare_completion_item = function(base_word)
     end)
     util.sort_completion_result(result, base_word)
   end
-
-  if context.file.result then
-    local filtered = {}
-    for _, item in pairs(context.file.result) do
-      if M.is_subseq(base_word, item.word) then
-        table.insert(filtered, item)
-      end
-    end
-    for _, item in pairs(filtered) do
-      table.insert(result, item)
-    end
-  end
-
   return result
 end
 
 M.find_completion_base_word = function()
-  if context.lsp.result == nil and
-      context.file.result == nil then
+  if context.lsp.result == nil then
     return nil
   else
     local start = util.get_completion_start()
@@ -232,14 +198,13 @@ M.append_lsp_result = function(results, new_results)
 end
 
 M.trigger_completion = util.debounce(function(bufnr)
-  M.scan_paths()
-
   local params = vim.lsp.util.make_position_params()
 
   if util.has_lsp_capability(bufnr, 'completionProvider') then
     if context.lsp.cancel_func then
       context.lsp.cancel_func()
     end
+    context.lsp.result = {}
     context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(result)
       vim.defer_fn(function()
         -- context.lsp.result = result
@@ -320,7 +285,6 @@ M.stop_completion = function()
   context.lsp.cancel_func = nil
 
   context.lsp.result = {}
-  context.file.result = nil
 end
 
 M.auto_complete = function()
