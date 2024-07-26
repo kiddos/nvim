@@ -1,5 +1,4 @@
 local util = {}
-local uv = vim.uv or vim.loop
 
 util.has_lsp_capability = function(bufnr, capability)
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
@@ -242,36 +241,6 @@ util.close_action_window = function(container)
   if container.buffer then
     vim.fn.setbufvar(container.buffer, '&buftype', 'nofile')
   end
-end
-
-util.get_words = function(line)
-  local words = {}
-  local buffer = line
-  local pattern = vim.regex('\\%(-\\?\\d\\+\\%(\\.\\d\\+\\)\\?\\|\\h\\w*\\%(-\\w*\\)*\\)')
-  while true do
-    local s, e = pattern:match_str(buffer)
-    if s then
-      local word = string.sub(buffer, s + 1, e)
-      if #word > 3 and string.sub(word, #word) ~= '-' then
-        table.insert(words, word)
-      end
-    end
-    local new_buffer = string.sub(buffer, e and e + 1 or 2)
-    if buffer == new_buffer then
-      break
-    end
-    buffer = new_buffer
-  end
-  return words
-end
-
-util.is_slash_comment = function(_)
-  local commentstring = vim.bo.commentstring or ''
-  local no_filetype = vim.bo.filetype == ''
-  local is_slash_comment = false
-  is_slash_comment = is_slash_comment or commentstring:match('/%*')
-  is_slash_comment = is_slash_comment or commentstring:match('//')
-  return is_slash_comment and not no_filetype
 end
 
 util.debounce = function(callback, timeout)
