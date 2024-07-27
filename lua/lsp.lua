@@ -85,6 +85,9 @@ lsp.setup = function()
   local clangd = '/usr/bin/clangd'
   if file_exists(clangd) then
     local cmd = { clangd, '--background-index', '--header-insertion=never', '--log=error', '--offset-encoding=utf-16' }
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
     lspconfig.clangd.setup {
       cmd = cmd,
       handlers = clangd_handler,
@@ -92,6 +95,8 @@ lsp.setup = function()
       init_options = {
         clangdFileStatus = true
       },
+      on_attach = lsp_status.on_attach,
+      capabilities = capabilities,
     }
   end
 
@@ -101,7 +106,6 @@ lsp.setup = function()
   lspconfig.eslint.setup {}
 
   local snyk_token = os.getenv('SNYK_TOKEN')
-  print(snyk_token)
   if snyk_token and #snyk_token > 0 then
     lspconfig.snyk_ls.setup {
       init_options = {
@@ -135,6 +139,8 @@ lsp.setup = function()
   }
 
   -- python
+  capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
   lspconfig.pylsp.setup {
     handlers = lsp_status.extensions.pyls_ms.setup(),
     settings = {
@@ -171,14 +177,21 @@ lsp.setup = function()
           }
         }
       }
-    }
+    },
+    on_attach = lsp_status.on_attach,
+    capabilities = capabilities
   }
 
   -- bash
   lspconfig.bashls.setup {}
 
   -- rust
-  lspconfig.rust_analyzer.setup {}
+  capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+  lspconfig.rust_analyzer.setup {
+    on_attach = lsp_status.on_attach,
+    capabilities = capabilities
+  }
 
   -- lua
   local lua_lsp_path = uv.os_homedir() .. '/.local/lsp/lua-language-server'
@@ -228,6 +241,35 @@ lsp.setup = function()
         showTodos = true,
         enableSnippets = false,
       }
+    }
+  end
+
+  local java_home = uv.os_homedir() .. '/.jdks/jdk-17.0.2'
+  local java = java_home .. '/bin/java'
+  local jdtls_home = uv.os_homedir() .. '/.local/lsp/jdtls'
+  local jdtls_jar = jdtls_home .. '/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar'
+  if file_exists(java) and file_exists(jdtls_jar) then
+    local configuration = jdtls_home .. '/config_linux'
+    local current_path = vim.fn.getcwd()
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
+    local cmd = {
+      java,
+      '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+      '-Dosgi.bundles.defaultStartLevel=4',
+      '-Declipse.product=org.eclipse.jdt.ls.core.product',
+      '-Dlog.protocol=true',
+      '-Dlog.level=ALL',
+      '-Xmx1g',
+      '-jar', jdtls_jar,
+      '-configuration', configuration,
+      "-data", current_path
+    }
+    lspconfig.jdtls.setup {
+      cmd = cmd,
+      on_attach = lsp_status.on_attach,
+      capabilities = capabilities,
     }
   end
 
@@ -331,6 +373,23 @@ lsp.setup = function()
     end
   end
 
+  local lsp_statusline = function()
+    local status_line = lsp_status.status()
+    local max_len = 30
+    if #status_line >= max_len then
+      return string.sub(status_line, 1, max_len) .. ' ...'
+    end
+    return status_line
+  end
+
+  local treesitter_statusline = function()
+    return require("nvim-treesitter").statusline({
+      indicator_size = 50,
+      type_patterns = { "class", "function", "method" },
+      separator = " -> ",
+    })
+  end
+
   require('lualine').setup {
     options = {
       theme = 'onedark',
@@ -341,13 +400,10 @@ lsp.setup = function()
       lualine_c = {
         'filename',
         status_icons,
-        'require("lsp-status").status()',
+        lsp_statusline,
       },
       lualine_x = {
-        {
-          'nvim_treesitter#statusline',
-          type = 'vim_fun'
-        },
+        treesitter_statusline,
         'encoding',
         'fileformat',
         'filetype'
