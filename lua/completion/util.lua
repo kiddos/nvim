@@ -84,49 +84,6 @@ util.get_completion_start = function()
   return start
 end
 
-util.word_emb = function(s)
-  local counts = {}
-  for i = 1, 256 do
-    counts[i] = 0
-  end
-  for i = 1, #s do
-    local c = string.byte(s, i)
-    if c >= 1 and c <= 256 then
-      counts[c] = counts[c] + 1
-    end
-  end
-  for i = 1, 256 do
-    counts[i] = counts[i] / #s
-  end
-  return counts
-end
-
-util.cosine_similarity = function(e1, e2)
-  local x = 0
-  for i = 1, 256 do
-    x = x + e1[i] * e2[i]
-  end
-  return x
-end
-
-util.sort_completion_result = function(items, base)
-  local base_emb = util.word_emb(base)
-  for _, item in pairs(items) do
-    local word = item.word
-    local e = util.word_emb(word)
-    local score = util.cosine_similarity(e, base_emb)
-    if vim.startswith(word, base) then
-      score = score + 1
-    end
-    item.score = score
-  end
-
-  table.sort(items, function(a, b)
-    return a.score > b.score
-  end)
-  return items
-end
-
 util.get_documentation = function(completion_item)
   -- documentation could be string | MarkupContent
   local doc = util.table_get(completion_item, { 'documentation' })

@@ -275,10 +275,7 @@ M.setup = function()
     },
 
     -- utility
-    {
-      'windwp/nvim-autopairs',
-      event = 'InsertEnter',
-    },
+    { 'windwp/nvim-autopairs' },
     {
       'numToStr/Comment.nvim',
       event = 'VimEnter',

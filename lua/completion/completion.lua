@@ -5,232 +5,132 @@ local util = require('completion.util')
 
 local context = {
   lsp = {
-    result = {},
+    completion_items = {},
     cancel_func = nil,
   },
   special_chars = {},
 }
 
-M.is_subseq = function(word1, word2)
-  local j = 1
-  for i = 1, #word2 do
-    if string.byte(word2, i) == string.byte(word1, j) then
-      j = j + 1
-    end
-
-    if j == #word1 + 1 then
-      return true
-    end
-  end
-  return false
-end
-
 M.get_completion_word = function(completion_item)
-  return util.table_get(completion_item, { 'textEdit', 'newText' }) or completion_item.insertText or completion_item.label or ''
+  return util.table_get(completion_item, { 'textEdit', 'newText' }) or completion_item.insertText or
+      completion_item.label or ''
 end
 
-M.filter_lsp_result = function(items, base)
-  return vim.tbl_filter(function(item)
-    -- if item.kind == 15 then
-    --   return false
-    -- end
-
-    local word = M.get_completion_word(item)
-    return M.is_subseq(base, word)
-  end, items)
-end
-
-M.remove_prefix = function(word,  before_cursor)
-  local i = 1
-  local j = #before_cursor
-  while i <= #word and j >= 1 and string.sub(word, i, 1) == string.sub(before_cursor, j, j) do
-    j = j - 1
-    i = i + 1
-  end
-  return string.sub(word, i)
-end
-
-M.lsp_completion_response_items_to_complete_items = function(items, client_id)
+M.convert_completion_items = function(items)
   if vim.tbl_count(items) == 0 then return {} end
 
-  local res = {}
-  --local current_line = vim.api.nvim_get_current_line()
-  --local before_cursor = string.sub(current_line, 1, vim.fn.col('.') - 1)
-  for _, completion_item in pairs(items) do
-    local word = M.get_completion_word(completion_item)
-    --word = M.remove_prefix(word, before_cursor)
-
-    table.insert(res, {
+  local result = {}
+  for _, item in pairs(items) do
+    local word = M.get_completion_word(item)
+    local completion_item = {
       word = word,
-      abbr = util.trim_long_text(completion_item.label, config.completion.abbr_max_len),
-      kind = vim.lsp.protocol.CompletionItemKind[completion_item.kind] or 'Unknown',
-      menu = util.trim_long_text(completion_item.detail or '', config.completion.menu_max_len),
-      info = util.get_documentation(completion_item),
+      abbr = util.trim_long_text(item.label, config.completion.abbr_max_len),
+      kind = vim.lsp.protocol.CompletionItemKind[item.kind] or 'Unknown',
+      menu = util.trim_long_text(item.detail or '', config.completion.menu_max_len),
+      info = util.get_documentation(item),
       icase = 1,
       dup = 1,
       empty = 1,
       user_data = {
         nvim = {
           lsp = {
-            completion_item = completion_item,
-            source = 'lsp',
-            client_id = client_id,
+            completion_item = item,
           }
         }
       },
-    })
-  end
-  return res
-end
-
-M.process_lsp_response = function(request_result, processor)
-  if not request_result then
-    return {}
-  end
-
-  if type(request_result) ~= 'table' then
-    return {}
-  end
-
-  local res = {}
-  for client_id, handler_result in pairs(request_result) do
-    if not handler_result.err and handler_result.result then
-      vim.list_extend(res, processor(handler_result.result, client_id) or {})
-    end
-  end
-  return res
-end
-
-
-M.prepare_completion_item = function(base_word)
-  local result = {}
-  if context.lsp.result then
-    result = M.process_lsp_response(context.lsp.result, function(response, client_id)
-      local items = util.table_get(response, { 'items' }) or response
-      if type(items) ~= 'table' then return {} end
-
-      items = M.filter_lsp_result(items, base_word)
-      return M.lsp_completion_response_items_to_complete_items(items, client_id)
-    end)
-    util.sort_completion_result(result, base_word)
+    }
+    table.insert(result, completion_item)
   end
   return result
 end
 
 M.find_completion_base_word = function()
-  if context.lsp.result == nil then
+  local start = util.get_completion_start()
+  if start < 0 then
     return nil
   else
-    local start = util.get_completion_start()
-    if start < 0 then
-      return nil
-    else
-      local line = vim.api.nvim_get_current_line()
-      return string.sub(line, start + 1, vim.fn.col('.') - 1)
-    end
+    local line = vim.api.nvim_get_current_line()
+    return string.sub(line, start + 1, vim.fn.col('.') - 1)
   end
 end
 
-M.show_completion = function()
+local edit_dist = function(w1, w2, insert_cost, delete_cost, substitude_cost)
+  local dp = {}
+  local n = #w1
+  local m = #w2
+  for i = 0, n do
+    dp[i] = {}
+    for j = 0, m do
+      dp[i][j] = 0
+    end
+  end
+  for i = 1, n do
+    dp[i][0] = i
+  end
+  for j = 1, m do
+    dp[0][j] = j
+  end
+
+  for i = 1, n do
+    local c1 = string.sub(w1, i, i)
+    for j = 1, m do
+      local c2 = string.sub(w2, j, j)
+      if c1 == c2 then
+        dp[i][j] = dp[i - 1][j - 1]
+      else
+        dp[i][j] = math.min(dp[i - 1][j] + insert_cost, dp[i][j - 1] + delete_cost, dp[i - 1][j - 1] + substitude_cost)
+      end
+    end
+  end
+  return dp[n][m]
+end
+
+local sort_completion_result = function(items, base)
+  for _, item in pairs(items) do
+    local word = item.insertText or item.filterText or item.label or item.sortText or ''
+    item.sort_score = edit_dist(base, word, 1, 1, 2)
+  end
+
+  table.sort(items, function(a, b)
+    if math.abs(a.sort_score - b.sort_score) <= 3 then
+      return a.kind > b.kind
+    end
+    return a.sort_score < b.sort_score
+  end)
+  return items
+end
+
+M.show_completion = util.debounce(function()
   local base_word = M.find_completion_base_word()
   if base_word ~= nil then
-    local items = M.prepare_completion_item(base_word)
+    sort_completion_result(context.lsp.completion_items, base_word)
+    local items = M.convert_completion_items(context.lsp.completion_items)
     if vim.fn.mode() == 'i' then
       vim.fn.complete(util.get_completion_start() + 1, items)
     end
   end
-end
-
-M.find_lsp_result_start = function(list)
-  if not list then
-    return -1
-  end
-
-  for _, item in pairs(list) do
-    if not item.err then
-      local items = util.table_get(item, { 'result', 'items'})
-      if items then
-        for _, completion_item in pairs(items) do
-          local start = util.table_get(completion_item, { 'textEdit', 'range', 'start' })
-          if start then
-            return start
-          end
-        end
-      end
-    end
-  end
-
-  return -1
-end
-
-M.append_lsp_result = function(results, new_results)
-  local indices = {}
-  for _, entry in pairs(results) do
-    if not entry.err then
-      local items = util.table_get(entry, { 'result', 'items' })
-      if items then
-        for idx, item in pairs(items) do
-          local sort_text = util.table_get(item, { 'sortText' })
-          if sort_text then
-            indices[sort_text] = idx
-          end
-        end
-      end
-    end
-  end
-
-  for _, entry in pairs(new_results) do
-    if not entry.err then
-      local items = util.table_get(entry, { 'result', 'items' })
-      if items then
-        for _, item in pairs(items) do
-          local sort_text = util.table_get(item, { 'sortText' })
-          if sort_text and indices[sort_text] then
-            local idx = indices[sort_text]
-            results[idx] = item
-          else
-            table.insert(results, item)
-          end
-        end
-      end
-    end
-  end
-end
+end, 10)
 
 M.trigger_completion = util.debounce(function(bufnr)
   local params = vim.lsp.util.make_position_params()
 
   if util.has_lsp_capability(bufnr, 'completionProvider') then
     if context.lsp.cancel_func then
-      context.lsp.cancel_func()
+      pcall(context.lsp.cancel_func)
     end
-    context.lsp.result = {}
-    context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(result)
-      vim.defer_fn(function()
-        -- context.lsp.result = result
-        if vim.tbl_isempty(context.lsp.result) then
-          context.lsp.result = result
-        else
-          local s1 = M.find_lsp_result_start(result)
-          local s2 = M.find_lsp_result_start(context.lsp.result)
-          if #context.lsp.result > 0 and s1 == s2 then
-            M.append_lsp_result(context.lsp.result, result)
-          else
-            context.lsp.result = result
-          end
+    context.lsp.completion_items = {}
+    context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(client_results)
+      for _, client_result in pairs(client_results) do
+        -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
+        -- the result could be CompletionItem[] | CompletionList | null
+        local result = util.table_get(client_result, { 'result' }) or {}
+        local items = util.table_get(result, { 'items' }) or result
+        for _, item in pairs(items) do
+          table.insert(context.lsp.completion_items, item)
         end
-
-         --print(#result[1].result.items)
-         --if #result[1].result.items > 0 then
-           --print(vim.inspect(result[1].result.items[1]))
-         --end
-        M.show_completion()
-      end, 0)
-    end)
-  else
-    vim.defer_fn(function()
+      end
       M.show_completion()
-    end, 0)
+    end)
   end
 end, config.completion.delay)
 
@@ -283,8 +183,7 @@ M.stop_completion = function()
     pcall(context.lsp.cancel_func)
   end
   context.lsp.cancel_func = nil
-
-  context.lsp.result = {}
+  context.lsp.completion_items = {}
 end
 
 M.auto_complete = function()
@@ -293,7 +192,6 @@ M.auto_complete = function()
 end
 
 M.setup = function()
-  -- cache special characters
   for _, char in pairs(config.completion.special_chars) do
     context.special_chars[char] = true
   end
@@ -318,10 +216,6 @@ M.setup = function()
     noremap = true,
     callback = M.auto_complete,
   })
-
-  vim.api.nvim_create_user_command('CompletionToggle', function()
-    context.completion.enabled = not context.completion.enabled
-  end, {})
 end
 
 return M
