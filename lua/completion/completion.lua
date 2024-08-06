@@ -78,7 +78,7 @@ local edit_dist = function(w1, w2, insert_cost, delete_cost, substitude_cost)
       if c1 == c2 then
         dp[i][j] = dp[i - 1][j - 1]
       else
-        dp[i][j] = math.min(dp[i - 1][j] + insert_cost, dp[i][j - 1] + delete_cost, dp[i - 1][j - 1] + substitude_cost)
+        dp[i][j] = math.min(dp[i - 1][j] + delete_cost, dp[i][j - 1] + insert_cost, dp[i - 1][j - 1] + substitude_cost)
       end
     end
   end
@@ -88,11 +88,11 @@ end
 local sort_completion_result = function(items, base)
   for _, item in pairs(items) do
     local word = item.insertText or item.filterText or item.label or item.sortText or ''
-    item.sort_score = edit_dist(base, word, 1, 1, 2)
+    item.sort_score = edit_dist(base, word, 1, 3, 1)
   end
 
   table.sort(items, function(a, b)
-    if math.abs(a.sort_score - b.sort_score) <= 3 then
+    if math.abs(a.sort_score - b.sort_score) <= 1 then
       return a.kind > b.kind
     end
     return a.sort_score < b.sort_score
