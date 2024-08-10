@@ -1,0 +1,90 @@
+snippet webpack
+	const path = require('path');
+	const webpack = require('webpack');
+
+	module.exports = {
+		entry: './src/main.js', // Your entry point
+		output: {
+			filename: '[name].bundle.js', // Output bundle file
+			path: path.resolve(__dirname, 'dist'), // Output directory
+		},
+		module: {
+			rules: [
+				{
+					test: /\.m?js$/,
+					exclude: /(node_modules|bower_components)/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env']
+						}
+					}
+				}
+			]
+		},
+		plugins: [
+			new webpack.ProvidePlugin({
+				$: 'jquery',
+				jQuery: 'jquery',
+			})
+		]
+	};
+snippet rollup
+	import resolve from '@rollup/plugin-node-resolve';
+	import commonjs from '@rollup/plugin-commonjs';
+	import babel from '@rollup/plugin-babel';
+	import inject from '@rollup/plugin-inject';
+	import terser from '@rollup/plugin-terser';
+	import postcss from 'rollup-plugin-postcss';
+
+	export default {
+		input: {
+			main: 'src/main.js',
+		},
+		output: {
+			entryFileNames: "[name].bundle.js",
+			dir: 'dist',
+			format: 'iife',
+			sourcemap: true,
+			globals: {
+				jquery: '$'
+			}
+		},
+		plugins: [
+			resolve(),
+			commonjs({
+				include: 'node_modules/**',
+			}),
+			babel({
+				babelHelpers: 'bundled',
+				presets: ['@babel/preset-env'],
+				exclude: 'node_modules/**',
+			}),
+			inject({
+				$: 'jquery',
+				jQuery: 'jquery',
+				exclude: ['node_modules/**/*.css'],
+			}),
+			terser(),
+			postcss({
+				extract: true,
+			}),
+		],
+		external: [],
+	};
+snippet tailwind
+	/** @type {import('tailwindcss').Config} */
+	module.exports = {
+		content: ["./src/**/*.{html,js}"],
+		theme: {
+			extend: {},
+		},
+		plugins: [],
+	}
+snippet postcss
+	module.exports = {
+		plugins: {
+			tailwindcss: {},
+			autoprefixer: {},
+		}
+	}
