@@ -368,8 +368,8 @@ M.setup = function()
     -- AI
     {
       'kiddos/gemini.nvim',
-      build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
-      dependencies = { { 'nvim-lua/plenary.nvim' } },
+      branch = 'ffi',
+      build = { 'make' },
       config = function()
         require('gemini').setup()
       end
