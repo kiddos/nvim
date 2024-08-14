@@ -368,8 +368,7 @@ M.setup = function()
     -- AI
     {
       'kiddos/gemini.nvim',
-      branch = 'ffi',
-      build = { 'make' },
+      branch = 'curl',
       config = function()
         require('gemini').setup()
       end
