@@ -222,6 +222,7 @@ M.setup = function()
     {
       'junegunn/fzf.vim',
       cmd = { 'Rg', 'Ag', 'FZF' },
+      keys = { '<C-P>' },
       dependencies = { 'junegunn/fzf' },
       build = ':call fzf#install()',
       config = function()

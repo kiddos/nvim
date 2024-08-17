@@ -1,8 +1,2 @@
-pynput
-psutil
-google-cloud-translate
-grpcio-tools
-langchain
-google-generativeai
 cmake-language-server
 python-lsp-server[all]
