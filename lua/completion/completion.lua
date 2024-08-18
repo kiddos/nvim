@@ -17,7 +17,9 @@ M.get_completion_word = function(completion_item)
 end
 
 M.convert_completion_items = function(items)
-  if vim.tbl_count(items) == 0 then return {} end
+  if vim.tbl_count(items) == 0 then
+    return {}
+  end
 
   local result = {}
   for _, item in pairs(items) do
@@ -85,12 +87,24 @@ local edit_dist = function(w1, w2, insert_cost, delete_cost, substitude_cost)
   return dp[n][m]
 end
 
-local sort_completion_result = function(items, base)
+local compute_item_score = function(items, base)
   for _, item in pairs(items) do
     local word = item.insertText or item.filterText or item.label or item.sortText or ''
     item.sort_score = edit_dist(base, word, 1, 3, 1)
   end
+end
 
+local filter_completion_item = function(items)
+  local filtered = {}
+  for _, item in pairs(items) do
+    if item.sort_score > 0 then
+      table.insert(filtered, item)
+    end
+  end
+  return filtered
+end
+
+local sort_completion_result = function(items)
   table.sort(items, function(a, b)
     if math.abs(a.sort_score - b.sort_score) <= 1 then
       return a.kind > b.kind
@@ -103,7 +117,9 @@ end
 M.show_completion = util.debounce(function()
   local base_word = M.find_completion_base_word()
   if base_word ~= nil then
-    sort_completion_result(context.lsp.completion_items, base_word)
+    compute_item_score(context.lsp.completion_items, base_word)
+    context.lsp.completion_items = filter_completion_item(context.lsp.completion_items)
+    sort_completion_result(context.lsp.completion_items)
     local items = M.convert_completion_items(context.lsp.completion_items)
     if vim.fn.mode() == 'i' then
       vim.fn.complete(util.get_completion_start() + 1, items)

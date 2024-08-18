@@ -14,10 +14,15 @@ util.has_lsp_capability = function(bufnr, capability)
   return false
 end
 
+util.str_trim = function(s)
+  return string.gsub(s, "^%s*(.-)%s*$", "%1")
+end
+
 util.trim_long_text = function(text, width)
   if not text then
     text = ''
   end
+  text = util.str_trim(text)
   if #text > width then
     return string.sub(text, 1, width + 1) .. '...'
   end
