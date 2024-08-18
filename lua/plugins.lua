@@ -119,7 +119,10 @@ M.setup = function()
           max_width = 60,
           timeout = 1000,
         })
-        vim.notify = notify
+        vim.notify = function(msg, level, opts)
+          notify(msg, level, opts)
+          print(msg)
+        end
       end,
     },
     {
