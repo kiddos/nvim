@@ -6,7 +6,7 @@ local util = require('completion.util')
 local context = {
   lsp = {
     completion_items = {},
-    cancel_func = nil,
+    request_ids = {},
   },
   special_chars = {},
 }
@@ -90,14 +90,15 @@ end
 local compute_item_score = function(items, base)
   for _, item in pairs(items) do
     local word = item.insertText or item.filterText or item.label or item.sortText or ''
-    item.sort_score = edit_dist(base, word, 1, 3, 1)
+    item.sort_score = edit_dist(base, word,
+      config.completion.insert_cost, config.completion.delete_cost, config.completion.substitude_cost)
   end
 end
 
 local filter_completion_item = function(items)
   local filtered = {}
   for _, item in pairs(items) do
-    if item.sort_score > 0 then
+    if item.sort_score <= config.completion.edit_dist then
       table.insert(filtered, item)
     end
   end
@@ -106,7 +107,7 @@ end
 
 local sort_completion_result = function(items)
   table.sort(items, function(a, b)
-    if math.abs(a.sort_score - b.sort_score) <= 1 then
+    if math.abs(a.sort_score - b.sort_score) <= config.completion.dist_difference then
       return a.kind > b.kind
     end
     return a.sort_score < b.sort_score
@@ -128,25 +129,29 @@ M.show_completion = util.debounce(function()
 end, 10)
 
 M.trigger_completion = util.debounce(function(bufnr)
-  local params = vim.lsp.util.make_position_params()
-
-  if util.has_lsp_capability(bufnr, 'completionProvider') then
-    if context.lsp.cancel_func then
-      pcall(context.lsp.cancel_func)
-    end
-    context.lsp.completion_items = {}
-    context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/completion', params, function(client_results)
-      for _, client_result in pairs(client_results) do
-        -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
-        -- the result could be CompletionItem[] | CompletionList | null
-        local result = util.table_get(client_result, { 'result' }) or {}
-        local items = util.table_get(result, { 'items' }) or result
-        for _, item in pairs(items) do
-          table.insert(context.lsp.completion_items, item)
-        end
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  context.lsp.completion_items = {}
+  for _, client in pairs(clients) do
+    if util.table_get(client, { 'server_capabilities', 'completionProvider' }) then
+      if context.lsp.request_ids[client.id] then
+        client.cancel_request(context.lsp.request_ids[client.id])
+        context.lsp.request_ids[client.id] = nil
       end
-      M.show_completion()
-    end)
+
+      local params = vim.lsp.util.make_position_params()
+      local result, request_id = client.request('textDocument/completion', params, function(err, client_result, _, _)
+        if not err then
+          local items = util.table_get(client_result, { 'items' }) or client_result
+          for _, item in pairs(items) do
+            table.insert(context.lsp.completion_items, item)
+          end
+          M.show_completion()
+        end
+      end, bufnr)
+      if result then
+        context.lsp.request_ids[client.id] = request_id
+      end
+    end
   end
 end, config.completion.delay)
 
@@ -195,10 +200,13 @@ M.confirm_completion = function()
 end
 
 M.stop_completion = function()
-  if context.lsp.cancel_func then
-    pcall(context.lsp.cancel_func)
+  for client_id, request_id in pairs(context.lsp.request_ids) do
+    local client = vim.lsp.get_client_by_id(client_id)
+    if client and request_id then
+      client.cancel_request(request_id)
+      context.lsp.request_ids[client_id] = nil
+    end
   end
-  context.lsp.cancel_func = nil
   context.lsp.completion_items = {}
 end
 

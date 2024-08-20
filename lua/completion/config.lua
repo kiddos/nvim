@@ -9,6 +9,11 @@ local config = {
     buffer_lru_size = 6000,
     special_chars = { '{', ':', ';', '(', '[', ',', ')', ']', '+', '-', '*', '/', '%', '!', '&', '|' },
     delay = 200,
+    edit_dist = 6,
+    dist_difference = 2,
+    insert_cost = 1,
+    delete_cost = 3,
+    substitude_cost = 1,
   },
   info = {
     max_width = 120,
