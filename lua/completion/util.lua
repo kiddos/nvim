@@ -1,19 +1,5 @@
 local util = {}
 
-util.has_lsp_capability = function(bufnr, capability)
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  if vim.tbl_isempty(clients) then
-    return false
-  end
-
-  for _, c in pairs(clients) do
-    if util.table_get(c, { 'server_capabilities', capability }) then
-      return true
-    end
-  end
-  return false
-end
-
 util.str_trim = function(s)
   return string.gsub(s, "^%s*(.-)%s*$", "%1")
 end

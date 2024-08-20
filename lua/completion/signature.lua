@@ -6,138 +6,62 @@ local util = require('completion.util')
 local context = {
   lsp = {
     result = nil,
-    cancel_func = nil,
+    request_ids = {},
     window = nil,
     buffer = nil,
     text = nil,
   },
 }
 
-M.trigger_signature = function(bufnr)
-  if util.has_lsp_capability(bufnr, 'signatureHelpProvider') then
-    local params = vim.lsp.util.make_position_params()
-    context.lsp.cancel_func = vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params,
-      function(result)
-        context.lsp.result = result
-        M.show_signature_window()
-      end)
-  end
-end
-
 M.auto_signature = util.debounce(function()
-  local left_char = util.get_left_char()
-  local char_is_trigger = left_char == ')' or util.is_lsp_trigger(left_char, 'signature')
-  if not char_is_trigger then
-    return
-  end
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  context.lsp.result = {}
 
-  M.trigger_signature()
+  local left_char = util.get_left_char()
+  for _, client in pairs(clients) do
+    local triggers = util.table_get(client, { 'server_capabilities', 'signatureHelpProvider', 'triggerCharacters' }) or {}
+    if vim.tbl_contains(triggers, left_char) then
+      if util.table_get(client, { 'server_capabilities', 'signatureHelpProvider' }) then
+        if context.lsp.request_ids[client.id] then
+          client.cancel_request(context.lsp.request_ids[client.id])
+          context.lsp.request_ids[client.id] = nil
+        end
+
+        local params = vim.lsp.util.make_position_params()
+        local result, request_id = client.request('textDocument/signatureHelp', params, function(err, client_result, _, _)
+          if not err then
+            context.lsp.result[client.id] = client_result
+            M.show_signature_window()
+          end
+        end, bufnr)
+
+        if result then
+          context.lsp.request_ids[client.id] = request_id
+        end
+      end
+    end
+  end
 end, config.signature.delay)
 
-M.process_signature_response = function(response)
-  if not response.signatures or vim.tbl_isempty(response.signatures) then return {} end
-
-  -- Get active signature (based on textDocument/signatureHelp specification)
-  local signature_id = response.activeSignature or 0
-  -- This is according to specification: "If ... value lies outside ...
-  -- defaults to zero"
-  local n_signatures = vim.tbl_count(response.signatures or {})
-  if signature_id < 0 or signature_id >= n_signatures then signature_id = 0 end
-  local signature = response.signatures[signature_id + 1]
-
-  -- Get displayed signature label
-  local signature_label = signature.label
-
-  -- Get start and end of active parameter (for highlighting)
-  local hl_range = {}
-  local n_params = vim.tbl_count(signature.parameters or {})
-  local has_params = signature.parameters and n_params > 0
-
-  -- Take values in this order because data inside signature takes priority
-  local parameter_id = signature.activeParameter or response.activeParameter or 0
-  local param_id_inrange = 0 <= parameter_id and parameter_id < n_params
-
-  -- Computing active parameter only when parameter id is inside bounds is not
-  -- strictly based on specification, as currently (v3.16) it says to treat
-  -- out-of-bounds value as first parameter. However, some clients seems to use
-  -- those values to indicate that nothing needs to be highlighted.
-  -- Sources:
-  -- https://github.com/microsoft/pyright/pull/1876
-  -- https://github.com/microsoft/language-server-protocol/issues/1271
-  if has_params and param_id_inrange then
-    local param_label = signature.parameters[parameter_id + 1].label
-
-    -- Compute highlight range based on type of supplied parameter label: can
-    -- be string label which should be a part of signature label or direct start
-    -- (inclusive) and end (exclusive) range values
-    local first, last = nil, nil
-    if type(param_label) == 'string' then
-      first, last = signature_label:find(vim.pesc(param_label))
-      -- Make zero-indexed and end-exclusive
-      if first then
-        first, last = first - 1, last
-      end
-    elseif type(param_label) == 'table' then
-      first, last = unpack(param_label)
-    end
-    if first then hl_range = { first = first, last = last } end
-  end
-
-  -- Return nested table because this will be a second argument of
-  -- `vim.list_extend()` and the whole inner table is a target value here.
-  return { { label = signature_label, hl_range = hl_range } }
-end
-
-M.is_completion_item = function(item)
-  if not item then
-    return false
-  end
-
-  if type(item) ~= 'table' then
-    return false
-  end
-
-  if not item.label or type(item.label) ~= 'string' then
-    return false
-  end
-
-  return true
-end
-
-M.process_lsp_response = function(request_result, processor)
-  if not request_result then
-    return {}
-  end
-
-  if type(request_result) ~= 'table' then
-    return {}
-  end
-
-  if M.is_completion_item(request_result[1]) then
-    return processor(request_result, 1)
-  end
-
-  local res = {}
-  for client_id, handler_result in pairs(request_result) do
-    if not handler_result.err and handler_result.result then
-      vim.list_extend(res, processor(handler_result.result, client_id) or {})
-    end
-  end
-  return res
-end
-
 M.get_signature_lines = function()
-  local signature_data = M.process_lsp_response(context.lsp.result, M.process_signature_response)
-  local lines, hl_ranges = {}, {}
-  for _, t in pairs(signature_data) do
-    -- `t` is allowed to be an empty table (in which case nothing is added) or
-    -- a table with two entries. This ensures that `hl_range`'s integer index
-    -- points to an actual line in future buffer.
-    table.insert(lines, t.label)
-    table.insert(hl_ranges, t.hl_range)
+  local lines = {}
+  local docs = {}
+  for _, result in pairs(context.lsp.result) do
+    local signatures = result.signatures
+    if type(signatures) == 'table' then
+      for _, signature_help in pairs(signatures) do
+        local label = signature_help.label or ''
+        local document = signature_help.documentation
+        if document and type(document) == 'table' then
+          document = document.value or ''
+        end
+        table.insert(lines, label)
+        table.insert(docs, document)
+      end
+    end
   end
-
-  return lines, hl_ranges
+  return lines, docs
 end
 
 M.signature_window_options = function()
@@ -183,9 +107,16 @@ M.show_signature_window = function()
     return
   end
 
-  local lines, _ = M.get_signature_lines()
+  local lines, docs = M.get_signature_lines()
   if not lines or util.is_whitespace(lines) then
     return
+  end
+
+  if docs and not util.is_whitespace(docs) then
+    table.insert(lines, '')
+    for _, doc in pairs(docs) do
+      table.insert(lines, doc)
+    end
   end
 
   util.create_buffer(context.lsp, 'function-signature')
@@ -201,7 +132,6 @@ M.show_signature_window = function()
   end
 
   context.lsp.text = cur_text
-
   if vim.fn.mode() == 'i' then
     local options = M.signature_window_options()
     util.open_action_window(context.lsp, options)
@@ -210,10 +140,15 @@ end
 
 M.stop_signature = function()
   util.close_action_window(context.lsp)
-  if context.lsp.cancel_func then
-    pcall(context.lsp.cancel_func)
+
+  for client_id, request_id in pairs(context.lsp.request_ids) do
+    local client = vim.lsp.get_client_by_id(client_id)
+    if client and request_id then
+      client.cancel_request(request_id)
+      context.lsp.request_ids[client_id] = nil
+    end
   end
-  context.lsp.cancel_func = nil
+
   context.lsp.result = nil
   context.lsp.text = nil
 end
