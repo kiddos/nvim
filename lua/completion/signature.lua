@@ -5,7 +5,7 @@ local util = require('completion.util')
 
 local context = {
   lsp = {
-    result = nil,
+    result = {},
     request_ids = {},
     window = nil,
     buffer = nil,
@@ -149,7 +149,7 @@ M.stop_signature = function()
     end
   end
 
-  context.lsp.result = nil
+  context.lsp.result = {}
   context.lsp.text = nil
 end
 
