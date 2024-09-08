@@ -98,7 +98,9 @@ end
 local filter_completion_item = function(items)
   local filtered = {}
   for _, item in pairs(items) do
-    if item.sort_score <= config.completion.edit_dist then
+    local word = item.insertText or item.filterText or item.label or item.sortText or ''
+    local matched = #word - item.sort_score
+    if matched >= config.completion.edit_dist then
       table.insert(filtered, item)
     end
   end
@@ -108,7 +110,7 @@ end
 local sort_completion_result = function(items)
   table.sort(items, function(a, b)
     if math.abs(a.sort_score - b.sort_score) <= config.completion.dist_difference then
-      return a.kind > b.kind
+      return (a.kind or 0) > (b.kind or 0)
     end
     return a.sort_score < b.sort_score
   end)
@@ -142,8 +144,10 @@ M.trigger_completion = util.debounce(function(bufnr)
       local result, request_id = client.request('textDocument/completion', params, function(err, client_result, _, _)
         if not err then
           local items = util.table_get(client_result, { 'items' }) or client_result
-          for _, item in pairs(items) do
-            table.insert(context.lsp.completion_items, item)
+          if items then
+            for _, item in pairs(items) do
+              table.insert(context.lsp.completion_items, item)
+            end
           end
           M.show_completion()
         end
