@@ -119,6 +119,12 @@ M.show_signature_window = function()
     end
   end
 
+  local first = {}
+  for i=1,math.min(#lines, config.signature.limit or 3) do
+    first[i] = lines[i]
+  end
+  lines = first
+
   util.create_buffer(context.lsp, 'function-signature')
   vim.lsp.util.stylize_markdown(context.lsp.buffer, lines, {})
 

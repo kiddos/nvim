@@ -121,7 +121,9 @@ M.show_completion = util.debounce(function()
   local base_word = M.find_completion_base_word()
   if base_word ~= nil then
     compute_item_score(context.lsp.completion_items, base_word)
-    context.lsp.completion_items = filter_completion_item(context.lsp.completion_items)
+    if #base_word > 0 then
+      context.lsp.completion_items = filter_completion_item(context.lsp.completion_items)
+    end
     sort_completion_result(context.lsp.completion_items)
     local items = M.convert_completion_items(context.lsp.completion_items)
     if vim.fn.mode() == 'i' then
