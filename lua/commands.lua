@@ -85,6 +85,7 @@ commands.set_compile_commands = function()
   register_command({ 'rust' }, '<F33>', '!rustc %')
   register_command({ 'cuda' }, '<F33>', '!nvcc % -o %:r &')
   register_command({ 'java' }, '<F33>', '!javac % &')
+  register_command({ 'kotlin' }, '<F33>', '!kotlinc % -include-runtime -d %:r.jar')
 end
 
 commands.toggle_highlight_trailing_space = function()
