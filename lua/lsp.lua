@@ -72,6 +72,9 @@ lsp.setup = function()
   lsp_status.register_progress()
 
   local function file_exists(filename)
+    if not filename then
+      return false
+    end
     local stat = uv.fs_stat(filename)
     return stat and stat.type or false
   end
@@ -244,18 +247,14 @@ lsp.setup = function()
     }
   end
 
-  local java_home = uv.os_homedir() .. '/.jdks/jdk-17.0.2'
-  local java = java_home .. '/bin/java'
-  local jdtls_home = uv.os_homedir() .. '/.local/lsp/jdtls'
-  local jdtls_jar = jdtls_home .. '/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar'
-  if file_exists(java) and file_exists(jdtls_jar) then
-    local configuration = jdtls_home .. '/config_linux'
-    local current_path = vim.fn.getcwd()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local jdtls_jar = uv.os_getenv('JDTLS_JAR')
+  local jdtls_config = uv.os_getenv('JDTLS_CONFIG')
+  if file_exists(jdtls_jar) then
+    capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
 
     local cmd = {
-      java,
+      'java',
       '-Declipse.application=org.eclipse.jdt.ls.core.id1',
       '-Dosgi.bundles.defaultStartLevel=4',
       '-Declipse.product=org.eclipse.jdt.ls.core.product',
@@ -263,8 +262,8 @@ lsp.setup = function()
       '-Dlog.level=ALL',
       '-Xmx1g',
       '-jar', jdtls_jar,
-      '-configuration', configuration,
-      "-data", current_path
+      '-configuration', jdtls_config,
+      "-data", uv.os_homedir() .. '/.jdtls-workspace'
     }
     lspconfig.jdtls.setup {
       cmd = cmd,
