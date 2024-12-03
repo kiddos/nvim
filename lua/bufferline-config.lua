@@ -10,9 +10,6 @@ M.setup = function()
         enabled = true,
         custom_colors = true,
       },
-      pinned = {
-        button = '📌',
-      },
       button = '✕',
       diagnostics = {
         [vim.diagnostic.severity.ERROR] = { enabled = true, icon = 'Ⓧ' },
@@ -38,19 +35,6 @@ M.setup = function()
   vim.api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', { silent = true, noremap = true })
   -- Close buffer
   vim.api.nvim_set_keymap('n', '<Leader><Leader>c', ':BufferClose<CR>', { silent = true, noremap = true })
-  vim.api.nvim_set_keymap('n', '<Leader><Leader><Space>', ':BufferCloseAllButCurrent<CR>', { silent = true, noremap = true })
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>s', ':BufferPick<CR>', { silent = true, noremap = true })
-
-  -- Wipeout buffer
-  -- :BufferWipeout<CR>
-  -- Close commands
-  -- :BufferCloseAllButCurrent<CR>
-  -- :BufferCloseBuffersLeft<CR>
-  -- :BufferCloseBuffersRight<CR>
-  -- Magic buffer-picking mode nnoremap <silent> <C-s>    :BufferPick<CR>
-  -- Sort automatically by...
-  -- nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-  -- nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
 end
 
 return M
