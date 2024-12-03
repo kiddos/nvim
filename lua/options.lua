@@ -140,6 +140,7 @@ options.setup = function()
     })
   end
 
+  set_indenting({ 'python' }, 4, 4, 4, true)
   set_indenting({ 'java' }, 4, 4, 4, true)
   set_indenting({ 'make' }, 4, 4, 4, false)
   set_indenting({ 'snippets' }, 4, 4, 4, false)
