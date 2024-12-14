@@ -80,7 +80,7 @@ M.setup = function()
     {
       'romgrk/barbar.nvim',
       event = 'VimEnter',
-      tag = 'v1.7.0',
+      tag = 'v1.9.1',
       dependencies = { 'kyazdani42/nvim-web-devicons' },
       config = require('bufferline-config').setup,
     },
@@ -117,7 +117,7 @@ M.setup = function()
         local notify = require('notify')
         notify.setup({
           max_width = 60,
-          timeout = 1000,
+          timeout = 2000,
         })
         vim.notify = function(msg, level, opts)
           notify(msg, level, opts)
