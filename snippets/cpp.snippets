@@ -187,24 +187,7 @@ snippet main_glog
 		google::LogToStderr();
 		return 0;
 	}
-#
-## glog
-snippet glog_include
-	#include <glog/logging.h>
-snippet glog
-	google::InitGoogleLogging(argv[0]);
-	google::LogToStderr();
-# basic templates
-## glog
-snippet template_glog
-	#include <glog/logging.h>
-
-	int main(int argc, char** argv) {
-		google::InitGoogleLogging(argv[0]);
-		google::LogToStderr();
-		return 0;
-	}
-snippet gtest
+snippet main_gtest
 	#include <gtest/gtest.h>
 
 	TEST(${1:TestName}, ${2:Description}) {
@@ -215,6 +198,15 @@ snippet gtest
 		::testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
 	}
+#
+## glog
+snippet glog_include
+	#include <glog/logging.h>
+snippet glog
+	google::InitGoogleLogging(argv[0]);
+	google::LogToStderr();
+# basic templates
+## glog
 snippet gtest_template
 	template <typename T>
 	class ${1:TestName} : public ::testing::Test {
