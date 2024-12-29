@@ -22,27 +22,11 @@ M.setup = function()
 
   local plugins = {
     -- lsp
-    {
-      'neovim/nvim-lspconfig',
-      lazy = false,
-    },
-    {
-      'nvim-lua/lsp-status.nvim',
-      lazy = false,
-    },
-    {
-      'onsails/lspkind-nvim',
-      lazy = false,
-    },
-    {
-      'kosayoda/nvim-lightbulb',
-      lazy = false,
-    },
-    {
-      'nvimdev/lspsaga.nvim',
-      lazy = false,
-      config = require('lspsaga-config').setup
-    },
+    { 'neovim/nvim-lspconfig', lazy = false },
+    { 'nvim-lua/lsp-status.nvim', lazy = false },
+    { 'onsails/lspkind-nvim',    event = 'VeryLazy' },
+    { 'kosayoda/nvim-lightbulb', event = 'VeryLazy' },
+    { 'nvimdev/lspsaga.nvim',    event = 'VeryLazy' },
     {
       'folke/trouble.nvim',
       opts = {},
@@ -82,13 +66,9 @@ M.setup = function()
       event = 'VimEnter',
       tag = 'v1.9.1',
       dependencies = { 'kyazdani42/nvim-web-devicons' },
-      config = require('bufferline-config').setup,
     },
     -- status line
-    {
-      'hoob3rt/lualine.nvim',
-      event = 'VimEnter',
-    },
+    { 'hoob3rt/lualine.nvim',  event = 'VimEnter' },
     -- file browser
     {
       'nvim-tree/nvim-tree.lua',
@@ -228,68 +208,20 @@ M.setup = function()
       keys = { '<C-P>' },
       dependencies = { 'junegunn/fzf' },
       build = ':call fzf#install()',
-      config = function()
-        local rg_options = {
-          '--column',
-          '--line-number',
-          '--with-filename',
-          '--color=always',
-          '--smart-case ',
-          '--no-search-zip',
-          '-g \'!{**/node_modules,**/.git}\'',
-        }
-        local rg_command = 'rg ' .. table.concat(rg_options, ' ') .. ' -- '
-        vim.api.nvim_create_user_command('Rg',
-          'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
-        vim.api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', { noremap = true, silent = true })
-
-        local register_fzf_menu = function(fzf_command, menu)
-          vim.api.nvim_command('nnoremenu FZF.' .. menu:gsub(' ', '\\ ') .. ' :' .. fzf_command .. '<CR>')
-        end
-
-        register_fzf_menu('GFiles', 'Git files 🦜')
-        register_fzf_menu('Buffers', 'Open buffers 🦥')
-        register_fzf_menu('Colors', 'Color scheme 🎨')
-        register_fzf_menu('Ag', 'ag search 🦆')
-        register_fzf_menu('Rg', 'rg search 🧸')
-        register_fzf_menu('Lines', 'Find in loadded buffers 🦄🦄🦄')
-        register_fzf_menu('Tags', 'Tags in the project 🦏')
-        register_fzf_menu('Changes', 'Changelist across open buffers 🦅')
-        register_fzf_menu('Marks', 'Marks 🦋')
-        register_fzf_menu('Jumps', 'Jumps 🦗')
-        register_fzf_menu('Windows', 'Windows ')
-        register_fzf_menu('History', 'History 🐓')
-        register_fzf_menu('Snippets', 'Snippets')
-        register_fzf_menu('Commits', 'Git Commits')
-        register_fzf_menu('Commands', 'Commands 🦩')
-        register_fzf_menu('Helptags', 'Help tags 🦎')
-        register_fzf_menu('Filetypes', 'File types 🦘')
-
-        vim.api.nvim_set_keymap('n', '<M-n>', '', {
-          expr = true,
-          noremap = true,
-          silent = true,
-          callback = function()
-            if vim.fn.pumvisible() == 0 then
-              vim.api.nvim_command('popup FZF')
-            end
-          end
-        })
-      end,
     },
 
     -- utility
     { 'windwp/nvim-autopairs' },
     { 'kevinhwang91/nvim-bqf', ft = 'qf' },
     {
-      "chentoast/marks.nvim",
-      event = "VeryLazy",
+      'chentoast/marks.nvim',
+      event = 'VeryLazy',
       opts = {},
       config = function()
-        require('marks').setup{
+        require('marks').setup {
           default_mappings = false,
         }
-        vim.api.nvim_set_keymap('n', '<C-M>', ':MarksListAll<CR>', { silent = true })
+        vim.api.nvim_set_keymap('n', '<Leader><Leader>m', ':MarksListAll<CR>', { silent = true })
       end
     },
     {
@@ -351,10 +283,7 @@ M.setup = function()
         })
       end,
     },
-    {
-      'farmergreg/vim-lastplace',
-      lazy = false,
-    },
+    { 'farmergreg/vim-lastplace', lazy = false },
     {
       'kiddos/google-translate.nvim',
       build = { 'pip install -r requirements.txt', ':UpdateRemotePlugins' },
@@ -372,19 +301,12 @@ M.setup = function()
       ft = { 'markdown' },
       cmd = 'MarkdownPreview',
     },
-    {
-      'tikhomirov/vim-glsl',
-      ft = 'glsl',
-    },
-    {
-      'slint-ui/vim-slint',
-      ft = 'slint',
-    },
+    { 'tikhomirov/vim-glsl', ft = 'glsl' },
+    { 'slint-ui/vim-slint', ft = 'slint' },
 
     -- AI
     {
       'kiddos/gemini.nvim',
-      branch = 'curl',
       config = function()
         require('gemini').setup()
       end
