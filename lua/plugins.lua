@@ -280,6 +280,18 @@ M.setup = function()
 
     -- utility
     { 'windwp/nvim-autopairs' },
+    { 'kevinhwang91/nvim-bqf', ft = 'qf' },
+    {
+      "chentoast/marks.nvim",
+      event = "VeryLazy",
+      opts = {},
+      config = function()
+        require('marks').setup{
+          default_mappings = false,
+        }
+        vim.api.nvim_set_keymap('n', '<C-M>', ':MarksListAll<CR>', { silent = true })
+      end
+    },
     {
       'numToStr/Comment.nvim',
       event = 'VimEnter',
