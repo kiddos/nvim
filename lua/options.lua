@@ -1,24 +1,6 @@
 local options = {}
 
 options.setup = function()
-  -- File type setting
-  local set_filetype = function(pattern, filetype)
-    vim.api.nvim_create_autocmd({ 'VimEnter', 'BufRead', 'BufNewFile', 'BufEnter' }, {
-      pattern = pattern,
-      callback = function()
-        vim.api.nvim_set_option_value('filetype', filetype, { scope = 'local' })
-      end
-    })
-  end
-
-  set_filetype({ '*.i', '*.swg' }, 'swig')
-  set_filetype({ '*.BUILD' }, 'bzl')
-  set_filetype({ '*.m' }, 'objc')
-  set_filetype({ '*.mm' }, 'objcpp')
-  set_filetype({ '*.h' }, 'cpp')
-  set_filetype({ '*.pro' }, 'make')
-  set_filetype({ '*.wmm' }, 'webmacro')
-
   vim.api.nvim_set_option_value('langmenu', 'en_US.UTF-8', {})
 
   -- Icon Setting
