@@ -1,31 +1,14 @@
-local lspconfig = require('lspconfig')
-local lsp_status = require('lsp-status')
 local uv = vim.uv or vim.loop
 
-local lsp = {}
-
-lsp.setup_inlay_hint = function()
-  local set_inlay_hints_keys = function(mode)
-    vim.api.nvim_set_keymap(mode, '<F5>', '', {
-      silent = true,
-      noremap = true,
-      callback = function()
-        local enable = not vim.lsp.inlay_hint.is_enabled()
-        vim.lsp.inlay_hint.enable(enable)
-        if enable then
-          vim.notify('Enable Inlay Hints')
-        else
-          vim.notify('Disable Inlay Hints', vim.log.levels.WARN)
-        end
-      end,
-    })
+local file_exists = function(filename)
+  if not filename then
+    return false
   end
-
-  set_inlay_hints_keys('n')
-  set_inlay_hints_keys('i')
+  local stat = uv.fs_stat(filename)
+  return stat and stat.type or false
 end
 
-lsp.setup = function()
+local config = function()
   vim.diagnostic.config({
     underline = true,
     virtual_text = true,
@@ -33,6 +16,8 @@ lsp.setup = function()
     update_in_insert = false,
     severity_sort = true,
   })
+
+  local lspconfig = require('lspconfig')
 
   local message_handler = function(err, result, ctx, config)
     if not err then
@@ -68,20 +53,11 @@ lsp.setup = function()
     }
   )
 
-  -- setting lsp
+  local lsp_status = require('lsp-status')
   lsp_status.register_progress()
-
-  local function file_exists(filename)
-    if not filename then
-      return false
-    end
-    local stat = uv.fs_stat(filename)
-    return stat and stat.type or false
-  end
 
   -- basecode lsp
   lspconfig.basecodels.setup {}
-
 
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
@@ -408,7 +384,32 @@ lsp.setup = function()
     },
   }
 
-  lsp.setup_inlay_hint()
+  local set_inlay_hints_keys = function(mode)
+    vim.api.nvim_set_keymap(mode, '<F5>', '', {
+      silent = true,
+      noremap = true,
+      callback = function()
+        local enable = not vim.lsp.inlay_hint.is_enabled()
+        vim.lsp.inlay_hint.enable(enable)
+        if enable then
+          vim.notify('Enable Inlay Hints')
+        else
+          vim.notify('Disable Inlay Hints', vim.log.levels.WARN)
+        end
+      end,
+    })
+  end
+
+  set_inlay_hints_keys('n')
+  set_inlay_hints_keys('i')
 end
 
-return lsp
+return {
+  'neovim/nvim-lspconfig',
+  lazy = false,
+  dependencies = {
+    { 'nvim-lua/lsp-status.nvim' },
+    { 'hoob3rt/lualine.nvim' },
+  },
+  config = config,
+}

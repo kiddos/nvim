@@ -1,8 +1,6 @@
-local M = {}
-
 local uv = vim.uv or vim.loop;
 
-M.setup = function()
+local config = function()
   local required = { 'c', 'lua', 'vim', 'vimdoc', 'query' }
   local cpp_language = { 'cpp', 'cmake', 'cuda', 'make', 'ninja' }
   local jvm_language = { 'java', 'kotlin' }
@@ -103,4 +101,9 @@ M.setup = function()
   })
 end
 
-return M
+return {
+  'nvim-treesitter/nvim-treesitter',
+  lazy = false,
+  build = ':TSUpdate',
+  config = config,
+}
