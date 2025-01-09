@@ -111,9 +111,5 @@ end
 return {
   'nvimdev/lspsaga.nvim',
   event = 'VeryLazy',
-  dependencies = {
-    { 'onsails/lspkind-nvim' },
-    { 'kosayoda/nvim-lightbulb' },
-  },
   config = config
 }

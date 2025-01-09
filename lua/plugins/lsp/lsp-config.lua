@@ -8,6 +8,11 @@ local file_exists = function(filename)
   return stat and stat.type or false
 end
 
+local is_node_installed = function()
+  vim.fn.system("node -v")
+  return vim.v.shell_error == 0
+end
+
 local config = function()
   vim.diagnostic.config({
     underline = true,
@@ -79,10 +84,30 @@ local config = function()
     }
   end
 
-  -- javascript/typescript
-  lspconfig.ts_ls.setup {}
+  local has_node = is_node_installed()
+  if has_node then
+    -- javascript/typescript
+    lspconfig.ts_ls.setup {}
+    lspconfig.eslint.setup {}
 
-  lspconfig.eslint.setup {}
+    -- css
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    lspconfig.cssls.setup {
+      capabilities = capabilities,
+      filetypes = { 'css', 'sass', 'scss', 'less', 'html', 'webmacro' }
+    }
+    lspconfig.cssmodules_ls.setup {}
+
+    -- html
+    lspconfig.html.setup {
+      capabilities = capabilities,
+      filetypes = { 'html', 'webmacro' }
+    }
+
+    -- bash
+    lspconfig.bashls.setup {}
+  end
 
   local snyk_token = os.getenv('SNYK_TOKEN')
   if snyk_token and #snyk_token > 0 then
@@ -101,24 +126,8 @@ local config = function()
     }
   end
 
-  -- css
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
-  lspconfig.cssls.setup {
-    capabilities = capabilities,
-    filetypes = { 'css', 'sass', 'scss', 'less', 'html', 'webmacro' }
-  }
-
-  lspconfig.cssmodules_ls.setup {}
-
-  -- html
-  lspconfig.html.setup {
-    capabilities = capabilities,
-    filetypes = { 'html', 'webmacro' }
-  }
-
   -- python
-  capabilities = vim.lsp.protocol.make_client_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
   lspconfig.pylsp.setup {
     handlers = lsp_status.extensions.pyls_ms.setup(),
@@ -158,9 +167,6 @@ local config = function()
     on_attach = lsp_status.on_attach,
     capabilities = capabilities
   }
-
-  -- bash
-  lspconfig.bashls.setup {}
 
   -- rust
   capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -259,10 +265,6 @@ local config = function()
       cmd = { glslls_path, '--stdin' },
     }
   end
-
-  -- lspkind plugin
-  local lspkind = require('lspkind')
-  lspkind.init()
 
 
   local npairs = require('nvim-autopairs')
@@ -410,6 +412,8 @@ return {
   dependencies = {
     { 'nvim-lua/lsp-status.nvim' },
     { 'hoob3rt/lualine.nvim' },
+    { 'windwp/nvim-autopairs' },
+    { 'onsails/lspkind-nvim' },
   },
   config = config,
 }
