@@ -18,7 +18,8 @@ end
 
 local get_currentline_marks = function()
   local current_line = vim.fn.line('.')
-  local marks = vim.fn.getmarklist('.')
+  local current_buf = vim.api.nvim_get_current_buf()
+  local marks = vim.fn.getmarklist(current_buf)
   local found = {}
   for _, mark in ipairs(marks) do
     local m = string.sub(mark.mark, 2)
