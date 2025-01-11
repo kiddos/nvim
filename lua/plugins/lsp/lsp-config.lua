@@ -13,6 +13,11 @@ local is_node_installed = function()
   return vim.v.shell_error == 0
 end
 
+local is_pylsp_installed = function()
+  vim.fn.system("pylsp -V")
+  return vim.v.shell_error == 0
+end
+
 local config = function()
   vim.diagnostic.config({
     underline = true,
@@ -129,44 +134,46 @@ local config = function()
   -- python
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-  lspconfig.pylsp.setup {
-    handlers = lsp_status.extensions.pyls_ms.setup(),
-    settings = {
-      pylsp = {
-        plugins = {
-          preload = {
-            modules = { 'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets', 'diffusers' }
-          },
-          autopep8 = {
-            enabled = false,
-          },
-          yapf = {
-            enabled = true,
-          },
-          jedi_completion = {
-            cache_for = {
-              'pandas',
-              'numpy',
-              'tensorflow',
-              'matplotlib',
-              'torch',
-              'torchvision',
-              'torchaudio',
-              'transformers',
-              'datasets',
-              'diffusers',
+  if is_pylsp_installed() then
+    lspconfig.pylsp.setup {
+      handlers = lsp_status.extensions.pyls_ms.setup(),
+      settings = {
+        pylsp = {
+          plugins = {
+            preload = {
+              modules = { 'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets', 'diffusers' }
+            },
+            autopep8 = {
+              enabled = false,
+            },
+            yapf = {
+              enabled = true,
+            },
+            jedi_completion = {
+              cache_for = {
+                'pandas',
+                'numpy',
+                'tensorflow',
+                'matplotlib',
+                'torch',
+                'torchvision',
+                'torchaudio',
+                'transformers',
+                'datasets',
+                'diffusers',
+              }
+            },
+            pycodestyle = {
+              convention = 'google',
+              maxLineLength = 120,
             }
-          },
-          pycodestyle = {
-            convention = 'google',
-            maxLineLength = 120,
           }
         }
-      }
-    },
-    on_attach = lsp_status.on_attach,
-    capabilities = capabilities
-  }
+      },
+      on_attach = lsp_status.on_attach,
+      capabilities = capabilities
+    }
+  end
 
   -- rust
   capabilities = vim.lsp.protocol.make_client_capabilities()
