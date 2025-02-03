@@ -234,31 +234,6 @@ local config = function()
     }
   end
 
-  local jdtls_jar = uv.os_getenv('JDTLS_JAR')
-  local jdtls_config = uv.os_getenv('JDTLS_CONFIG')
-  if file_exists(jdtls_jar) then
-    capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-
-    local cmd = {
-      'java',
-      '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-      '-Dosgi.bundles.defaultStartLevel=4',
-      '-Declipse.product=org.eclipse.jdt.ls.core.product',
-      '-Dlog.protocol=true',
-      '-Dlog.level=ALL',
-      '-Xmx1g',
-      '-jar', jdtls_jar,
-      '-configuration', jdtls_config,
-      "-data", uv.os_homedir() .. '/.jdtls-workspace'
-    }
-    lspconfig.jdtls.setup {
-      cmd = cmd,
-      on_attach = lsp_status.on_attach,
-      capabilities = capabilities,
-    }
-  end
-
   -- webmacro
   lspconfig.webmacrols.setup {}
 
@@ -266,13 +241,12 @@ local config = function()
   lspconfig.r_language_server.setup {}
 
   -- glsl
-  local glslls_path = uv.os_homedir() .. '/.local/lsp/glsl-language-server/build/glslls'
-  if file_exists(glslls_path) then
-    lspconfig.glslls.setup {
-      cmd = { glslls_path, '--stdin' },
-    }
-  end
-
+  -- local glslls_path = uv.os_homedir() .. '/.local/lsp/glsl-language-server/build/glslls'
+  -- if file_exists(glslls_path) then
+  --   lspconfig.glslls.setup {
+  --     cmd = { glslls_path, '--stdin' },
+  --   }
+  -- end
 
   local npairs = require('nvim-autopairs')
   npairs.setup {
