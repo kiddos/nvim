@@ -12,35 +12,23 @@ local context = {
   },
 }
 
-M.get_completion_info_text = function(event, callback)
-  local completed_item = util.table_get(event, { 'completed_item' }) or {}
+M.get_completion_label = function(completed_item)
+  local label = util.table_get(completed_item, {'user_data', 'nvim', 'lsp', 'completion_item', 'label'}) or ''
+  label = string.format("```cpp\n%s\n```", label)
+  return vim.lsp.util.convert_input_to_markdown_lines(label)
+end
+
+M.get_completion_doc = function(completed_item)
   local text = completed_item.info or ''
   if not util.is_whitespace(text) then
-    vim.defer_fn(function()
-      local lines = vim.lsp.util.convert_input_to_markdown_lines(text)
-      callback(lines)
-    end, 0)
-    return
+    return vim.lsp.util.convert_input_to_markdown_lines(text)
   end
 
-  local completed_item_source = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'source' })
-  if completed_item_source ~= 'lsp' then
-    return
+  local completion_item = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'completion_item' })
+  if completion_item and completion_item.documentation then
+    return vim.lsp.util.convert_input_to_markdown_lines(completion_item.documentation)
   end
-
-  local lsp_completion_item = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'completion_item' })
-  if not lsp_completion_item then
-    return
-  end
-
-  local doc = lsp_completion_item.documentation
-  if doc then
-    vim.defer_fn(function()
-      local lines = vim.lsp.util.convert_input_to_markdown_lines(doc)
-      callback(lines)
-    end, 0)
-    return
-  end
+  return nil
 end
 
 M.get_info_window_options = function(event)
@@ -68,8 +56,8 @@ M.get_info_window_options = function(event)
   return {
     relative = 'editor',
     anchor = anchor,
-    row = event.row,
-    col = col,
+    row = event.row - (#lines + 3),
+    col = event.col + 3,
     width = info_width,
     height = info_height,
     focusable = false,
@@ -90,9 +78,26 @@ end, config.info.delay)
 
 M.trigger_info = function(event)
   util.create_buffer(context.lsp, 'completion-info')
-  M.get_completion_info_text(event, function(info_text)
-    M.show_info(info_text, event)
-  end)
+  local completed_item = util.table_get(event, { 'completed_item' }) or {}
+  local doc = M.get_completion_doc(completed_item)
+  local label = M.get_completion_label(completed_item)
+  local text = {}
+  if label then
+    for _, line in pairs(label) do
+      table.insert(text, line)
+    end
+  end
+  if doc then
+    if #text then
+      table.insert(text, '\n')
+    end
+    for _, line in pairs(doc) do
+      table.insert(text, line)
+    end
+  end
+  vim.defer_fn(function()
+    M.show_info(text, event)
+  end, 0)
 end
 
 M.stop_info = function()

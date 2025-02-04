@@ -93,7 +93,7 @@ options.setup = function()
   vim.api.nvim_set_option_value('cinoptions', '(1s,>1s,:1s,g1,m1,+2s', {})
 
   -- maximum number of items to show in the popup menu
-  -- vim.api.nvim_set_option_value('pumheight', 30, {})
+  vim.api.nvim_set_option_value('pumheight', 10, {})
   vim.api.nvim_set_option_value('complete', '', {})
   -- do not show XXX completion (YYY)
   vim.api.nvim_set_option_value('shortmess', vim.api.nvim_get_option_value('shortmess', {}) .. 'c', {})

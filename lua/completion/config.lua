@@ -12,7 +12,7 @@ local config = {
     edit_dist = 1,
     dist_difference = 2,
     insert_cost = 1,
-    delete_cost = 3,
+    delete_cost = 5,
     substitude_cost = 1,
   },
   info = {
