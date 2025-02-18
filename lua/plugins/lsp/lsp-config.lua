@@ -73,7 +73,14 @@ local config = function()
   local clangd_handler = lsp_status.extensions.clangd.setup()
   local clangd = '/usr/bin/clangd'
   if file_exists(clangd) then
-    local cmd = { clangd, '--background-index', '--header-insertion=never', '--log=error', '--offset-encoding=utf-16' }
+    local cmd = {
+      clangd,
+      '--background-index',
+      '--query-driver=/usr/bin/**/clang-*,/usr/bin/*g++,/usr/bin/*gcc',
+      '--header-insertion=never',
+      '--log=error',
+      '--offset-encoding=utf-16',
+    }
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
 
