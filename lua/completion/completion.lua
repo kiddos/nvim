@@ -3,33 +3,56 @@ local M = {}
 local config = require('completion.config').get_config()
 local util = require('completion.util')
 
+local CompletionTriggerKind = {
+  Invoked = 1,
+  TriggerCharacter = 2,
+  TriggerForIncompleteCompletions = 3,
+}
+
 local context = {
   lsp = {
     completion_items = {},
     request_ids = {},
   },
-  special_chars = {},
 }
 
-M.get_completion_word = function(completion_item)
+local get_completion_word = function(completion_item)
   return util.table_get(completion_item, { 'textEdit', 'newText' }) or completion_item.insertText or
       completion_item.label or ''
 end
 
-M.convert_completion_items = function(items)
+local get_documentation = function(completion_item)
+  -- documentation could be string | MarkupContent
+  local doc = util.table_get(completion_item, { 'documentation' })
+  if not doc then
+    return ''
+  end
+
+  if type(doc) == 'string' then
+    return doc
+  end
+
+  if type(doc) == 'table' then
+    return util.table_get(doc, { 'value' })
+  end
+
+  return ''
+end
+
+local convert_completion_items = function(items)
   if vim.tbl_count(items) == 0 then
     return {}
   end
 
   local result = {}
   for _, item in pairs(items) do
-    local word = M.get_completion_word(item)
+    local word = get_completion_word(item)
     local completion_item = {
       word = word,
       abbr = util.trim_long_text(item.label, config.completion.abbr_max_len),
       kind = vim.lsp.protocol.CompletionItemKind[item.kind] or 'Unknown',
       menu = util.trim_long_text(item.detail or '', config.completion.menu_max_len),
-      info = util.get_documentation(item),
+      info = get_documentation(item),
       icase = 1,
       dup = 1,
       empty = 1,
@@ -46,8 +69,34 @@ M.convert_completion_items = function(items)
   return result
 end
 
-M.find_completion_base_word = function()
-  local start = util.get_completion_start()
+local get_completion_start = function()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = vim.api.nvim_get_current_line()
+  local line_to_cursor = line:sub(1, pos[2])
+  local start = -1
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr });
+  for _, client in pairs(clients) do
+    local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
+    if triggers then
+      for _, trigger_char in pairs(triggers) do
+        local result = util.find_last(line_to_cursor, trigger_char)
+        if result then
+          start = math.max(start, result)
+        end
+      end
+    end
+  end
+
+  local result = vim.fn.match(line_to_cursor, '\\w*$')
+  if result <= pos[2] then
+    start = math.max(start, result)
+  end
+  return start
+end
+
+local find_completion_base_word = function()
+  local start = get_completion_start()
   if start < 0 then
     return nil
   else
@@ -118,44 +167,75 @@ local sort_completion_result = function(items)
 end
 
 M.show_completion = util.debounce(function()
-  local base_word = M.find_completion_base_word()
+  local base_word = find_completion_base_word()
   if base_word ~= nil then
     compute_item_score(context.lsp.completion_items, base_word)
     if #base_word > 0 then
       context.lsp.completion_items = filter_completion_item(context.lsp.completion_items)
     end
     sort_completion_result(context.lsp.completion_items)
-    local items = M.convert_completion_items(context.lsp.completion_items)
+
+    local items = convert_completion_items(context.lsp.completion_items)
     if vim.fn.mode() == 'i' then
-      vim.fn.complete(util.get_completion_start() + 1, items)
+      vim.fn.complete(get_completion_start() + 1, items)
     end
   end
 end, 10)
 
+local make_completion_request_param = function(trigger_kind)
+  local params = vim.lsp.util.make_position_params()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  local trigger_char = string.sub(line, col, col)
+  params.context = {
+    triggerKind = trigger_kind,
+    triggerCharacter = trigger_char,
+  }
+  return params
+end
+
+local could_trigger = function(client, cursor_char)
+  if cursor_char:match("^[-%w_]+$") ~= nil then
+    return true
+  end
+  local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
+  if triggers and util.contains(triggers, cursor_char) then
+    return true
+  end
+  return false
+end
+
 M.trigger_completion = util.debounce(function(bufnr)
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
   context.lsp.completion_items = {}
+
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = vim.api.nvim_get_current_line()
+  local cursor_char = line:sub(pos[2], pos[2])
+
   for _, client in pairs(clients) do
     if util.table_get(client, { 'server_capabilities', 'completionProvider' }) then
-      if context.lsp.request_ids[client.id] then
-        client.cancel_request(context.lsp.request_ids[client.id])
-        context.lsp.request_ids[client.id] = nil
-      end
-
-      local params = vim.lsp.util.make_position_params()
-      local result, request_id = client.request('textDocument/completion', params, function(err, client_result, _, _)
-        if not err then
-          local items = util.table_get(client_result, { 'items' }) or client_result
-          if items then
-            for _, item in pairs(items) do
-              table.insert(context.lsp.completion_items, item)
-            end
-          end
-          M.show_completion()
+      if could_trigger(client, cursor_char) then
+        if context.lsp.request_ids[client.id] then
+          client.cancel_request(context.lsp.request_ids[client.id])
+          context.lsp.request_ids[client.id] = nil
         end
-      end, bufnr)
-      if result then
-        context.lsp.request_ids[client.id] = request_id
+
+        local params = make_completion_request_param(CompletionTriggerKind.TriggerCharacter)
+        local result, request_id = client.request('textDocument/completion', params, function(err, client_result, _, _)
+          if not err then
+            local items = util.table_get(client_result, { 'items' }) or client_result
+            if items then
+              for _, item in pairs(items) do
+                table.insert(context.lsp.completion_items, item)
+              end
+            end
+            M.show_completion()
+          end
+        end, bufnr)
+        if result then
+          context.lsp.request_ids[client.id] = request_id
+        end
       end
     end
   end
@@ -170,36 +250,29 @@ M.confirm_completion = function()
   local index = info.selected
   if vim.fn.pumvisible() ~= 0 and index ~= -1 then
     local selected = items[index + 1]
-    local char = util.get_left_char()
-    -- TODO
-    -- make this more robust
-    if context.special_chars[char] ~= nil then
-      return vim.api.nvim_replace_termcodes('<C-E>', true, true, true) .. cr
-    else
-      local text_edit = util.table_get(selected, { 'user_data', 'nvim', 'lsp', 'completion_item', 'textEdit' })
-      if text_edit then
-        local key = vim.api.nvim_replace_termcodes('<C-E>', true, true, true)
-        vim.api.nvim_feedkeys(key, 'i', false)
-        vim.defer_fn(function()
-          if vim.fn.pumvisible() ~= 0 then
-            return
-          end
+    local text_edit = util.table_get(selected, { 'user_data', 'nvim', 'lsp', 'completion_item', 'textEdit' })
+    if text_edit then
+      local key = vim.api.nvim_replace_termcodes('<C-E>', true, true, true)
+      vim.api.nvim_feedkeys(key, 'i', false)
+      vim.defer_fn(function()
+        if vim.fn.pumvisible() ~= 0 then
+          return
+        end
 
-          local bufnr = vim.api.nvim_get_current_buf()
-          vim.lsp.util.apply_text_edits({ text_edit }, bufnr, 'utf-8')
+        local bufnr = vim.api.nvim_get_current_buf()
+        vim.lsp.util.apply_text_edits({ text_edit }, bufnr, 'utf-8')
 
-          local text = util.table_get(text_edit, { 'newText' })
-          local row = util.table_get(text_edit, { 'range', 'start', 'line' })
-          local col = util.table_get(text_edit, { 'range', 'start', 'character' })
-          if text and row and col then
-            vim.api.nvim_win_set_cursor(0, { row + 1, col + #text })
-          end
-        end, 100)
-        return
-      end
-
-      return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
+        local text = util.table_get(text_edit, { 'newText' })
+        local row = util.table_get(text_edit, { 'range', 'start', 'line' })
+        local col = util.table_get(text_edit, { 'range', 'start', 'character' })
+        if text and row and col then
+          vim.api.nvim_win_set_cursor(0, { row + 1, col + #text })
+        end
+      end, 100)
+      return
     end
+
+    return vim.api.nvim_replace_termcodes('<C-Y>', true, true, true)
   else
     return cr
   end
@@ -222,10 +295,6 @@ M.auto_complete = function()
 end
 
 M.setup = function()
-  for _, char in pairs(config.completion.special_chars) do
-    context.special_chars[char] = true
-  end
-
   vim.api.nvim_create_autocmd({ 'InsertCharPre' }, {
     callback = M.auto_complete
   })

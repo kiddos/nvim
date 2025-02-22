@@ -49,50 +49,6 @@ util.find_last = function(s, pattern)
   return last_index
 end
 
-util.get_completion_start = function()
-  local pos = vim.api.nvim_win_get_cursor(0)
-  local line = vim.api.nvim_get_current_line()
-  local line_to_cursor = line:sub(1, pos[2])
-  local start = -1
-  local bufnr = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_clients({ bufnr = bufnr });
-  for _, client in pairs(clients) do
-    local triggers = util.table_get(client, { 'server_capabilities', 'completionProvider', 'triggerCharacters' })
-    if triggers then
-      for _, trigger_char in pairs(triggers) do
-        local result = util.find_last(line_to_cursor, trigger_char)
-        if result then
-          start = math.max(start, result)
-        end
-      end
-    end
-  end
-
-  local result = vim.fn.match(line_to_cursor, '\\w*$')
-  if result <= pos[2] then
-    start = math.max(start, result)
-  end
-  return start
-end
-
-util.get_documentation = function(completion_item)
-  -- documentation could be string | MarkupContent
-  local doc = util.table_get(completion_item, { 'documentation' })
-  if not doc then
-    return ''
-  end
-
-  if type(doc) == 'string' then
-    return doc
-  end
-
-  if type(doc) == 'table' then
-    return util.table_get(doc, { 'value' })
-  end
-
-  return ''
-end
-
 util.create_buffer = function(container, name)
   if container.buffer then
     return
@@ -221,6 +177,15 @@ util.throttle = function(callback, timeout)
     end, timeout)
   end
   return f
+end
+
+util.contains = function(tbl, value)
+  for _, v in ipairs(tbl) do
+    if v == value then
+      return true
+    end
+  end
+  return false
 end
 
 return util
