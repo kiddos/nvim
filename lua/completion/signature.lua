@@ -112,21 +112,24 @@ M.show_signature_window = function()
     return
   end
 
+  local signatures = {}
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+  table.insert(signatures, string.format('```%s', filetype))
+  for _, line in ipairs(lines) do
+    table.insert(signatures, line)
+  end
+  table.insert(signatures, '```')
+
   if docs and not util.is_whitespace(docs) then
-    table.insert(lines, '')
+    table.insert(signatures, '')
     for _, doc in pairs(docs) do
-      table.insert(lines, doc)
+      table.insert(signatures, doc)
     end
   end
 
-  local first = {}
-  for i=1,math.min(#lines, config.signature.limit or 3) do
-    first[i] = lines[i]
-  end
-  lines = first
-
   util.create_buffer(context.lsp, 'function-signature')
-  vim.lsp.util.stylize_markdown(context.lsp.buffer, lines, {})
+  vim.lsp.util.stylize_markdown(context.lsp.buffer, signatures, {})
 
   local cur_text = table.concat(lines, '\n')
   if context.lsp.window and cur_text == context.lsp.text then
