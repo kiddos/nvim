@@ -12,18 +12,7 @@ local context = {
   },
 }
 
-M.get_completion_label = function(completed_item)
-  local label = util.table_get(completed_item, {'user_data', 'nvim', 'lsp', 'completion_item', 'label'}) or ''
-  label = string.format("```cpp\n%s\n```", label)
-  return vim.lsp.util.convert_input_to_markdown_lines(label)
-end
-
-M.get_completion_doc = function(completed_item)
-  local text = completed_item.info or ''
-  if not util.is_whitespace(text) then
-    return vim.lsp.util.convert_input_to_markdown_lines(text)
-  end
-
+local get_completion_doc = function(completed_item)
   local completion_item = util.table_get(completed_item, { 'user_data', 'nvim', 'lsp', 'completion_item' })
   if completion_item and completion_item.documentation then
     return vim.lsp.util.convert_input_to_markdown_lines(completion_item.documentation)
@@ -56,8 +45,8 @@ M.get_info_window_options = function(event)
   return {
     relative = 'editor',
     anchor = anchor,
-    row = event.row - (#lines + 3),
-    col = event.col + 3,
+    row = event.row,
+    col = col,
     width = info_width,
     height = info_height,
     focusable = false,
@@ -79,14 +68,8 @@ end, config.info.delay)
 M.trigger_info = function(event)
   util.create_buffer(context.lsp, 'completion-info')
   local completed_item = util.table_get(event, { 'completed_item' }) or {}
-  local doc = M.get_completion_doc(completed_item)
-  local label = M.get_completion_label(completed_item)
+  local doc = get_completion_doc(completed_item)
   local text = {}
-  if label then
-    for _, line in pairs(label) do
-      table.insert(text, line)
-    end
-  end
   if doc then
     if #text then
       table.insert(text, '\n')
@@ -95,9 +78,12 @@ M.trigger_info = function(event)
       table.insert(text, line)
     end
   end
-  vim.defer_fn(function()
-    M.show_info(text, event)
-  end, 0)
+
+  if #text > 0 then
+    vim.defer_fn(function()
+      M.show_info(text, event)
+    end, 0)
+  end
 end
 
 M.stop_info = function()
