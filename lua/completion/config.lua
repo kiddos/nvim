@@ -18,7 +18,7 @@ local config = {
   },
   signature = {
     max_width = 120,
-    max_height = 30,
+    max_height = 6,
     delay = 100,
   },
   cr_mapping = nil,
