@@ -1,12 +1,12 @@
 local uv = vim.uv or vim.loop;
 
-local config = function()
+local function config()
   local required = { 'c', 'lua', 'vim', 'vimdoc', 'query' }
   local cpp_language = { 'cpp', 'cmake', 'cuda', 'make', 'ninja' }
   local jvm_language = { 'java', 'kotlin' }
   local common_language = { 'dart', 'go', 'rust', 'python', 'r', 'bash' }
   local web = { 'html', 'css', 'javascript', 'typescript', 'tsx' }
-  local config = { 'yaml', 'json', 'xml', 'toml' }
+  local data = { 'yaml', 'json', 'xml', 'toml' }
   local markdown = { 'markdown', 'markdown_inline' }
   local git = { 'gitignore', 'gitcommit' }
   local other = { 'proto', 'glsl', }
@@ -23,7 +23,7 @@ local config = function()
   add_install(jvm_language)
   add_install(common_language)
   add_install(web)
-  add_install(config)
+  add_install(data)
   add_install(markdown)
   add_install(git)
   add_install(other)

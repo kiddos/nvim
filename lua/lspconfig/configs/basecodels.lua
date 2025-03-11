@@ -10,6 +10,7 @@ return {
       'basecode-lsp',
       '--snippet-folder=' .. snippet_dir,
       '--root-folder=' .. current_dir,
+      '--debug'
     },
     filetypes = {},
     root_dir = function()

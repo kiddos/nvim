@@ -1,6 +1,7 @@
 local uv = vim.uv or vim.loop
+local api = vim.api
 
-local file_exists = function(filename)
+local function file_exists(filename)
   if not filename then
     return false
   end
@@ -8,17 +9,17 @@ local file_exists = function(filename)
   return stat and stat.type or false
 end
 
-local is_node_installed = function()
+local function is_node_installed()
   vim.fn.system("node -v")
   return vim.v.shell_error == 0
 end
 
-local is_pylsp_installed = function()
+local function is_pylsp_installed()
   vim.fn.system("pylsp -V")
   return vim.v.shell_error == 0
 end
 
-local config = function()
+local function config()
   vim.diagnostic.config({
     underline = true,
     virtual_text = true,
@@ -29,7 +30,7 @@ local config = function()
 
   local lspconfig = require('lspconfig')
 
-  local message_handler = function(err, result, ctx, config)
+  local function message_handler(err, result, ctx, conf)
     if not err then
       local message_type = result.type
       local message = result.message
@@ -129,6 +130,7 @@ local config = function()
         token = snyk_token,
         activateSnykCodeQuality = 'true',
         trustedFolders = {
+          uv.os_homedir() .. '/.cache',
           uv.os_homedir() .. '/.config',
           uv.os_homedir() .. '/.local',
           uv.os_homedir() .. '/projects',
@@ -255,17 +257,6 @@ local config = function()
   --   }
   -- end
 
-  local npairs = require('nvim-autopairs')
-  npairs.setup {
-    -- map_cr = true,
-  }
-
-  -- completion
-  local completion = require('completion')
-  completion.setup {
-    cr_mapping = npairs.autopairs_cr,
-  }
-
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
     text = '🐞',
@@ -289,7 +280,7 @@ local config = function()
   })
 
   -- commands
-  vim.api.nvim_set_keymap('n', '<C-A-l>', '', {
+  api.nvim_set_keymap('n', '<C-A-l>', '', {
     silent = true,
     noremap = true,
     callback = function()
@@ -302,80 +293,12 @@ local config = function()
   })
 
   -- debuggin lsp clients
-  vim.api.nvim_create_user_command('LspClients', function()
+  api.nvim_create_user_command('LspClients', function()
     print(vim.inspect(vim.lsp.get_clients()))
   end, {})
 
-  local status_icons = function()
-    local current = vim.api.nvim_get_current_buf()
-    local diagnostics = vim.diagnostic.get(current)
-    if #diagnostics > 0 then
-      local bug = ''
-      for i = 1, #diagnostics, 1 do
-        local severity = diagnostics[i].severity
-        if severity == vim.diagnostic.severity.ERROR then
-          bug = bug .. '🐁'
-        elseif severity == vim.diagnostic.severity.WARN then
-          bug = bug .. '🐀'
-        elseif severity == vim.diagnostic.severity.INFO then
-          bug = bug .. '🐺'
-        elseif severity == vim.diagnostic.severity.HINT then
-          bug = bug .. '🐹'
-        end
-      end
-      return bug
-    else
-      if vim.fn.mode() == 'n' then
-        return '🐕'
-      elseif vim.fn.mode() == 'i' then
-        return '🐧'
-      elseif vim.fn.mode() == 's' then
-        return '🐇'
-      end
-      return '🐘'
-    end
-  end
-
-  local lsp_statusline = function()
-    local status_line = lsp_status.status()
-    local max_len = 30
-    if #status_line >= max_len then
-      return string.sub(status_line, 1, max_len) .. ' ...'
-    end
-    return status_line
-  end
-
-  local treesitter_statusline = function()
-    return require("nvim-treesitter").statusline({
-      indicator_size = 50,
-      type_patterns = { "class", "function", "method" },
-      separator = " -> ",
-    })
-  end
-
-  require('lualine').setup {
-    options = {
-      theme = 'onedark',
-      section_separators = { '◗', '◖' },
-      component_separators = { '►', '◄' }
-    },
-    sections = {
-      lualine_c = {
-        'filename',
-        status_icons,
-        lsp_statusline,
-      },
-      lualine_x = {
-        treesitter_statusline,
-        'encoding',
-        'fileformat',
-        'filetype'
-      },
-    },
-  }
-
-  local set_inlay_hints_keys = function(mode)
-    vim.api.nvim_set_keymap(mode, '<F5>', '', {
+  local function set_inlay_hints_keys(mode)
+    api.nvim_set_keymap(mode, '<F5>', '', {
       silent = true,
       noremap = true,
       callback = function()
@@ -400,7 +323,6 @@ return {
   dependencies = {
     { 'nvim-lua/lsp-status.nvim' },
     { 'hoob3rt/lualine.nvim' },
-    { 'windwp/nvim-autopairs' },
     { 'onsails/lspkind-nvim' },
   },
   config = config,

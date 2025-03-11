@@ -1,6 +1,6 @@
 local M = {}
 
-local install_lazy = function()
+local function install_lazy()
   local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
   if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -28,8 +28,11 @@ M.setup = function()
     { import = 'plugins.treesitter' },
     { import = 'plugins.colorscheme' },
     { 'NvChad/nvim-colorizer.lua', ft = { 'css', 'javascript' } },
+    { import = 'plugins.lualine' },
     { import = 'plugins.barbar' },
     { import = 'plugins.git' },
+    { 'windwp/nvim-autopairs', opts = {} },
+    { 'kiddos/pawtocomplete.nvim', opts = {} },
 
     -- utility
     { 'kevinhwang91/nvim-bqf', ft = 'qf' },
@@ -45,10 +48,19 @@ M.setup = function()
 
     -- language specific
     { 'tikhomirov/vim-glsl', ft = 'glsl' },
-    { 'slint-ui/vim-slint', ft = 'slint' },
+    { 'slint-ui/vim-slint',  ft = 'slint' },
 
     -- AI
-    { 'kiddos/gemini.nvim', opts = {} }
+    {
+      'kiddos/gemini.nvim',
+      opts = {
+        completion = {
+          can_complete = function()
+            return not require('pawtocomplete.completion_menu').is_opened()
+          end
+        }
+      }
+    }
   }
 
   local options = {
