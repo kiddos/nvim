@@ -44,82 +44,90 @@ snippet mint
 		return ans;
 	}
 
+	i64 extended_euclidean(i64 a, i64 b, i64& x, i64& y) {
+		if (b == 0) {
+			x = 1;
+			y = 0;
+			return a;
+		}
+
+		i64 x1 = 0, y1 = 0;
+		i64 d = extended_euclidean(b, a % b, x1, y1);
+		x = y1;
+		y = x1 - y1 * (a / b);
+		return d;
+	}
+
+	i64 mod_div(i64 a, i64 b, i64 m) {
+		i64 x = 0, y = 0;
+		i64 g = extended_euclidean(b, m, x, y);
+		if (g != 1) {
+			return -1;
+		} else {
+			i64 inv_b = (x % m + m) % m;
+			return (a * inv_b) % m;
+		}
+	}
+
 	template <int MOD>
 	class ModInt {
 	 public:
 		ModInt() : val_(0) {}
 
-		ModInt(i64 x) : val_(x % MOD) {}
+		ModInt(int x) : val_((x % MOD + MOD) % MOD) {}
 
-		ModInt(const ModInt& m) { val_ = m.val_; }
+		ModInt(i64 x) : val_((x % MOD + MOD) % MOD) {}
 
-		ModInt(ModInt&& m) { val_ = m.val_; }
-
-		constexpr ModInt& operator=(const ModInt& rhs) {
-			val_ = rhs.val_;
-			return *this;
-		}
-
-		constexpr ModInt& operator=(ModInt&& rhs) {
-			val_ = rhs.val_;
-			return *this;
-		}
-
-		constexpr ModInt& operator+=(const ModInt& rhs) {
+		ModInt& operator+=(const ModInt& rhs) {
 			val_ = (val_ + rhs.val_) % MOD;
 			return *this;
 		}
 
-		constexpr ModInt& operator-=(const ModInt& rhs) {
+		const ModInt& operator-=(const ModInt& rhs) {
 			val_ = (val_ - rhs.val_ + MOD) % MOD;
 			return *this;
 		}
 
-		constexpr ModInt& operator*=(const ModInt& rhs) {
+		const ModInt& operator*=(const ModInt& rhs) {
 			val_ = (1LL * val_ * rhs.val_) % MOD;
 			return *this;
 		}
 
-		constexpr ModInt inv() const {
-			i64 val = power(val_, MOD - 2, MOD);
+		const ModInt inv() const {
+			i64 val = mod_div(1, val_, MOD);
 			return ModInt(val);
 		}
 
-		constexpr ModInt& operator/=(const ModInt& rhs) { return *this *= rhs.inv(); }
+		const ModInt& operator/=(const ModInt& rhs) { return *this *= rhs.inv(); }
 
-		explicit constexpr operator int() const { return val_; }
+		explicit operator int() const { return val_; }
 
-		friend constexpr ModInt operator+(const ModInt& lhs, const ModInt& rhs) {
-			ModInt ans = lhs;
-			ans += rhs;
-			return ans;
+		friend const ModInt operator+(const ModInt& lhs, const ModInt& rhs) {
+			return ModInt(lhs) += rhs;
 		}
 
-		friend constexpr ModInt operator-(const ModInt& lhs, const ModInt& rhs) {
-			ModInt ans = lhs;
-			ans -= rhs;
-			return ans;
+		friend const ModInt operator-(const ModInt& lhs, const ModInt& rhs) {
+			return ModInt(lhs) -= rhs;
 		}
 
-		friend constexpr ModInt operator*(const ModInt& lhs, const ModInt& rhs) {
-			ModInt ans = lhs;
-			ans *= rhs;
-			return ans;
+		friend const ModInt operator*(const ModInt& lhs, const ModInt& rhs) {
+			return ModInt(lhs) *= rhs;
 		}
 
-		friend constexpr ModInt operator/(const ModInt& lhs, const ModInt& rhs) {
-			ModInt ans = lhs;
-			ans /= rhs;
-			return ans;
+		friend const ModInt operator/(const ModInt& lhs, const ModInt& rhs) {
+			return ModInt(lhs) /= rhs;
 		}
 
-		friend constexpr ostream& operator<<(ostream& os, const ModInt& x) {
+		friend ostream& operator<<(ostream& os, const ModInt& x) {
 			return os << x.val_;
 		}
 
 	 private:
 		unsigned int val_;
 	};
+
+	constexpr int MOD = ${1:998244353};
+	using Mint = ModInt<MOD>;
 ##
 ## namespace
 snippet namespace
