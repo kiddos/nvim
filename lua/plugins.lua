@@ -32,7 +32,7 @@ M.setup = function()
     { import = 'plugins.barbar' },
     { import = 'plugins.git' },
     { 'windwp/nvim-autopairs', opts = {} },
-    { 'kiddos/pawtocomplete.nvim', opts = {} },
+    { 'kiddos/pawtocomplete.nvim', build = { 'make' }, opts = {} },
 
     -- utility
     { 'kevinhwang91/nvim-bqf', ft = 'qf' },

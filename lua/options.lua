@@ -51,7 +51,6 @@ options.setup = function()
   vim.api.nvim_set_option_value('cmdwinheight', 6, {})
 
   -- when this number of lines is change, a message will show
-  vim.opt.report = 10
   vim.api.nvim_set_option_value('report', 10, {})
 
   -- splitting a window will put the new window right of the current one.
