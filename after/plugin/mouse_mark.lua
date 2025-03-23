@@ -1,61 +1,48 @@
-local mark_vars = {
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-  'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-}
+local api = vim.api
 
-local context = {
-  index = 1
-}
+local namespace = api.nvim_create_namespace("right_click_mark")
 
-local can_remove = function(mark)
-  for _, var in ipairs(mark_vars) do
-    if var == mark then
-      return true
-    end
-  end
-  return false
+local command_opts = {}
+
+api.nvim_create_user_command('RightClickSetMark', function()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local line = pos[1]
+  vim.defer_fn(function()
+    api.nvim_buf_set_extmark(bufnr, namespace, line - 1, 0, {
+      sign_text = "▶",
+      sign_hl_group = "WarningMsg",
+    })
+  end, 0)
+end, {})
+
+api.nvim_create_user_command('RightClickCancelAllMarks', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.defer_fn(function()
+    api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
+  end, 0)
+end, command_opts)
+
+local function register_mark_menu(command, menu)
+  api.nvim_command('nnoremenu Mark.' .. menu:gsub(' ', '\\ ') .. ' :' .. command .. '<CR>')
 end
 
-local get_currentline_marks = function()
-  local current_line = vim.fn.line('.')
-  local current_buf = vim.api.nvim_get_current_buf()
-  local marks = vim.fn.getmarklist(current_buf)
-  local found = {}
-  for _, mark in ipairs(marks) do
-    local m = string.sub(mark.mark, 2)
-    if mark.pos[2] == current_line and can_remove(m) then
-      table.insert(found, m)
-    end
+register_mark_menu('RightClickSetMark', 'Set Mark 🦘')
+register_mark_menu('RightClickCancelAllMarks', 'Clear Marks 🧸')
+
+local function show_menu()
+  local mouse = vim.fn.getmousepos()
+  local row = mouse.line
+  local col = mouse.column
+  api.nvim_win_set_cursor(0, { row, col })
+
+  if vim.fn.pumvisible() == 0 then
+    api.nvim_command('popup Mark')
   end
-  return found
 end
 
-local set_mark = function()
-  local m = mark_vars[context.index]
-  context.index = context.index + 1
-  if context.index > #mark_vars then
-    context.index = 1
-  end
-  vim.cmd('mark ' .. m)
-  local current_line = vim.fn.line('.')
-  print("Mark set at line: " .. current_line)
-end
-
-vim.api.nvim_set_keymap('n', '<2-LeftMouse>', '', {
+api.nvim_set_keymap('n', '<RightMouse>', '', {
   noremap = true,
   silent = true,
-  callback = function()
-    local mouse_pos = vim.fn.getmousepos() -- Get the mouse position
-    vim.api.nvim_win_set_cursor(0, { mouse_pos.line, mouse_pos.column - 1 })
-
-    local marks = get_currentline_marks()
-    if #marks > 0 then
-      print('removing marks: ' .. vim.inspect(marks))
-      for _, mark in ipairs(marks) do
-        vim.cmd('delmark ' .. mark)
-      end
-    else
-      set_mark()
-    end
-  end
+  callback = show_menu
 })
