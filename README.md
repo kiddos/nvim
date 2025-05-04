@@ -8,13 +8,6 @@ cd ~/.config
 git clone https://github.com/kiddos/nvim
 ```
 
-### APM Server
-
-```shell
-cd nvim
-pip install -r requirements.txt
-```
-
 ### Language servers
 
 - basecode-lsp
