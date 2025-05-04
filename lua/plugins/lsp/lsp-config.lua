@@ -115,7 +115,7 @@ local function config()
     -- html
     lspconfig.html.setup {
       capabilities = capabilities,
-      filetypes = { 'html', 'webmacro' }
+      filetypes = { 'html', 'webmacro', 'jsp' }
     }
 
     -- bash
