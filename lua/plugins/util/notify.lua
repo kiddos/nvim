@@ -1,5 +1,6 @@
 return {
   'rcarriga/nvim-notify',
+  tag = 'v3.15.0',
   lazy = false,
   config = function()
     local notify = require('notify')
@@ -9,7 +10,7 @@ return {
     })
     vim.notify = function(msg, level, opts)
       notify(msg, level, opts)
-      print(msg)
+      print(vim.inspect(msg))
     end
   end,
 }
