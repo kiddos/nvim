@@ -174,8 +174,8 @@ local function config()
             },
             pycodestyle = {
               convention = 'google',
-              maxLineLength = 120,
-            }
+              ignore = { 'E501' },
+            },
           }
         }
       },
