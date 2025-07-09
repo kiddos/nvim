@@ -53,6 +53,7 @@ M.setup = function()
     -- AI
     {
       'kiddos/gemini.nvim',
+      event = 'InsertEnter',
       opts = {
         completion = {
           can_complete = function()
