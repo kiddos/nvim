@@ -10,10 +10,10 @@ local config = function()
     callback = function()
       if colorizer.is_buffer_attached(0) then
         colorizer.detach_from_buffer(0)
-        vim.notify('Disable nvim-colorizer', vim.log.levels.INFO, {})
+        vim.notify('🛑 Disable nvim-colorizer', vim.log.levels.INFO, {})
       else
         colorizer.attach_to_buffer(0)
-        vim.notify('Enable nvim-colorizer', vim.log.levels.INFO, {})
+        vim.notify('✅ Enable nvim-colorizer', vim.log.levels.INFO, {})
       end
     end
   })

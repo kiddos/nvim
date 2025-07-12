@@ -305,9 +305,9 @@ local function config()
         local enable = not vim.lsp.inlay_hint.is_enabled()
         vim.lsp.inlay_hint.enable(enable)
         if enable then
-          vim.notify('Enable Inlay Hints')
+          vim.notify('✅ Enable Inlay Hints')
         else
-          vim.notify('Disable Inlay Hints', vim.log.levels.WARN)
+          vim.notify('🛑 Disable Inlay Hints', vim.log.levels.WARN)
         end
       end,
     })
