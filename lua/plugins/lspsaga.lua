@@ -1,3 +1,5 @@
+local api = vim.api
+
 local config = function()
   local saga = require('lspsaga')
 
@@ -40,7 +42,7 @@ local config = function()
 
   local register_command = function(saga_command, binding, command, menu)
     if binding and binding ~= '' then
-      vim.api.nvim_set_keymap('n', binding, '', {
+      api.nvim_set_keymap('n', binding, '', {
         noremap = true,
         silent = true,
         callback = function()
@@ -49,14 +51,14 @@ local config = function()
       })
     end
     if command and command ~= '' then
-      vim.api.nvim_create_user_command(command, function()
+      api.nvim_create_user_command(command, function()
         vim.defer_fn(function()
           pcall(function() vim.api.nvim_command(saga_command) end)
         end, 0)
       end, {})
     end
 
-    vim.api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. saga_command .. '<CR>')
+    api.nvim_command('nnoremenu LSP.' .. menu:gsub(' ', '\\ ') .. ' :' .. saga_command .. '<CR>')
   end
 
   register_command('Lspsaga code_action', nil, 'Code', 'Code Action 🍀')
@@ -75,7 +77,7 @@ local config = function()
 
 
   local register_popup_keymap = function(key)
-    vim.api.nvim_set_keymap('n', key, '', {
+    api.nvim_set_keymap('n', key, '', {
       expr = true,
       noremap = true,
       silent = true,
@@ -92,7 +94,7 @@ local config = function()
 
 
   local register_toggle_key = function(key, command)
-    vim.api.nvim_set_keymap('n', key, '', {
+    api.nvim_set_keymap('n', key, '', {
       expr = true,
       noremap = true,
       silent = true,
@@ -110,6 +112,6 @@ end
 
 return {
   'nvimdev/lspsaga.nvim',
-  event = 'VeryLazy',
+  keys = { '<C-n>', '<C-Space>', '<F7>', '<F8>' },
   config = config
 }

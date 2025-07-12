@@ -1,6 +1,6 @@
 return {
   'onsails/lspkind-nvim',
-  event = 'VeryLazy',
+  event = { 'InsertEnter' },
   config = function()
     require('lspkind').init()
   end

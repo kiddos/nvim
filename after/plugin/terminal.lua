@@ -64,7 +64,7 @@ local toggle_term = function()
 end
 
 vim.api.nvim_create_user_command('ToggleTerm', toggle_term, {})
-vim.api.nvim_set_keymap('n', '<F6>', ':ToggleTerm<CR>', {
-  silent = true,
-  noremap = true
-})
+-- vim.api.nvim_set_keymap('n', '<F6>', ':ToggleTerm<CR>', {
+--   silent = true,
+--   noremap = true
+-- })

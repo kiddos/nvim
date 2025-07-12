@@ -1,6 +1,6 @@
 return {
   'kylechui/nvim-surround',
-  event = 'InsertEnter',
-  tag = 'v2.1.10',
+  event = 'VeryLazy',
+  version = '^3.0.0',
   opts = {},
 }

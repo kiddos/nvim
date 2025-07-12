@@ -1,4 +1,5 @@
 local uv = vim.uv or vim.loop;
+local api = vim.api
 
 local function config()
   local required = { 'c', 'lua', 'vim', 'vimdoc', 'query' }
@@ -38,7 +39,7 @@ local function config()
         end
 
         local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+        local ok, stats = pcall(uv.fs_stat, api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
           return true
         end
@@ -53,7 +54,7 @@ local function config()
     },
   }
 
-  vim.api.nvim_create_autocmd('FileType', {
+  api.nvim_create_autocmd('FileType', {
     pattern = {
       'c',
       'cpp',
@@ -75,28 +76,28 @@ local function config()
       'vim'
     },
     callback = function()
-      vim.api.nvim_set_option_value('foldcolumn', 'auto', { scope = 'local' })
-      vim.api.nvim_set_option_value('foldlevel', 100, { scope = 'local' })
-      vim.api.nvim_set_option_value('foldlevelstart', -1, { scope = 'local' })
-      vim.api.nvim_set_option_value('foldmethod', 'expr', { scope = 'local' })
-      vim.api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', { scope = 'local' })
-      vim.api.nvim_set_option_value('foldtext', 'vim.treesitter.foldtext()', { scope = 'local' })
+      api.nvim_set_option_value('foldcolumn', 'auto', { scope = 'local' })
+      api.nvim_set_option_value('foldlevel', 100, { scope = 'local' })
+      api.nvim_set_option_value('foldlevelstart', -1, { scope = 'local' })
+      api.nvim_set_option_value('foldmethod', 'expr', { scope = 'local' })
+      api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', { scope = 'local' })
+      api.nvim_set_option_value('foldtext', 'vim.treesitter.foldtext()', { scope = 'local' })
     end
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  api.nvim_create_autocmd('FileType', {
     pattern = { 'bash', 'zsh' },
     callback = function()
-      vim.api.nvim_set_option_value('foldmethod', 'marker', { scope = 'local' })
-      vim.api.nvim_set_option_value('foldmarker',  '{,}', { scope = 'local' })
+      api.nvim_set_option_value('foldmethod', 'marker', { scope = 'local' })
+      api.nvim_set_option_value('foldmarker', '{,}', { scope = 'local' })
     end
   })
 
-  vim.api.nvim_create_autocmd('FileType', {
+  api.nvim_create_autocmd('FileType', {
     pattern = { 'vim' },
     callback = function()
-      vim.api.nvim_set_option_value('foldmethod', 'marker', { scope = 'local' })
-      vim.api.nvim_set_option_value('foldmarker',  '{{{,}}}', { scope = 'local' })
+      api.nvim_set_option_value('foldmethod', 'marker', { scope = 'local' })
+      api.nvim_set_option_value('foldmarker', '{{{,}}}', { scope = 'local' })
     end
   })
 end

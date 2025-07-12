@@ -1,5 +1,8 @@
+local severity = vim.diagnostic.severity
+local api = vim.api
+
 local config = function()
-  require('barbar').setup{
+  require('barbar').setup {
     animation = false,
     auto_hide = false,
     icons = {
@@ -9,27 +12,28 @@ local config = function()
       },
       button = '✕',
       diagnostics = {
-        [vim.diagnostic.severity.ERROR] = { enabled = true, icon = 'Ⓧ' },
-        [vim.diagnostic.severity.HINT] = { enabled = true, icon = '💡' },
-        [vim.diagnostic.severity.INFO] = { enabled = true, icon = 'ⓘ ' },
-        [vim.diagnostic.severity.WARN] = { enabled = true, icon = '⚠️' },
+        [severity.ERROR] = { enabled = true, icon = 'Ⓧ' },
+        [severity.HINT] = { enabled = true, icon = '💡' },
+        [severity.INFO] = { enabled = true, icon = 'ⓘ ' },
+        [severity.WARN] = { enabled = true, icon = '⚠️' },
       }
     },
     maximum_padding = 1,
   }
+  local opts = { silent = true, noremap = true }
   -- Re-order to previous/next
-  vim.api.nvim_set_keymap('n', '<A-Left>', ':BufferMovePrevious<CR>', { silent = true, noremap = true })
-  vim.api.nvim_set_keymap('n', '<A-Right>', ':BufferMoveNext<CR>', { silent = true, noremap = true })
+  api.nvim_set_keymap('n', '<A-Left>', ':BufferMovePrevious<CR>', opts)
+  api.nvim_set_keymap('n', '<A-Right>', ':BufferMoveNext<CR>', opts)
 
   for i = 1, 9, 1 do
-    vim.api.nvim_set_keymap('n', string.format('<Leader>%d', i), string.format(':BufferGoto %d<CR>', i),
-      { silent = true, noremap = true })
+    local key = string.format('<Leader>%d', i)
+    local command = string.format(':BufferGoto %d<CR>', i)
+    api.nvim_set_keymap('n', key, command, opts)
   end
 
-  -- Goto buffer in position...
-  vim.api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', { silent = true, noremap = true })
+  api.nvim_set_keymap('n', '<Leader>0', ':BufferLast<CR>', opts)
   -- Close buffer
-  vim.api.nvim_set_keymap('n', '<Leader><Leader>c', ':BufferClose<CR>', { silent = true, noremap = true })
+  api.nvim_set_keymap('n', '<Leader><Leader>c', ':BufferClose<CR>', opts)
 end
 
 return {

@@ -321,9 +321,7 @@ return {
   'neovim/nvim-lspconfig',
   lazy = false,
   dependencies = {
-    { 'nvim-lua/lsp-status.nvim' },
-    { 'hoob3rt/lualine.nvim' },
-    { 'onsails/lspkind-nvim' },
+    'nvim-lua/lsp-status.nvim',
   },
   config = config,
 }
