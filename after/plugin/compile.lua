@@ -26,10 +26,12 @@ local register_command = function(filetype, key, command)
   })
 end
 
-local key = '<F33>'
+local keys = { '<F33>', '<C-F9>' }
 
-register_command({ 'c', 'cpp' }, key, '!clang++ % -Wall -Wextra -Wshadow -std=c++20 -fsanitize=address -O1 -g -o %:r')
-register_command({ 'rust' }, key, '!rustc %')
-register_command({ 'cuda' }, key, '!nvcc % -o %:r &')
-register_command({ 'java' }, key, '!javac % &')
-register_command({ 'kotlin' }, key, '!kotlinc % -include-runtime -d %:r.jar')
+for _, key in pairs(keys) do
+  register_command({ 'c', 'cpp' }, key, '!clang++ % -Wall -Wextra -Wshadow -std=c++20 -fsanitize=address -O1 -g -o %:r')
+  register_command({ 'rust' }, key, '!rustc %')
+  register_command({ 'cuda' }, key, '!nvcc % -o %:r &')
+  register_command({ 'java' }, key, '!javac % &')
+  register_command({ 'kotlin' }, key, '!kotlinc % -include-runtime -d %:r.jar')
+end
