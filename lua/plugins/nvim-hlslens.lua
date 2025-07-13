@@ -16,6 +16,17 @@ local config = function()
   api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], opts)
 
   api.nvim_set_keymap('n', '<Leader>h', '<Cmd>noh<CR>', opts)
+
+  local augroup = api.nvim_create_augroup("NoHlSearchOnWrite", { clear = true })
+  api.nvim_create_autocmd({ 'BufWritePost' }, {
+    group = augroup,
+    callback = function()
+      vim.defer_fn(function()
+        api.nvim_command('nohlsearch')
+      end, 10)
+    end,
+    desc = "Clear search highlights after writing a buffer",
+  })
 end
 
 return {
