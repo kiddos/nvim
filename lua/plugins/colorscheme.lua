@@ -1,9 +1,10 @@
 return {
-  'kiddos/malokai.vim',
+  'kiddos/molokai-zenith.nvim',
   lazy = false,
   priority = 1000,
   config = function()
-    vim.cmd.colorscheme('malokai')
-    vim.api.nvim_set_option_value('termguicolors', true, {})
+    local colorscheme = require('molokai-zenith')
+    colorscheme.setup()
+    colorscheme.colorscheme()
   end
 }
