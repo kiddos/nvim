@@ -1,3 +1,5 @@
+local api = vim.api
+
 local config = function()
   require("nvim-tree").setup()
   local tree_api = require('nvim-tree.api').tree
@@ -10,6 +12,18 @@ local config = function()
         tree_api.toggle()
       end
     })
+  end
+
+  local groups = {
+    NvimTreeFolderIcon = { link = 'Directory' },
+    NvimTreeFolderName = { link = 'Normal' },
+    NvimTreeEmptyFolderName = { link = 'Comment' },
+    NvimTreeOpenedFolderName = { link = 'Normal' },
+    NvimTreeSymlinkFolderName = { link = 'Normal' },
+  }
+
+  for group, value in pairs(groups) do
+    api.nvim_set_hl(0, group, value)
   end
 end
 
