@@ -10,7 +10,8 @@ local function config()
   local data = { 'yaml', 'json', 'xml', 'toml' }
   local markdown = { 'markdown', 'markdown_inline' }
   local git = { 'gitignore', 'gitcommit' }
-  local other = { 'proto', 'glsl', }
+  local other = { 'proto', 'glsl' }
+  local low_level = { 'asm', 'llvm' }
 
   local installed = {}
   local add_install = function(list)
@@ -28,6 +29,7 @@ local function config()
   add_install(markdown)
   add_install(git)
   add_install(other)
+  add_install(low_level)
 
   require('nvim-treesitter.configs').setup {
     ensure_installed = installed,
