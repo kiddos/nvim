@@ -5,7 +5,8 @@ local function config()
   local required = { 'c', 'lua', 'vim', 'vimdoc', 'query' }
   local cpp_language = { 'cpp', 'cmake', 'cuda', 'make', 'ninja' }
   local jvm_language = { 'java', 'kotlin' }
-  local common_language = { 'dart', 'go', 'rust', 'python', 'r', 'bash' }
+  local common_language = { 'dart', 'go', 'rust', 'python', 'r' }
+  local shell = { 'bash', 'fish' }
   local web = { 'html', 'css', 'javascript', 'typescript', 'tsx' }
   local data = { 'yaml', 'json', 'xml', 'toml' }
   local markdown = { 'markdown', 'markdown_inline' }
@@ -24,6 +25,7 @@ local function config()
   add_install(cpp_language)
   add_install(jvm_language)
   add_install(common_language)
+  add_install(shell)
   add_install(web)
   add_install(data)
   add_install(markdown)
