@@ -74,10 +74,22 @@ local function config()
   local clangd_handler = lsp_status.extensions.clangd.setup()
   local clangd = '/usr/bin/clangd'
   if file_exists(clangd) then
+    local query_drivers = {
+      '/usr/bin/clang++-*',
+      '/usr/bin/clang-*',
+      '/usr/bin/g++-*',
+      '/usr/bin/gcc-*',
+      '/usr/bin/arm-none-eabi-gcc*',
+    }
+    local xtensa_esp = uv.os_homedir() .. '/.espressif/tools/xtensa-esp32-elf'
+    if file_exists(xtensa_esp) then
+      table.insert(query_drivers, xtensa_esp .. '/**/bin/xtensa-esp32-elf-*')
+    end
+
     local cmd = {
       clangd,
       '--background-index',
-      '--query-driver=/usr/bin/**/clang-*,/usr/bin/*g++,/usr/bin/*gcc',
+      '--query-driver=' .. table.concat(query_drivers, ','),
       '--header-insertion=never',
       '--log=error',
       '--offset-encoding=utf-16',
