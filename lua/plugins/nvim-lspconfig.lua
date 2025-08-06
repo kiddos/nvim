@@ -1,24 +1,6 @@
 local uv = vim.uv or vim.loop
 local api = vim.api
 
-local function file_exists(filename)
-  if not filename then
-    return false
-  end
-  local stat = uv.fs_stat(filename)
-  return stat and stat.type or false
-end
-
-local function is_node_installed()
-  vim.fn.system("node -v")
-  return vim.v.shell_error == 0
-end
-
-local function is_pylsp_installed()
-  vim.fn.system("pylsp -V")
-  return vim.v.shell_error == 0
-end
-
 local function config()
   vim.diagnostic.config({
     underline = true,
@@ -72,8 +54,7 @@ local function config()
 
   -- c++
   local clangd_handler = lsp_status.extensions.clangd.setup()
-  local clangd = '/usr/bin/clangd'
-  if file_exists(clangd) then
+  if vim.fn.executable('clangd') then
     local query_drivers = {
       '/usr/bin/clang++-*',
       '/usr/bin/clang-*',
@@ -82,12 +63,12 @@ local function config()
       '/usr/bin/arm-none-eabi-gcc*',
     }
     local xtensa_esp = uv.os_homedir() .. '/.espressif/tools/xtensa-esp32-elf'
-    if file_exists(xtensa_esp) then
+    if vim.fn.isdirectory(xtensa_esp) then
       table.insert(query_drivers, xtensa_esp .. '/**/bin/xtensa-esp32-elf-*')
     end
 
     local cmd = {
-      clangd,
+      'clangd',
       '--background-index',
       '--query-driver=' .. table.concat(query_drivers, ','),
       '--header-insertion=never',
@@ -109,8 +90,7 @@ local function config()
     }
   end
 
-  local has_node = is_node_installed()
-  if has_node then
+  if vim.fn.executable('node') then
     -- javascript/typescript
     lspconfig.ts_ls.setup {}
     lspconfig.eslint.setup {}
@@ -135,7 +115,7 @@ local function config()
   end
 
   local snyk_token = os.getenv('SNYK_TOKEN')
-  if snyk_token and #snyk_token > 0 then
+  if snyk_token and #snyk_token > 0 and vim.fn.executable('snyk-ls') then
     lspconfig.snyk_ls.setup {
       init_options = {
         integrationName = 'nvim',
@@ -155,7 +135,7 @@ local function config()
   -- python
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-  if is_pylsp_installed() then
+  if vim.fn.executable('pylsp') then
     lspconfig.pylsp.setup {
       handlers = lsp_status.extensions.pyls_ms.setup(),
       settings = {
@@ -207,7 +187,7 @@ local function config()
   -- lua
   local lua_lsp_path = uv.os_homedir() .. '/.local/lsp/lua-language-server'
   local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
-  if file_exists(lua_lsp_binary) then
+  if vim.fn.executable(lua_lsp_binary) then
     lspconfig.lua_ls.setup {
       cmd = { lua_lsp_binary },
       on_init = function(client)
@@ -236,8 +216,8 @@ local function config()
   end
 
   -- dart
-  local dart_path = uv.os_homedir() .. '/flutter/bin/dart'
-  if file_exists(dart_path) then
+  if vim.fn.executable('flutter') then
+    local dart_path = uv.os_homedir() .. '/flutter/bin/dart'
     lspconfig.dartls.setup {
       cmd = { dart_path, 'language-server', '--protocol=lsp' },
       init_options = {
@@ -260,14 +240,6 @@ local function config()
 
   -- R
   lspconfig.r_language_server.setup {}
-
-  -- glsl
-  -- local glslls_path = uv.os_homedir() .. '/.local/lsp/glsl-language-server/build/glslls'
-  -- if file_exists(glslls_path) then
-  --   lspconfig.glslls.setup {
-  --     cmd = { glslls_path, '--stdin' },
-  --   }
-  -- end
 
   -- sign
   vim.fn.sign_define('DiagnosticSignError', {
