@@ -11,7 +11,7 @@ local function config()
   local data = { 'yaml', 'json', 'xml', 'toml' }
   local markdown = { 'markdown', 'markdown_inline' }
   local git = { 'gitignore', 'gitcommit' }
-  local other = { 'proto', 'glsl' }
+  local other = { 'proto', 'glsl', 'qmljs' }
   local low_level = { 'asm', 'llvm' }
 
   local installed = {}

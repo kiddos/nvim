@@ -28,15 +28,6 @@ local function status_icons()
   end
 end
 
-local function lsp_statusline()
-  local status_line = require('lsp-status').status()
-  local max_len = 30
-  if #status_line >= max_len then
-    return string.sub(status_line, 1, max_len) .. ' ...'
-  end
-  return status_line
-end
-
 local function treesitter_statusline()
   return require("nvim-treesitter").statusline({
     indicator_size = 50,
@@ -56,7 +47,6 @@ local function config()
       lualine_c = {
         'filename',
         status_icons,
-        lsp_statusline,
       },
       lualine_x = {
         treesitter_statusline,
@@ -73,7 +63,6 @@ return {
   lazy = false,
   dependencies = {
     { 'nvim-treesitter/nvim-treesitter' } ,
-    { 'nvim-lua/lsp-status.nvim' },
   },
   config = config,
 }

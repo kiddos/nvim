@@ -5,55 +5,24 @@ local function config()
   vim.diagnostic.config({
     underline = true,
     virtual_text = true,
-    signs = true,
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = '🐞',
+        [vim.diagnostic.severity.WARN] = '🐝',
+        [vim.diagnostic.severity.INFO] = '🐏',
+        [vim.diagnostic.severity.HINT] = '🦉',
+      },
+    },
     update_in_insert = false,
     severity_sort = true,
   })
 
-  local lspconfig = require('lspconfig')
-
-  local function message_handler(err, result, ctx, conf)
-    if not err then
-      local message_type = result.type
-      local message = result.message
-      local log_level = vim.log.levels.INFO
-      if message_type == 1 then
-        log_level = vim.log.levels.ERROR
-      elseif message_type == 2 then
-        log_level = vim.log.levels.WARN
-      elseif message_type == 3 then
-        log_level = vim.log.levels.INFO
-      elseif message_type == 4 then
-        log_level = vim.log.levels.INFO
-      elseif message_type == 5 then
-        log_level = vim.log.levels.TRACE
-      end
-      vim.notify_once(message, log_level, {
-        title = 'LSP',
-        timeout = 1000,
-      })
-    end
-  end
-
-  lspconfig.util.default_config = vim.tbl_extend(
-    "force",
-    lspconfig.util.default_config,
-    {
-      handlers = {
-        ['window/showMessage'] = message_handler,
-        -- ['window/logMessage'] = message_handler,
-      }
-    }
-  )
-
-  local lsp_status = require('lsp-status')
-  lsp_status.register_progress()
-
   -- basecode lsp
-  lspconfig.basecodels.setup {}
+  vim.lsp.enable('basecodels')
+  -- if vim.fn.executable('basecode-lsp') then
+  -- end
 
   -- c++
-  local clangd_handler = lsp_status.extensions.clangd.setup()
   if vim.fn.executable('clangd') then
     local query_drivers = {
       '/usr/bin/clang++-*',
@@ -66,7 +35,6 @@ local function config()
     if vim.fn.isdirectory(xtensa_esp) then
       table.insert(query_drivers, xtensa_esp .. '/**/bin/xtensa-esp32-elf-*')
     end
-
     local cmd = {
       'clangd',
       '--background-index',
@@ -75,48 +43,43 @@ local function config()
       '--log=error',
       '--offset-encoding=utf-16',
     }
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-
-    lspconfig.clangd.setup {
+    vim.lsp.config('clangd', {
       cmd = cmd,
-      handlers = clangd_handler,
-      filetypes = { 'c', 'cpp', 'cuda' },
-      init_options = {
-        clangdFileStatus = true
-      },
-      on_attach = lsp_status.on_attach,
-      capabilities = capabilities,
-    }
+    })
+    vim.lsp.enable('clangd')
   end
+
+  -- if vim.fn.executable('cmake-language-server') then
+  --   vim.lsp.enable('cmake')
+  -- end
 
   if vim.fn.executable('node') then
     -- javascript/typescript
-    lspconfig.ts_ls.setup {}
-    lspconfig.eslint.setup {}
+    vim.lsp.enable('ts_ls')
+    vim.lsp.enable('eslint')
 
     -- css
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.textDocument.completion.completionItem.snippetSupport = true
-    lspconfig.cssls.setup {
-      capabilities = capabilities,
-      filetypes = { 'css', 'sass', 'scss', 'less', 'html', 'webmacro' }
-    }
-    lspconfig.cssmodules_ls.setup {}
 
-    -- html
-    lspconfig.html.setup {
+    vim.lsp.config('cssls', {
       capabilities = capabilities,
-      filetypes = { 'html', 'webmacro', 'jsp' }
-    }
+    })
+    vim.lsp.config('html', {
+      capabilities = capabilities,
+    })
+    vim.lsp.enable('html')
+    vim.lsp.enable('cssls')
 
     -- bash
-    lspconfig.bashls.setup {}
+    if vim.fn.executable('bash-language-server') then
+      vim.lsp.enable('bashls')
+    end
   end
 
   local snyk_token = os.getenv('SNYK_TOKEN')
   if snyk_token and #snyk_token > 0 and vim.fn.executable('snyk-ls') then
-    lspconfig.snyk_ls.setup {
+    vim.lsp.config('snyk_ls', {
       init_options = {
         integrationName = 'nvim',
         token = snyk_token,
@@ -129,15 +92,13 @@ local function config()
           uv.os_homedir() .. '/programming',
         },
       }
-    }
+    })
+    vim.lsp.enable('snyk_ls')
   end
 
   -- python
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
   if vim.fn.executable('pylsp') then
-    lspconfig.pylsp.setup {
-      handlers = lsp_status.extensions.pyls_ms.setup(),
+    vim.lsp.config('pylsp', {
       settings = {
         pylsp = {
           plugins = {
@@ -171,29 +132,19 @@ local function config()
           }
         }
       },
-      on_attach = lsp_status.on_attach,
-      capabilities = capabilities
-    }
+    })
+    vim.lsp.enable('pylsp')
   end
 
   -- rust
-  capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-  lspconfig.rust_analyzer.setup {
-    on_attach = lsp_status.on_attach,
-    capabilities = capabilities
-  }
+  vim.lsp.enable('rust_analyzer')
 
   -- lua
   local lua_lsp_path = uv.os_homedir() .. '/.local/lsp/lua-language-server'
   local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
   if vim.fn.executable(lua_lsp_binary) then
-    lspconfig.lua_ls.setup {
+    vim.lsp.config('lua_ls', {
       cmd = { lua_lsp_binary },
-      on_init = function(client)
-        client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
-        return true
-      end,
       settings = {
         Lua = {
           diagnostics = {
@@ -212,13 +163,14 @@ local function config()
           }
         }
       }
-    }
+    })
+    vim.lsp.enable('lua_ls')
   end
 
   -- dart
   if vim.fn.executable('flutter') then
     local dart_path = uv.os_homedir() .. '/flutter/bin/dart'
-    lspconfig.dartls.setup {
+    vim.lsp.config('dartls', {
       cmd = { dart_path, 'language-server', '--protocol=lsp' },
       init_options = {
         closingLabels = false,
@@ -232,36 +184,13 @@ local function config()
         showTodos = true,
         enableSnippets = false,
       }
-    }
+    })
+    vim.lsp.enable('dartls')
   end
 
-  -- webmacro
-  lspconfig.webmacrols.setup {}
-
-  -- R
-  lspconfig.r_language_server.setup {}
-
-  -- sign
-  vim.fn.sign_define('DiagnosticSignError', {
-    text = '🐞',
-    texthl = 'DiagnosticSignError',
-    numhl = 'DiagnosticError'
-  })
-  vim.fn.sign_define('DiagnosticSignWarn', {
-    text = '💩',
-    texthl = 'DiagnosticSignWarn',
-    numhl = 'DiagnosticWarn',
-  })
-  vim.fn.sign_define('DiagnosticSignInfo', {
-    text = '🤖',
-    texthl = 'DiagnosticSignInfo',
-    numhl = 'DiagnosticInfo',
-  })
-  vim.fn.sign_define('DiagnosticSignHint', {
-    text = '🐾',
-    texthl = 'DiagnosticSignHint',
-    numhl = 'DiagnosticHint',
-  })
+  if vim.fn.executable('glsl_analyzer') then
+    vim.lsp.enable('glsl_analyzer')
+  end
 
   -- commands
   api.nvim_set_keymap('n', '<C-A-l>', '', {
@@ -304,8 +233,5 @@ end
 return {
   'neovim/nvim-lspconfig',
   lazy = false,
-  dependencies = {
-    'nvim-lua/lsp-status.nvim',
-  },
   config = config,
 }
