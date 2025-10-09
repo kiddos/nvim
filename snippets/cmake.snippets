@@ -1,29 +1,16 @@
 # main
 snippet main
-	cmake_minimum_required(VERSION 3.14)
-	project(${0:project})
+	cmake_minimum_required(VERSION 3.16)
+	project(${0:project} C CXX)
 
 	set(CMAKE_CXX_STANDARD 17)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS\} -Wall -Wextra")
+	set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -Wall -Wextra")
 	set(BUILD_SHARED_LIBS ON)
 	set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 	set(FETCHCONTENT_QUIET FALSE)
-
-	add_subdirectory(src)
-## fetch
-snippet curl
-	# curl
 	include(FetchContent)
 
-	FetchContent_Declare(
-		${1:name}
-		GIT_REPOSITORY ${2:url}
-		GIT_TAG        ${3:tag}
-		GIT_SHALLOW    TRUE
-	)
-
-	FetchContent_MakeAvailable($1)
-## test
+# test
 snippet test
 	# gtest
 	include(FetchContent)
@@ -38,7 +25,7 @@ snippet test
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 	FetchContent_MakeAvailable(googletest)
 
-	include_directories(${CMAKE_SOURCE_DIR\}/src)
+	include_directories(\${CMAKE_SOURCE_DIR}/src)
 
 	enable_testing()
 
@@ -51,108 +38,3 @@ snippet test
 		GTest::gtest_main
 		lib
 	)
-## curl
-snippet curl
-	# curl
-	include(FetchContent)
-
-	FetchContent_Declare(
-		curl
-		GIT_REPOSITORY https://github.com/curl/curl.git
-		GIT_TAG        curl-8_11_0
-		GIT_SHALLOW    TRUE
-	)
-
-	FetchContent_MakeAvailable(curl)
-## gflag
-snippet gflag
-	# gflags
-	FetchContent_Declare(
-	gflags
-		GIT_REPOSITORY https://github.com/gflags/gflags.git
-		GIT_TAG        v2.2.2
-		EXCLUDE_FROM_ALL
-	)
-	FetchContent_MakeAvailable(gflags)
-## glog
-snippet glog
-	# glog
-	FetchContent_Declare(
-		glog
-		GIT_REPOSITORY https://github.com/google/glog
-		GIT_TAG        v0.7.1
-		EXCLUDE_FROM_ALL
-	)
-	FetchContent_MakeAvailable(glog)
-## json
-snippet json
-	# json
-	FetchContent_Declare(
-		json
-		GIT_REPOSITORY https://github.com/nlohmann/json
-		GIT_TAG        v3.11.3
-	)
-	FetchContent_MakeAvailable(json)
-## SFML
-snippet SFML
-	# SFML
-	FetchContent_Declare(
-		SFML
-		GIT_REPOSITORY https://github.com/SFML/SFML
-		GIT_TAG        2.6.1
-		EXCLUDE_FROM_ALL
-	)
-	FetchContent_MakeAvailable(SFML)
-## grpc
-snippet grpc
-	# grpc
-	FetchContent_Declare(
-		gRPC
-		GIT_REPOSITORY https://github.com/grpc/grpc
-		GIT_TAG        v1.65.5
-		EXCLUDE_FROM_ALL
-	)
-	set(FETCHCONTENT_QUIET OFF)
-	set(ABSL_ENABLE_INSTALL ON)
-	FetchContent_MakeAvailable(gRPC)
-
-	# Since FetchContent uses add_subdirectory under the hood, we can use
-	# the grpc targets directly from this build.
-	set(_PROTOBUF_LIBPROTOBUF libprotobuf)
-	set(_REFLECTION grpc++_reflection)
-	set(_PROTOBUF_PROTOC $<TARGET_FILE:protoc>)
-	set(_GRPC_GRPCPP grpc++)
-	if (CMAKE_CROSSCOMPILING)
-		find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
-	else()
-		set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
-	endif()
-
-	get_filename_component(${1:package_name}_proto "${CMAKE_SOURCE_DIR\}/proto/${2:package}.proto" ABSOLUTE)
-	get_filename_component($1_proto_path "${$1_proto\}" PATH)
-
-	set($1_proto_srcs "${CMAKE_CURRENT_BINARY_DIR\}/$2.pb.cc")
-	set($1_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR\}/$2.pb.h")
-	set($1_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR\}/$2.grpc.pb.cc")
-	set($1_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR\}/$2.grpc.pb.h")
-	include_directories("${CMAKE_CURRENT_BINARY_DIR\}")
-	add_custom_command(
-		OUTPUT "${$1_proto_srcs\}" "${$1_proto_hdrs\}" "${$1_grpc_srcs\}" "${$1_grpc_hdrs\}"
-		COMMAND ${_PROTOBUF_PROTOC\}
-		ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR\}"
-			--cpp_out "${CMAKE_CURRENT_BINARY_DIR\}"
-			-I "${$1_proto_path\}"
-			--plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE\}"
-			"${$1_proto\}"
-		DEPENDS "${$1_proto\}")
-
-
-	add_library(kb_grpc_proto STATIC
-		${$1_grpc_srcs}
-		${$1_grpc_hdrs}
-		${$1_proto_srcs}
-		${$1_proto_hdrs})
-	target_link_libraries($1_grpc_proto
-		${_REFLECTION}
-		${_GRPC_GRPCPP}
-		${_PROTOBUF_LIBPROTOBUF})
