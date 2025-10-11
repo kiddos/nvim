@@ -18,6 +18,7 @@ local config = function()
   local opts = { noremap = true, silent = true, callback = callback }
   api.nvim_set_keymap('n', '<F3>', '', opts)
   api.nvim_set_keymap('i', '<F3>', '', opts)
+  api.nvim_set_keymap('s', '<F3>', '', opts)
 end
 
 return {
