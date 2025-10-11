@@ -18,9 +18,9 @@ local function config()
   })
 
   -- basecode lsp
-  vim.lsp.enable('basecodels')
-  -- if vim.fn.executable('basecode-lsp') then
-  -- end
+  if vim.fn.executable('basecode-lsp') then
+    vim.lsp.enable('basecodels')
+  end
 
   -- c++
   if vim.fn.executable('clangd') then
@@ -49,9 +49,9 @@ local function config()
     vim.lsp.enable('clangd')
   end
 
-  -- if vim.fn.executable('cmake-language-server') then
-  --   vim.lsp.enable('cmake')
-  -- end
+  if vim.fn.executable('cmake-language-server') then
+    vim.lsp.enable('cmake')
+  end
 
   if vim.fn.executable('node') then
     -- javascript/typescript
