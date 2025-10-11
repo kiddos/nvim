@@ -62,8 +62,8 @@ local config = function()
   end
 
   register_command('Lspsaga code_action', nil, 'Code', 'Code Action 🍀')
-  register_command('Lspsaga rename', '<Leader>rename', nil, 'Rename ✍ ')
-  register_command('Lspsaga show_cursor_diagnostics', nil, nil, 'Cursor Diagnostic 💩')
+  register_command('Lspsaga rename', '<Leader>rename', nil, 'Rename')
+  register_command('Lspsaga show_cursor_diagnostics', nil, nil, 'Cursor Diagnostic')
   register_command('Lspsaga goto_definition', nil, nil, 'Goto Definition 🐣')
   register_command('Lspsaga finder imp', nil, nil, 'Goto Implementation 🐻')
   register_command('Lspsaga finder', nil, nil, 'Finder 🐶')
