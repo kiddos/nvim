@@ -184,9 +184,7 @@ local function config()
   })
   vim.lsp.enable('dartls')
 
-  if vim.fn.executable('glsl_analyzer') then
-    vim.lsp.enable('glsl_analyzer')
-  end
+  vim.lsp.enable('glsl_analyzer')
 
   -- commands
   api.nvim_set_keymap('n', '<C-A-l>', '', {
