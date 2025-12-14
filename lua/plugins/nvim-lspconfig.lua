@@ -168,25 +168,21 @@ local function config()
   end
 
   -- dart
-  if vim.fn.executable('flutter') then
-    local dart_path = uv.os_homedir() .. '/flutter/bin/dart'
-    vim.lsp.config('dartls', {
-      cmd = { dart_path, 'language-server', '--protocol=lsp' },
-      init_options = {
-        closingLabels = false,
-        flutterOutline = false,
-        onlyAnalyzeProjectsWithOpenFiles = true,
-        outline = false,
-        suggestFromUnimportedLibraries = true
-      },
-      settings = {
-        completeFunctionCalls = true,
-        showTodos = true,
-        enableSnippets = false,
-      }
-    })
-    vim.lsp.enable('dartls')
-  end
+  vim.lsp.config('dartls', {
+    init_options = {
+      closingLabels = false,
+      flutterOutline = false,
+      onlyAnalyzeProjectsWithOpenFiles = true,
+      outline = false,
+      suggestFromUnimportedLibraries = true
+    },
+    settings = {
+      completeFunctionCalls = true,
+      showTodos = true,
+      enableSnippets = false,
+    }
+  })
+  vim.lsp.enable('dartls')
 
   if vim.fn.executable('glsl_analyzer') then
     vim.lsp.enable('glsl_analyzer')
