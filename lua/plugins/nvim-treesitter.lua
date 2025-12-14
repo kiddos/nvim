@@ -37,17 +37,14 @@ local function config()
     ensure_installed = installed,
     indent = {
       enable = true,
-      disable = function(lang, buf)
-        if lang == 'dart' then
-          return true
+      disable = function(_, buf)
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+        for _, line in pairs(lines) do
+          if #line > 250 then
+            return true
+          end
         end
-
-        local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(uv.fs_stat, api.nvim_buf_get_name(buf))
-        if ok and stats and stats.size > max_filesize then
-          return true
-        end
-        return false
+        return false;
       end,
     },
     ignore_install = {},
