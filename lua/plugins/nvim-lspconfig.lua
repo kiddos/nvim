@@ -18,9 +18,7 @@ local function config()
   })
 
   -- basecode lsp
-  if vim.fn.executable('basecode-lsp') then
-    vim.lsp.enable('basecodels')
-  end
+  vim.lsp.enable('basecodels')
 
   -- c++
   if vim.fn.executable('clangd') then
@@ -49,9 +47,7 @@ local function config()
     vim.lsp.enable('clangd')
   end
 
-  if vim.fn.executable('cmake-language-server') then
-    vim.lsp.enable('cmake')
-  end
+  vim.lsp.enable('cmake')
 
   if vim.fn.executable('node') then
     -- javascript/typescript
@@ -97,44 +93,42 @@ local function config()
   end
 
   -- python
-  if vim.fn.executable('pylsp') then
-    vim.lsp.config('pylsp', {
-      settings = {
-        pylsp = {
-          plugins = {
-            preload = {
-              modules = { 'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets', 'diffusers' }
-            },
-            autopep8 = {
-              enabled = false,
-            },
-            yapf = {
-              enabled = true,
-            },
-            jedi_completion = {
-              cache_for = {
-                'pandas',
-                'numpy',
-                'tensorflow',
-                'matplotlib',
-                'torch',
-                'torchvision',
-                'torchaudio',
-                'transformers',
-                'datasets',
-                'diffusers',
-              }
-            },
-            pycodestyle = {
-              convention = 'google',
-              ignore = { 'E501' },
-            },
-          }
+  vim.lsp.config('pylsp', {
+    settings = {
+      pylsp = {
+        plugins = {
+          preload = {
+            modules = { 'tensorflow', 'torch', 'torchvision', 'torchaudio', 'transformers', 'datasets', 'diffusers' }
+          },
+          autopep8 = {
+            enabled = false,
+          },
+          yapf = {
+            enabled = true,
+          },
+          jedi_completion = {
+            cache_for = {
+              'pandas',
+              'numpy',
+              'tensorflow',
+              'matplotlib',
+              'torch',
+              'torchvision',
+              'torchaudio',
+              'transformers',
+              'datasets',
+              'diffusers',
+            }
+          },
+          pycodestyle = {
+            convention = 'google',
+            ignore = { 'E501' },
+          },
         }
-      },
-    })
-    vim.lsp.enable('pylsp')
-  end
+      }
+    },
+  })
+  vim.lsp.enable('pylsp')
 
   -- rust
   vim.lsp.enable('rust_analyzer')
@@ -184,7 +178,11 @@ local function config()
   })
   vim.lsp.enable('dartls')
 
+  -- glsl
   vim.lsp.enable('glsl_analyzer')
+
+  -- xml
+  vim.lsp.enable('lemminx')
 
   -- commands
   api.nvim_set_keymap('n', '<C-A-l>', '', {
