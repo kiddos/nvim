@@ -1,18 +1,6 @@
 local api = vim.api
 
 local config = function()
-  local rg_options = {
-    '--column',
-    '--line-number',
-    '--with-filename',
-    '--color=always',
-    '--smart-case ',
-    '--no-search-zip',
-    '-g \'!{**/node_modules,**/.git}\'',
-  }
-  local rg_command = 'rg ' .. table.concat(rg_options, ' ') .. ' -- '
-  api.nvim_create_user_command('Rg',
-    'call fzf#vim#grep("' .. rg_command .. '".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)', {})
   api.nvim_set_keymap('n', '<C-P>', ':Files<CR>', { noremap = true, silent = true })
 
   local register_fzf_menu = function(fzf_command, menu)
@@ -54,6 +42,5 @@ return {
   cmd = { 'Rg', 'Ag', 'FZF', 'Files' },
   keys = { '<C-P>', '<M-n>' },
   dependencies = { 'junegunn/fzf' },
-  build = ':call fzf#install()',
   config = config,
 }
