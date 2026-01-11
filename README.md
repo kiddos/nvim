@@ -46,7 +46,7 @@ sudo apt install clangd
 - python
 
 ```sh
-pip install -U 'python-language-server[all]'
+pip install "python-lsp-server[all]"
 ```
 
 - web
