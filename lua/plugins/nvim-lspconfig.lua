@@ -134,11 +134,8 @@ local function config()
   vim.lsp.enable('rust_analyzer')
 
   -- lua
-  local lua_lsp_path = uv.os_homedir() .. '/.local/lsp/lua-language-server'
-  local lua_lsp_binary = lua_lsp_path .. '/bin/lua-language-server'
-  if vim.fn.executable(lua_lsp_binary) then
+  if vim.fn.executable('lua-language-server') then
     vim.lsp.config('lua_ls', {
-      cmd = { lua_lsp_binary },
       settings = {
         Lua = {
           diagnostics = {
