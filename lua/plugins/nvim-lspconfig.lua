@@ -47,7 +47,14 @@ local function config()
     vim.lsp.enable('clangd')
   end
 
-  vim.lsp.enable('cmake')
+  -- cmake
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+  vim.lsp.config('neocmake', {
+    capabilities = capabilities,
+  })
+  vim.lsp.enable('neocmake')
 
   if vim.fn.executable('node') then
     -- javascript/typescript
