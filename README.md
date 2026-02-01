@@ -46,7 +46,7 @@ sudo apt install clangd
 - python
 
 ```sh
-pip install "python-lsp-server[all]"
+uv tool install "python-lsp-server[all]"
 ```
 
 - web
@@ -61,10 +61,16 @@ npm install -g typescript-language-server typescript vscode-langservers-extracte
 npm install -g bash-language-server 
 ```
 
+- proto
+
+```sh
+cargo install protols
+```
+
 - cmake
 
 ```sh
-pip install cmake-language-server
+cargo install neocmakelsp
 ```
 
 ### tools
