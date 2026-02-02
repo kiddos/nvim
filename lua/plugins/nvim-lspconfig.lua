@@ -18,7 +18,7 @@ local function setup_clangd()
   local espressif_root = uv.os_homedir() .. '/.espressif'
   local xtensa_esp = espressif_root .. '/tools/xtensa-esp-elf'
   local riscv32_esp = espressif_root .. '/tools/riscv32-esp-elf'
-  if vim.fn.executable('idf.py') and vim.fn.isdirectory(xtensa_esp) then
+  if vim.fn.executable('idf.py') == 1 and vim.fn.isdirectory(xtensa_esp) == 1 then
     local patterns = {
       xtensa_esp .. '/**/bin/xtensa-esp*-elf-gcc',
       xtensa_esp .. '/**/bin/xtensa-esp*-elf-g++',
@@ -40,7 +40,7 @@ local function setup_clangd()
 
     local executable_pattern = espressif_root .. '/tools/esp-clang/*/esp-clang/bin/clangd'
     local esp_clangd = vim.fn.glob(executable_pattern, false, true)
-    if #esp_clangd then
+    if #esp_clangd > 0 then
       executable = esp_clangd[1]
     end
   end
@@ -60,7 +60,7 @@ local function setup_clangd()
 end
 
 local function setup_weblsp()
-  if not vim.fn.executable('node') then
+  if vim.fn.executable('node') == 0 then
     return
   end
 
@@ -84,7 +84,7 @@ end
 
 local function setup_snyk_lsp()
   local snyk_token = os.getenv('SNYK_TOKEN')
-  if snyk_token and #snyk_token > 0 and vim.fn.executable('snyk-ls') then
+  if snyk_token and #snyk_token > 0 and vim.fn.executable('snyk-ls') == 1 then
     lsp.config('snyk_ls', {
       init_options = {
         integrationName = 'nvim',
@@ -143,7 +143,7 @@ local function setup_python_lsp()
 end
 
 local function setup_lua_lsp()
-  if not vim.fn.executable('lua-language-server') then
+  if vim.fn.executable('lua-language-server') == 0 then
     return
   end
   lsp.config('lua_ls', {
