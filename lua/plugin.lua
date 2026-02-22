@@ -32,6 +32,9 @@ M.setup = function()
     ui = {
       border = 'rounded',
     },
+    git = {
+      timeout = 600,
+    },
     dev = {
       path = '~/projects/tools',
       patterns = { 'kiddos' },

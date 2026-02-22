@@ -64,6 +64,20 @@ local function setup_weblsp()
     return
   end
 
+  local function get_typescript_server_path()
+    local mise_node_path = vim.fn.trim(vim.fn.system("mise where npm:typescript"))
+    return mise_node_path .. "/bin/tsserver"
+  end
+
+  lsp.config('ts_ls', {
+    init_options = {
+      hostInfo = "neovim",
+      tsserver = {
+        path = get_typescript_server_path()
+      }
+    }
+  })
+
   -- javascript/typescript
   lsp.enable('ts_ls')
   lsp.enable('eslint')
