@@ -100,7 +100,7 @@ options.setup = function()
   api.nvim_set_option_value('pumheight', 10, {})
   api.nvim_set_option_value('complete', '', {})
   -- do not show XXX completion (YYY)
-  api.nvim_set_option_value('shortmess', vim.api.nvim_get_option_value('shortmess', {}) .. 'c', {})
+  api.nvim_set_option_value('shortmess', vim.api.nvim_get_option_value('shortmess', {}) .. 'Icat', {})
 
   api.nvim_create_autocmd('FileType', {
     pattern = { 'c', 'cpp', 'rust', 'arduino', 'cuda' },
