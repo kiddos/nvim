@@ -57,6 +57,34 @@ local function setup_clangd()
     cmd = cmd,
   })
   lsp.enable('clangd')
+
+  local function is_bazel_workspace()
+    local files = {
+      'WORKSPACE',
+      'WORKSPACE.bazel',
+      'MODULE.bazel',
+      'BUILD.bazel',
+    }
+    local cwd = vim.fn.getcwd()
+    for _, f in pairs(files) do
+      if vim.fn.filereadable(cwd .. '/' .. f) == 1 then
+        return true
+      end
+    end
+    return false
+  end
+
+  vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and client.name == 'clangd' then
+        if is_bazel_workspace() then
+          vim.notify('bazel build found disable clangd', vim.log.levels.INFO)
+          vim.lsp.stop_client(client.id)
+        end
+      end
+    end,
+  })
 end
 
 local function setup_weblsp()
