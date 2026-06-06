@@ -4,7 +4,7 @@ return {
     'kiddos/pawtocomplete.nvim',
   },
   event = 'InsertEnter',
-  cmd = { 'GeminiTask', 'GeminiChat' },
+  cmd = { 'GeminiTask', 'GeminiChat', 'GeminiAuthenticate' },
   opts = {
     completion = {
       trigger_key = '<C-Space>',
@@ -17,6 +17,10 @@ return {
         position = "right",
         width = 80,
       }
+    },
+    oauth = {
+      client_id = vim.fn.getenv('GEMINI_OAUTH_CLIENT_ID'),
+      client_secret = vim.fn.getenv('GEMINI_OAUTH_CLIENT_SECRET'),
     }
   }
 }
