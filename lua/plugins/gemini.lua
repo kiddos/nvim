@@ -19,6 +19,7 @@ return {
       }
     },
     oauth = {
+      enabled = true,
       client_id = vim.fn.getenv('GEMINI_OAUTH_CLIENT_ID'),
       client_secret = vim.fn.getenv('GEMINI_OAUTH_CLIENT_SECRET'),
     }
