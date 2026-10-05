@@ -37,7 +37,11 @@ local function config()
     ensure_installed = installed,
     indent = {
       enable = true,
-      disable = function(_, buf)
+      disable = function(lang, buf)
+        if lang == 'c' or lang == 'cpp' then
+          return true
+        end
+
         local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
         for _, line in pairs(lines) do
           if #line > 250 then
