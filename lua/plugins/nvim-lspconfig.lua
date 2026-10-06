@@ -230,8 +230,6 @@ local function setup_dartls()
 end
 
 local function config()
-  lsp.set_log_level("info")
-
   vim.diagnostic.config({
     underline = true,
     virtual_text = true,
@@ -248,6 +246,8 @@ local function config()
   })
 
   lsp.enable('basecodels')
+  lsp.enable('cpfinderls')
+
   setup_clangd()
   lsp.enable('neocmake')
   lsp.enable('bashls')
