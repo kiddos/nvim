@@ -1,4 +1,3 @@
-local uv = vim.uv or vim.loop;
 local api = vim.api
 
 local function config()
@@ -36,25 +35,23 @@ local function config()
   require('nvim-treesitter.configs').setup {
     ensure_installed = installed,
     indent = {
-      enable = true,
-      disable = function(lang, buf)
-        if lang == 'c' or lang == 'cpp' then
-          return true
-        end
-
-        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-        for _, line in pairs(lines) do
-          if #line > 250 then
-            return true
-          end
-        end
-        return false;
-      end,
+      enable = false,
     },
     ignore_install = {},
     highlight = {
       enable = true,
-      disable = { 'webmacro' },
+      disable = function(lang, buf)
+        if lang == 'webmacro' then
+          return true
+        end
+
+        -- Disable if file size is greater than 100 KB
+        local max_filesize = 100 * 1024 -- 100 KB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+          return true
+        end
+      end,
       additional_vim_regex_highlighting = false,
     },
   }
