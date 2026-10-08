@@ -20,7 +20,7 @@ local config = function()
 end
 
 return {
-  'norcalli/nvim-colorizer.lua',
+  'catgoose/nvim-colorizer.lua',
   keys = { '<F6>' },
   ft = { 'css', 'javascript', 'jsp', 'html' },
   config = config,
