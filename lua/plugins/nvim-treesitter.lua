@@ -13,66 +13,47 @@ local function config()
   local other = { 'proto', 'glsl', 'qmljs' }
   local low_level = { 'asm', 'llvm' }
 
-  local installed = {}
-  local add_install = function(list)
-    for _, item in pairs(list) do
-      table.insert(installed, item)
+  local extend = function(t1, t2)
+    for _, item in pairs(t2) do
+      table.insert(t1, item)
     end
   end
 
-  add_install(required)
-  add_install(cpp_language)
-  add_install(jvm_language)
-  add_install(common_language)
-  add_install(shell)
-  add_install(web)
-  add_install(data)
-  add_install(markdown)
-  add_install(git)
-  add_install(other)
-  add_install(low_level)
+  local to_install = {}
+  extend(to_install, required)
+  extend(to_install, cpp_language)
+  extend(to_install, jvm_language)
+  extend(to_install, common_language)
+  extend(to_install, shell)
+  extend(to_install, web)
+  extend(to_install, data)
+  extend(to_install, markdown)
+  extend(to_install, git)
+  extend(to_install, other)
+  extend(to_install, low_level)
 
-  require('nvim-treesitter').setup {
-    ensure_installed = installed,
-    indent = {
-      enable = false,
-    },
-    ignore_install = {},
-    highlight = {
-      enable = true,
-      disable = function(_, buf)
-        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-        for _, line in pairs(lines) do
-          if #line > 250 then
-            return true
-          end
-        end
-      end,
-      additional_vim_regex_highlighting = false,
-    },
-  }
+  local treesitter = require('nvim-treesitter')
+  treesitter.install(to_install)
+  treesitter.setup {}
 
   api.nvim_create_autocmd('FileType', {
-    pattern = {
-      'c',
-      'cpp',
-      'cuda',
-      'dart',
-      'go',
-      'lua',
-      'rust',
-      'python',
-      'julia',
-      'java',
-      'javascript',
-      'typescript',
-      'json',
-      'tsx',
-      'html',
-      'css',
-      'yaml',
-      'vim'
-    },
+    pattern = to_install,
+    callback = function()
+      vim.treesitter.start()
+    end
+  })
+
+  local enable_fold = {}
+
+  extend(enable_fold, required)
+  extend(enable_fold, cpp_language)
+  extend(enable_fold, jvm_language)
+  extend(enable_fold, common_language)
+  extend(enable_fold, shell)
+  extend(enable_fold, web)
+
+  api.nvim_create_autocmd('FileType', {
+    pattern = enable_fold,
     callback = function()
       api.nvim_set_option_value('foldcolumn', 'auto', { scope = 'local' })
       api.nvim_set_option_value('foldlevel', 100, { scope = 'local' })
@@ -80,14 +61,6 @@ local function config()
       api.nvim_set_option_value('foldmethod', 'expr', { scope = 'local' })
       api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', { scope = 'local' })
       api.nvim_set_option_value('foldtext', 'vim.treesitter.foldtext()', { scope = 'local' })
-    end
-  })
-
-  api.nvim_create_autocmd('FileType', {
-    pattern = { 'bash', 'zsh' },
-    callback = function()
-      api.nvim_set_option_value('foldmethod', 'marker', { scope = 'local' })
-      api.nvim_set_option_value('foldmarker', '{,}', { scope = 'local' })
     end
   })
 
